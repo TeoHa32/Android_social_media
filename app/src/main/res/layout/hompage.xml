@@ -15,8 +15,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="332dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
+        app:layout_constraintTop_toTopOf="parent" />
+<!--        app:srcCompat="@drawable/logo" -->
 
     <EditText
         android:id="@+id/editTextText"
