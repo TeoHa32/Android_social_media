@@ -36,6 +36,8 @@
         android:ems="10"
         android:hint="Họ và Tên"
         android:inputType="text"
+        android:background="@drawable/textbox"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -105,6 +107,8 @@
         android:ems="10"
         android:hint="Số điện thoại"
         android:inputType="text"
+        android:background="@drawable/textbox"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -117,6 +121,8 @@
         android:ems="10"
         android:hint="Địa chỉ"
         android:inputType="text"
+        android:background="@drawable/textbox"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPhoneNumber" />
 
@@ -129,6 +135,8 @@
         android:ems="10"
         android:hint="Tên đăng nhập"
         android:inputType="text"
+        android:background="@drawable/textbox"
+        android:paddingLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
 
@@ -140,6 +148,8 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Mật khẩu"
+        android:background="@drawable/textbox"
+        android:paddingLeft="20dp"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
@@ -152,6 +162,8 @@
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Nhập lại mật khâu"
+        android:background="@drawable/textbox"
+        android:paddingLeft="20dp"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtMK" />
