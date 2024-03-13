@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,29 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_social_media"
         tools:targetApi="31">
-        <activity
-            android:name=".ForgetPassword3"
-            android:exported="true" />
-        <activity
-            android:name=".ForgetPassword2"
-            android:exported="true" />
-        <activity
-            android:name=".ForgetPassword1"
-            android:exported="true" />
-        <activity
-            android:name=".EditInfo"
-            android:exported="true" />
-        <activity
-            android:name=".SignUp"
-            android:exported="false" />
+        <activity android:name=".fragment.SignUpFragment">
+
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".trangcanhan"
-            android:exported="false" />
-        <activity
-            android:name=".Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

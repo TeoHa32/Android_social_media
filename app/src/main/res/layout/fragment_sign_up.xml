@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUp">
+    tools:context=".fragment.SignUpFragment">
+
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
+        android:layout_width="152dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,32 +20,33 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
+        android:layout_marginStart="140dp"
         android:layout_marginTop="8dp"
         android:text="Đăng ký tài khoản"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="310dp"
-        android:layout_height="49dp"
+        android:id="@+id/txtHoTen"
+        android:layout_width="311dp"
+        android:layout_height="37dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="24dp"
+        android:background="@drawable/textbox"
         android:ems="10"
         android:hint="Họ và Tên"
         android:inputType="text"
-        android:background="@drawable/textbox"
         android:paddingLeft="20dp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <DatePicker
-        android:id="@+id/datePicker"
+        android:id="@+id/dateTime"
         android:layout_width="321dp"
-        android:layout_height="85dp"
+        android:layout_height="70dp"
         android:layout_marginStart="44dp"
         android:layout_marginTop="8dp"
         android:calendarViewShown="false"
@@ -57,11 +59,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:text="Ngày sinh: "
-        android:textSize="18dp"
+        android:textSize="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
 
     <TextView
         android:id="@+id/textView9"
@@ -70,11 +72,12 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="12dp"
         android:text="Giới tính: "
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+        app:layout_constraintTop_toBottomOf="@+id/dateTime" />
 
     <RadioGroup
+        android:id="@+id/rb_Gender"
         android:layout_width="196dp"
         android:layout_height="31dp"
         android:layout_marginTop="12dp"
@@ -82,7 +85,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.304"
         app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker">
+        app:layout_constraintTop_toBottomOf="@+id/dateTime">
 
         <RadioButton
             android:id="@+id/rbMale"
@@ -100,82 +103,122 @@
 
     <EditText
         android:id="@+id/txtPhoneNumber"
-        android:layout_width="310dp"
-        android:layout_height="42dp"
+        android:layout_width="307dp"
+        android:layout_height="37dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/textbox"
         android:ems="10"
         android:hint="Số điện thoại"
         android:inputType="text"
-        android:background="@drawable/textbox"
         android:paddingLeft="20dp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <EditText
-        android:id="@+id/txtAddress"
-        android:layout_width="310dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Địa chỉ"
-        android:inputType="text"
+        android:id="@+id/txtTDN"
+        android:layout_width="305dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/textbox"
+        android:ems="10"
+        android:hint="Tên đăng nhập"
+        android:inputType="text"
         android:paddingLeft="20dp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPhoneNumber" />
 
     <EditText
-        android:id="@+id/editTextText5"
-        android:layout_width="310dp"
-        android:layout_height="51dp"
+        android:id="@+id/txtMK"
+        android:layout_width="301dp"
+        android:layout_height="41dp"
         android:layout_marginStart="44dp"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Tên đăng nhập"
-        android:inputType="text"
         android:background="@drawable/textbox"
-        android:paddingLeft="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
-
-    <EditText
-        android:id="@+id/txtMK"
-        android:layout_width="310dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Mật khẩu"
-        android:background="@drawable/textbox"
-        android:paddingLeft="20dp"
         android:inputType="textPassword"
+        android:paddingLeft="20dp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
+        app:layout_constraintTop_toBottomOf="@+id/txtTDN" />
 
     <EditText
         android:id="@+id/txtConfirm"
-        android:layout_width="310dp"
-        android:layout_height="45dp"
+        android:layout_width="304dp"
+        android:layout_height="35dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/textbox"
         android:ems="10"
         android:hint="Nhập lại mật khâu"
-        android:background="@drawable/textbox"
-        android:paddingLeft="20dp"
         android:inputType="textPassword"
+        android:paddingLeft="20dp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtMK" />
 
     <Button
-        android:id="@+id/btnLogIn"
-        android:layout_width="133dp"
-        android:layout_height="52dp"
+        android:id="@+id/btnSignUp"
+        android:layout_width="120dp"
+        android:layout_height="41dp"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="Đăng ký"
-        android:textSize="20dp"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="28dp"
+        android:text="Bạn đã có tài khoản rồi?"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp" />
+
+    <TextView
+        android:id="@+id/txtLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
+        android:text="Đăng nhập"
+        android:textColor="#F44336"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp" />
+
+    <EditText
+        android:id="@+id/txtEmail"
+        android:layout_width="310dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/textbox"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtHoTen" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:visibility="gone"
+        android:layout_width="32dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="188dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtConfirm" />
 </androidx.constraintlayout.widget.ConstraintLayout>

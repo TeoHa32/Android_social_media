@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    tools:context=".fragment.LoginFragment">
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="208dp"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
     <Button
-        android:id="@+id/btnLogIn"
+        android:id="@+id/btnSignUp"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginStart="136dp"
@@ -87,7 +87,7 @@
         android:text="Quên mật khẩu ?"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogIn"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp"
         android:textColor="#145db7"/>
 
     <TextView
