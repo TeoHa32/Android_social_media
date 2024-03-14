@@ -20,21 +20,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Button btnClick = (Button) findViewById(R.id.btn1);
-
-        btnClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnClick.setVisibility(View.GONE);
-                // Add SignUpFragment
-                SignUpFragment signUpFragment = new SignUpFragment();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, signUpFragment);
-                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
-                fragmentTransaction.commit();
-            }
-        });
+        //Khởi tạo ban đầu sẽ ở trang đăng ký.
+        SignUpFragment signUpFragment = new SignUpFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, signUpFragment);
+        fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+        fragmentTransaction.commit();
 
 
     }

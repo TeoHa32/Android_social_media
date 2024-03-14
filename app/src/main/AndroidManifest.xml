@@ -17,6 +17,9 @@
         <activity android:name=".fragment.SignUpFragment">
 
         </activity>
+        <activity android:name=".trangcanhan">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
