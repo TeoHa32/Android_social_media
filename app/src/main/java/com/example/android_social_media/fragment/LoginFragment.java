@@ -105,7 +105,13 @@ public class LoginFragment extends Fragment {
 
                         // Kiểm tra xem username và password có khớp với dữ liệu từ Firebase không
                         if (dbUsername != null && dbPassword != null && dbUsername.equals(username) && dbPassword.equals(password)) {
-                            Log.d("Check user: ", "User exists");
+                            //Nếu đăng nhập thành công sẽ chuyển đến trang cá nhân
+                            profileFragment profile = new profileFragment();
+                            FragmentManager manager = requireActivity().getSupportFragmentManager();
+                            FragmentTransaction trans = manager.beginTransaction();
+                            trans.replace(R.id.fragment_container, profile);
+                            trans.addToBackStack(null);
+                            trans.commit();
                             Toast.makeText(getContext(),"Đăng nhập thành công!",Toast.LENGTH_LONG).show();
                             return;
                         }
