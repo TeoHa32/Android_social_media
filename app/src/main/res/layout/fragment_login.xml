@@ -79,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cbRemember" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="144dp"
@@ -100,7 +100,7 @@
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtForgotPassword" />
 
     <ImageView
         android:id="@+id/imageView2"

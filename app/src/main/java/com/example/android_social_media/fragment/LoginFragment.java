@@ -30,7 +30,7 @@ import java.util.HashMap;
 public class LoginFragment extends Fragment {
 
     EditText txtUsername, txtPassword;
-    TextView txtSignUp;
+    TextView txtSignUp, txtForgotPassword;
     Button btnLogin;
 
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -58,6 +58,7 @@ public class LoginFragment extends Fragment {
         btnLogin = view.findViewById(R.id.btnLogin);
         txtUsername = view.findViewById(R.id.txtUsername);
         txtPassword = view.findViewById(R.id.txtPassword);
+        txtForgotPassword = view.findViewById(R.id.txtForgotPassword);
     }
 
     public void clickListener(){
@@ -89,6 +90,19 @@ public class LoginFragment extends Fragment {
                     return;
                 }
                 checkAcc(username, password);
+            }
+        });
+
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
+                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction trans = manager.beginTransaction();
+                trans.replace(R.id.fragment_container, forgotPasswordFragment);
+                trans.addToBackStack(null);
+                trans.commit();
             }
         });
     }
