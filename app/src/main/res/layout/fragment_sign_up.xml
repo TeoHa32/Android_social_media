@@ -244,4 +244,25 @@
         android:src="@drawable/hide"
         app:layout_constraintStart_toStartOf="@+id/txtConfirm"
         app:layout_constraintTop_toTopOf="@+id/txtConfirm" />
+
+    <ImageView
+        android:id="@+id/hide1"
+        android:layout_width="27dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="272dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/hide"
+        app:layout_constraintStart_toStartOf="@+id/txtMK"
+        app:layout_constraintTop_toTopOf="@+id/txtMK" />
+
+    <ImageView
+        android:id="@+id/show1"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="276dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_eye"
+        app:layout_constraintStart_toStartOf="@+id/txtMK"
+        app:layout_constraintTop_toTopOf="@+id/txtMK" />
 </androidx.constraintlayout.widget.ConstraintLayout>

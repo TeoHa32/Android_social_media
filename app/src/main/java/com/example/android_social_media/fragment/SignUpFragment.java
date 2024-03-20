@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class SignUpFragment extends Fragment {
     private Button btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private ImageView hide, show;
+    private ImageView hide, show, hide1, show1;
 
 
 //    Check Regex
@@ -86,6 +87,8 @@ public class SignUpFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         hide = view.findViewById(R.id.hide);
         show = view.findViewById(R.id.show);
+        hide1 = view.findViewById(R.id.hide1);
+        show1 = view.findViewById(R.id.show1);
 
         auth = FirebaseAuth.getInstance();
     }
@@ -179,7 +182,26 @@ public class SignUpFragment extends Fragment {
 
                 show.setVisibility(View.VISIBLE);
                 hide.setVisibility(View.GONE);
-                txtConfirm.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                txtConfirm.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+        });
+
+        show1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide1.setVisibility(View.VISIBLE);
+                show1.setVisibility(View.GONE);
+                txtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }
+        });
+
+        hide1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                show1.setVisibility(View.VISIBLE);
+                hide1.setVisibility(View.GONE);
+                txtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         });
     }
