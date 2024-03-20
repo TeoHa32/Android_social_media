@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Add to back stack if needed
         fragmentTransaction.commit();
 
+        //đổi màu
+        getWindow().setStatusBarColor(getResources().getColor(R.color.gray));
+
 
     }
 

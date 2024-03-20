@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "352887116490",
+    "firebase_url": "https://android-social-media-30d2b-default-rtdb.firebaseio.com",
     "project_id": "android-social-media-30d2b",
     "storage_bucket": "android-social-media-30d2b.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.android_social_media"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "352887116490-frf8cnlrqjreiqkevtppuna0v2eu0l57.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android_social_media",
+            "certificate_hash": "5c2edfecf44e1930f186eab24397ff5bf48deb94"
+          }
+        },
+        {
+          "client_id": "352887116490-gvhingi5rko0o94050snn3o32umtjr2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCpPCAZa6mgXjKWHTZ_J4iuzeuT9XWgicA"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "352887116490-gvhingi5rko0o94050snn3o32umtjr2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
