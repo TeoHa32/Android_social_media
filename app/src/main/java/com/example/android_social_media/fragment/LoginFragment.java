@@ -26,6 +26,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -98,7 +100,35 @@ public class LoginFragment extends Fragment {
                                     trans.replace(R.id.fragment_container, profile);
                                     trans.addToBackStack(null);
                                     trans.commit();
-                                    Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+
+                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+
+                                    HashMap<String, Object> data = new HashMap<>();
+                                    data.put("UserID", acc.getIdToken());
+                                    data.put("dob", "01/01/2000");
+                                    data.put("email", acc.getEmail());
+                                    data.put("gender", "nu");
+                                    data.put("name", acc.getDisplayName());
+                                    data.put("password", "123456");
+                                    data.put("phoneNumber", "");
+
+                                    String newKey = databaseReference.push().getKey(); // Tạo một khóa mới duy nhất
+                                    databaseReference.child(newKey).setValue(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Data successfully saved to the database
+                                                    Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // An error occurred while saving data
+                                                    Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+
                                 } else {
                                     Toast.makeText(getContext(), "Đăng nhập thất bại!", Toast.LENGTH_LONG).show();
                                 }
