@@ -17,6 +17,9 @@
         <activity android:name=".fragment.SignUpFragment">
 
         </activity>
+        <activity android:name=".fragment.SendOTPFragment">
+
+        </activity>
         <activity android:name=".trangcanhan">
 
         </activity>

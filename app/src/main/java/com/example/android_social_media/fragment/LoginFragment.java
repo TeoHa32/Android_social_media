@@ -43,7 +43,7 @@ import java.util.HashMap;
 public class LoginFragment extends Fragment {
 
     EditText txtUsername, txtPassword;
-    TextView txtSignUp;
+    TextView txtSignUp, txtForgotPassword;
     Button btnLogin;
     ImageView btnSignInGG;
 
@@ -124,6 +124,7 @@ public class LoginFragment extends Fragment {
         txtUsername = view.findViewById(R.id.txtUsername);
         txtPassword = view.findViewById(R.id.txtPassword);
         btnSignInGG = view.findViewById(R.id.btnSignInGG);
+        txtForgotPassword = view.findViewById(R.id.txtForgotPassword);
     }
 
     public void clickListener(){
@@ -159,10 +160,22 @@ public class LoginFragment extends Fragment {
         });
 
         btnSignInGG.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = client.getSignInIntent();
+               startActivityForResult(intent, 1234);
+           }
+       });
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = client.getSignInIntent();
-                startActivityForResult(intent, 1234);
+
+                ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
+                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction trans = manager.beginTransaction();
+                trans.replace(R.id.fragment_container, forgotPasswordFragment);
+                trans.addToBackStack(null);
+                trans.commit();
             }
         });
     }
