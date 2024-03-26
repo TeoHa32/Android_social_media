@@ -234,6 +234,19 @@ public class SignUpFragment extends Fragment {
 
     }
 
+    public void navigateToProfile(String username){
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        //Nếu đăng ký thành công sẽ chuyển đến trang cá nhân
+        profileFragment profile = new profileFragment();
+        profile.setArguments(bundle);
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.replace(R.id.fragment_container, profile);
+        trans.addToBackStack(null);
+        trans.commit();
+    }
+
     private void upLoadUser(FirebaseUser user, String name, String email, String dob, String gender, String phoneNumber, String username, String password){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         String key = "users";
@@ -255,13 +268,7 @@ public class SignUpFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(),"Không update được dữ liệu!", Toast.LENGTH_LONG).show();
                 } else {
-                    //Nếu đăng ký thành công sẽ chuyển đến trang cá nhân
-                    profileFragment profile = new profileFragment();
-                    FragmentManager manager = requireActivity().getSupportFragmentManager();
-                    FragmentTransaction trans = manager.beginTransaction();
-                    trans.replace(R.id.fragment_container, profile);
-                    trans.addToBackStack(null);
-                    trans.commit();
+                    navigateToProfile(username);
                     Toast.makeText(getContext(), "Đăng ký thành công!", Toast.LENGTH_LONG).show();
                 }
             }
