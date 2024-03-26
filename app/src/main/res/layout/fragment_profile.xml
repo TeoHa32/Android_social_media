@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".trangcanhan">
+    tools:context=".fragment.profileFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/usernameProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="104dp"
+        android:layout_marginStart="88dp"
         android:layout_marginTop="20dp"
         android:text="meowmoew"
         app:layout_constraintStart_toEndOf="@+id/setting"
@@ -63,13 +63,13 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="96dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.17"
+        app:layout_constraintStart_toEndOf="@+id/usernameProfile"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img_2" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnInfoProfile"
         android:layout_width="130dp"
         android:layout_height="57dp"
         android:layout_marginStart="8dp"
@@ -95,26 +95,17 @@
         android:textColor="#000000"
         android:textSize="12dp"
         app:backgroundTint="@null"
-        app:layout_constraintStart_toEndOf="@+id/button4"
+        app:layout_constraintStart_toEndOf="@+id/btnInfoProfile"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="4dp"
-        android:text="meow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button5"
         app:srcCompat="@drawable/img_3" />
 
     <TextView
@@ -145,8 +136,8 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="84dp"
         android:text="0"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -177,7 +168,7 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="16dp"
         android:text="Đang theo dõi"
         app:layout_constraintStart_toEndOf="@+id/textView8"
@@ -276,7 +267,7 @@
         app:srcCompat="@drawable/img_8" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/txtUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

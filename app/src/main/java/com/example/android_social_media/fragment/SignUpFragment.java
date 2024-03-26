@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android_social_media.FragmentReplaceActivity;
-import com.example.android_social_media.MainActivity;
 import com.example.android_social_media.R;
-import com.example.android_social_media.trangcanhan;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,7 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +47,7 @@ public class SignUpFragment extends Fragment {
     private Button btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private ImageView hide, show, hide1, show1;
 
 
 //    Check Regex
@@ -88,6 +85,10 @@ public class SignUpFragment extends Fragment {
         rb_nu = view.findViewById(R.id.rbFemale);
         btnSignUp = view.findViewById(R.id.btnSignUp);
         progressBar = view.findViewById(R.id.progressBar);
+        hide = view.findViewById(R.id.hide);
+        show = view.findViewById(R.id.show);
+        hide1 = view.findViewById(R.id.hide1);
+        show1 = view.findViewById(R.id.show1);
 
         auth = FirebaseAuth.getInstance();
     }
@@ -156,12 +157,51 @@ public class SignUpFragment extends Fragment {
                 else if(!pwConfirm.equals(passWord) || pwConfirm.isEmpty()){
                     txtConfirm.setError("Mật khẩu bạn nhập không khớp, vui lòng nhập lại!");
                     txtPassword.setText("");
+                    txtConfirm.setText("");
                     return;
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
                 createAcc(name, email, dob, gender, phoneNumber, userName, passWord, pwConfirm);
 
+            }
+        });
+
+        show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide.setVisibility(View.VISIBLE);
+                show.setVisibility(View.GONE);
+                txtConfirm.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }
+        });
+
+        hide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                show.setVisibility(View.VISIBLE);
+                hide.setVisibility(View.GONE);
+                txtConfirm.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+        });
+
+        show1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide1.setVisibility(View.VISIBLE);
+                show1.setVisibility(View.GONE);
+                txtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }
+        });
+
+        hide1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                show1.setVisibility(View.VISIBLE);
+                hide1.setVisibility(View.GONE);
+                txtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         });
     }
@@ -194,6 +234,19 @@ public class SignUpFragment extends Fragment {
 
     }
 
+    public void navigateToProfile(String username){
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        //Nếu đăng ký thành công sẽ chuyển đến trang cá nhân
+        profileFragment profile = new profileFragment();
+        profile.setArguments(bundle);
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.replace(R.id.fragment_container, profile);
+        trans.addToBackStack(null);
+        trans.commit();
+    }
+
     private void upLoadUser(FirebaseUser user, String name, String email, String dob, String gender, String phoneNumber, String username, String password){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         String key = "users";
@@ -215,8 +268,7 @@ public class SignUpFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(),"Không update được dữ liệu!", Toast.LENGTH_LONG).show();
                 } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
-                    requireActivity().finish();
+                    navigateToProfile(username);
                     Toast.makeText(getContext(), "Đăng ký thành công!", Toast.LENGTH_LONG).show();
                 }
             }

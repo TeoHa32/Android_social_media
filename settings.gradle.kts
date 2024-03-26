@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Android_social_media"
 include(":app")
- 

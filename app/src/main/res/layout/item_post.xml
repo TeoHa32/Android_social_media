@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img" />
+        <ImageView
+            android:id="@+id/image_post"
+            android:layout_width="match_parent"
+            android:layout_height="410dp"
+            android:layout_marginTop="30dp"
+            android:padding="0dp"
+            android:src="@drawable/post_mew" />
+        <RelativeLayout
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:padding="5dp"
+                android:id="@+id/img_user_post"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_launcher_background"
+                ></de.hdodenhof.circleimageview.CircleImageView>
+
+            <TextView
+                android:id="@+id/tv_name_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_user_post"
+                android:text="@string/app_name" />
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/interact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image_post"
+            >
+            <ImageView
+                android:paddingStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/heart">
+
+
+            </ImageView>
+            <ImageView
+                android:paddingStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/comment"
+
+                >
+
+            </ImageView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/share"
+                android:paddingStart="280dp">
+
+
+
+            </ImageView>
+
+        </LinearLayout>
+        <ImageView
+            android:layout_below="@+id/interact"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
