@@ -120,9 +120,16 @@ public class ResetPasswordFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                //Về trang Login
+                                                LoginFragment loginFragment = new LoginFragment();
+                                                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                                                FragmentTransaction trans = manager.beginTransaction();
+                                                trans.replace(R.id.fragment_container, loginFragment);
+                                                trans.addToBackStack(null);
+                                                trans.commit();
+
                                                 Toast.makeText(getContext(), "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
-                                                edtResetPass1.setText("");
-                                                edtResetPass2.setText("");
+
                                             } else {
                                                 Toast.makeText(getContext(), "Có lỗi khi đặt lại mật khẩu!", Toast.LENGTH_SHORT).show();
                                             }
