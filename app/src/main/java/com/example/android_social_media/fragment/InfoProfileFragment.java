@@ -176,12 +176,7 @@ public class InfoProfileFragment extends Fragment {
         txtChangeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                ChangeImageFragment changeImageFragment = new ChangeImageFragment();
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.fragment_container, changeImageFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
+
             }
         });//end
 
