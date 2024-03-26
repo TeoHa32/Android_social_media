@@ -23,24 +23,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.hompage);
+        setContentView(R.layout.activity_main);
         //-------------------------------------
-        rcv = findViewById(R.id.rcv_id);
-        userAdapter = new UserAdapter(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false);
-        rcv.setLayoutManager(linearLayoutManager);
-        userAdapter.setData(getListUser());
-        rcv.setAdapter(userAdapter);
+//        rcv = findViewById(R.id.rcv_id);
+//        userAdapter = new UserAdapter(this);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false);
+//        rcv.setLayoutManager(linearLayoutManager);
+//        userAdapter.setData(getListUser());
+//        rcv.setAdapter(userAdapter);
         //Khởi tạo ban đầu sẽ ở trang đăng ký.
 
-//        SignUpFragment signUpFragment = new SignUpFragment();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.fragment_container, signUpFragment);
-//        fragmentTransaction.addToBackStack(null); // Add to back stack if needed
-//        fragmentTransaction.commit();
-//        //đổi màu
-//        getWindow().setStatusBarColor(getResources().getColor(R.color.gray));
+        SignUpFragment signUpFragment = new SignUpFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, signUpFragment);
+        fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+        fragmentTransaction.commit();
+        //đổi màu
+        getWindow().setStatusBarColor(getResources().getColor(R.color.gray));
     }
     public List<User> getListUser(){
         List<User> list = new ArrayList<>();
