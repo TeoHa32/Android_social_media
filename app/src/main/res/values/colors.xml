@@ -5,5 +5,7 @@
     <color name="gray">#b4b4b4</color>
     <color name="blue">#0064d1</color>
     <color name="green">#62d6af</color>
+    <color name="tiep">#4780EF</color>
+    <color name="share">#0195F7</color>
 <!--    <color name="f">#f0f0f0</color>-->
 </resources>
