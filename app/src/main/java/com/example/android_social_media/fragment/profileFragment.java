@@ -16,18 +16,17 @@ import android.widget.TextView;
 
 import com.example.android_social_media.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link profileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class profileFragment extends Fragment {
-    Button btnInfoProfile;
 
+    Button btnInfoProfile;
     public profileFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +44,6 @@ public class profileFragment extends Fragment {
         }
 
         return view;
-
     }
 
     @Override
