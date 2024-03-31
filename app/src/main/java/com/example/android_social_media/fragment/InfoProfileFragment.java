@@ -39,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -57,6 +58,8 @@ public class InfoProfileFragment extends Fragment {
     TextView titleName, titleUsername, txtChangeImg;
     Button btnEdit;
     ImageView imageViewBack, imgProfile;
+
+    String username;
 
     public InfoProfileFragment() {
         // Required empty public constructor
@@ -95,21 +98,24 @@ public class InfoProfileFragment extends Fragment {
     }
 
     public void showUserData() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
-            userRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        String nameUser = dataSnapshot.child("name").getValue(String.class);
-                        String genderUser = dataSnapshot.child("gender").getValue(String.class);
-                        String dobUser = dataSnapshot.child("dob").getValue(String.class);
-                        String phoneUser = dataSnapshot.child("phoneNumber").getValue(String.class);
-                        String gmailUser = dataSnapshot.child("email").getValue(String.class);
-                        String usernameUser = dataSnapshot.child("username").getValue(String.class);
-                        String passwordUser = dataSnapshot.child("password").getValue(String.class);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            username = bundle.getString("username");
+        }
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        Query query = userRef.orderByChild("username").equalTo(username);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String nameUser = userSnapshot.child("name").getValue(String.class);
+                        String genderUser = userSnapshot.child("gender").getValue(String.class);
+                        String dobUser = userSnapshot.child("dob").getValue(String.class);
+                        String phoneUser = userSnapshot.child("phoneNumber").getValue(String.class);
+                        String gmailUser = userSnapshot.child("email").getValue(String.class);
+                        String usernameUser = userSnapshot.child("username").getValue(String.class);
+                        String passwordUser = userSnapshot.child("password").getValue(String.class);
 
                         // Hiển thị dữ liệu lên TextView
                         titleName.setText(nameUser);
@@ -126,14 +132,17 @@ public class InfoProfileFragment extends Fragment {
                         pfUsername.setText(usernameUser);
                         pfPassword.setText(passwordUser);
                     }
+                } else {
+                    Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Xử lý lỗi nếu có
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
+//        }
     } //end show data user
 
     private void clickListener() {

@@ -282,7 +282,6 @@ public class LoginFragment extends Fragment {
                     Log.d("key users: ", "No data for key users.");
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Failed to read value.", error.toException());

@@ -14,12 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android_social_media.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class profileFragment extends Fragment {
 
     Button btnInfoProfile;
+    String username;
     public profileFragment() {
         // Required empty public constructor
     }
@@ -41,11 +45,10 @@ public class profileFragment extends Fragment {
         if (bundle != null) {
             //lấy
             String username = bundle.getString("username");
-//            Log.d("tên: ", username);
+            username = bundle.getString("username");
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
         }
-
         return view;
     }
 
@@ -65,6 +68,9 @@ public class profileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",username);
+                infoProfileFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
