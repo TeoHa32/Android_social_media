@@ -30,11 +30,12 @@
 
     <EditText
         android:id="@+id/txtUsername"
-        android:layout_width="320dp"
-        android:layout_height="41dp"
+        android:layout_width="310dp"
+        android:layout_height="56dp"
+        android:textSize="18sp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/textbox"
+        android:background="@drawable/custom_plantext"
         android:ems="10"
         android:hint="Tên đăng nhập"
         android:inputType="text"
@@ -44,13 +45,14 @@
 
     <EditText
         android:id="@+id/txtPassword"
-        android:layout_width="320dp"
-        android:layout_height="41dp"
+        android:layout_width="310dp"
+        android:layout_height="56dp"
+        android:textSize="18sp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Mật khẩu"
-        android:background="@drawable/textbox"
+        android:background="@drawable/custom_plantext"
         android:paddingLeft="20dp"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"

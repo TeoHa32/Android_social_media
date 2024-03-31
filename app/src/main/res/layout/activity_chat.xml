@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chat.ChatActivity">
+
+    <RelativeLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/post"
+            app:civ_border_color="@color/gray"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/profileImage"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@+id/profileImage"
+            android:text="Thu Hà"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="78dp"
+            tools:layout_editor_absoluteY="119dp" />
+
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_marginStart="17dp"
+            android:layout_marginBottom="-26dp"
+            android:layout_toEndOf="@+id/profileImage"
+            android:text="online" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/topLayout" />
+
+    <EditText
+        android:id="@+id/contentChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/custom_plantext"
+        android:paddingLeft="15dp"
+        android:text="Nhập nội dung tin nhắn ..."
+        android:textSize="18dp"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewChat"
+        tools:layout_editor_absoluteX="10dp" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="332dp"
+        android:layout_marginBottom="12dp"
+        android:alpha="0.8"
+        android:src="@drawable/paper_plane_regular"
+        app:layout_constraintBottom_toBottomOf="@+id/contentChat"
+        app:layout_constraintStart_toStartOf="@+id/contentChat" />
+</androidx.constraintlayout.widget.ConstraintLayout>

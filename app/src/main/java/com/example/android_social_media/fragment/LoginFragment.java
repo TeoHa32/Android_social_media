@@ -64,7 +64,7 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        // Khởi tạo GoogleSignInOptions (lỗi)
+        // Khởi tạo GoogleSignInOptions
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -99,6 +99,8 @@ public class LoginFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount acc = task.getResult(ApiException.class);
+                // Xóa cache của Firebase Authentication
+                FirebaseAuth.getInstance().signOut();
                 firebaseAuthWithGoogle(acc);
             } catch (ApiException e) {
                 e.printStackTrace();
@@ -128,9 +130,14 @@ public class LoginFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Email already exists, proceed to profile
-                    navigateToProfile(userId);
-                    Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String username = userSnapshot.child("username").getValue(String.class);
+                        if (username != null) {
+                            navigateToProfile(username);
+                            Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
                 } else {
                     // Email does not exist, create new user profile
                     createUserProfile(email, displayName, userId, databaseReference);
@@ -144,12 +151,16 @@ public class LoginFragment extends Fragment {
         });
     }
 
+
     private void createUserProfile(String email, String displayName, String userId, DatabaseReference databaseReference) {
         String newKey = databaseReference.push().getKey();
+
+        //không lấy userID ra được.
+        Log.d("userID: ", userId);
         String username;
 
-        if (newKey.length() > 10) {
-            username = newKey.substring(0, 10); // Lấy 10 ký tự đầu tiên
+        if (userId.length() > 10) {
+            username = userId.substring(0, 10); // Lấy 10 ký tự đầu tiên
         }else{
             username = newKey;
         }
@@ -252,8 +263,8 @@ public class LoginFragment extends Fragment {
                     for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         // Lấy thông tin tài khoản từ mỗi nút con
                         String dbUsername = userSnapshot.child("username").getValue(String.class);
+//                        Log.d("username: ", dbUsername);
                         String dbPassword = userSnapshot.child("password").getValue(String.class);
-//                        String dbEmail = userSnapshot.child("email").getValue(String.class);
 
                         // Kiểm tra xem username và password có khớp với dữ liệu từ Firebase không
                         if (dbUsername != null && dbPassword != null  && dbUsername.equals(username) && dbPassword.equals(password)) {
