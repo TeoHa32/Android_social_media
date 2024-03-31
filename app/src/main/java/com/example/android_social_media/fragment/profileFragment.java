@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +42,6 @@ public class profileFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            //lấy
-            String username = bundle.getString("username");
             username = bundle.getString("username");
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
@@ -61,7 +58,6 @@ public class profileFragment extends Fragment {
 
     private void init(View view) {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
-
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {

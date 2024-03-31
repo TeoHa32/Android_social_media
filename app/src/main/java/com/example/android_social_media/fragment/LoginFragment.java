@@ -154,9 +154,6 @@ public class LoginFragment extends Fragment {
 
     private void createUserProfile(String email, String displayName, String userId, DatabaseReference databaseReference) {
         String newKey = databaseReference.push().getKey();
-
-        //không lấy userID ra được.
-        Log.d("userID: ", userId);
         String username;
 
         if (userId.length() > 10) {
@@ -263,7 +260,6 @@ public class LoginFragment extends Fragment {
                     for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         // Lấy thông tin tài khoản từ mỗi nút con
                         String dbUsername = userSnapshot.child("username").getValue(String.class);
-//                        Log.d("username: ", dbUsername);
                         String dbPassword = userSnapshot.child("password").getValue(String.class);
 
                         // Kiểm tra xem username và password có khớp với dữ liệu từ Firebase không
