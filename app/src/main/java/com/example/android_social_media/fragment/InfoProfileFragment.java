@@ -51,15 +51,20 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class InfoProfileFragment extends Fragment {
 
     TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword;
     TextView titleName, titleUsername, txtChangeImg;
     Button btnEdit;
-    ImageView imageViewBack, imgProfile;
+    ImageView imageViewBack;
+    CircleImageView imgProfile;
+    ProgressBar progressBar;
 
     String username;
+
 
     public InfoProfileFragment() {
         // Required empty public constructor
@@ -78,6 +83,7 @@ public class InfoProfileFragment extends Fragment {
         init(view);
         showUserData();
         clickListener();
+        getUserInfo();
     }
 
 
@@ -95,6 +101,7 @@ public class InfoProfileFragment extends Fragment {
         imageViewBack = view.findViewById(R.id.imageViewBack);
         imgProfile = view.findViewById(R.id.imgProfile);
         txtChangeImg = view.findViewById(R.id.txtChangeImg);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 
     public void showUserData() {
@@ -173,6 +180,9 @@ public class InfoProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 profileFragment profileFragment = new profileFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",username);
+                profileFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, profileFragment);
@@ -185,10 +195,46 @@ public class InfoProfileFragment extends Fragment {
         txtChangeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ChangeImageFragment changeImageFragment = new ChangeImageFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",username);
+                changeImageFragment.setArguments(bundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, changeImageFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });//end
 
+    }
+    private void getUserInfo() {
+        progressBar.setVisibility(View.VISIBLE);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            username = bundle.getString("username");
+        }
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        Query query = userRef.orderByChild("username").equalTo(username);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    if (userSnapshot.hasChild("profileImage")) {
+                        String image = userSnapshot.child("profileImage").getValue().toString();
+                        Picasso.get().load(image).into(imgProfile);
+                        // Ẩn ProgressBar khi tải hoàn tất
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Lỗi khi truy xuất dữ liệu người dùng", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
 

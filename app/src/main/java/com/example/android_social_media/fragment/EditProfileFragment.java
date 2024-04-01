@@ -150,6 +150,11 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username",usernameUser);
+                infoProfileFragment.setArguments(bundle);
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
@@ -396,6 +401,15 @@ public class EditProfileFragment extends Fragment {
                 }
             });
             usernameUser = newUsername;
+
+            profileFragment profileFragment = new profileFragment();
+            InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("username",usernameUser);
+            profileFragment.setArguments(bundle);
+            infoProfileFragment.setArguments(bundle);
+
+
             return true;
         } else {
             return false;
