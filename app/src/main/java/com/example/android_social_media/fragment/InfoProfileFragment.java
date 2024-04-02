@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.GenericLifecycleObserver;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,4 +238,6 @@ public class InfoProfileFragment extends Fragment {
         });
     }
 }
+
+
 

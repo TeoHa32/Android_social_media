@@ -68,6 +68,7 @@ public class LoginFragment extends Fragment {
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         // Khởi tạo GoogleSignInClient
@@ -116,16 +117,21 @@ public class LoginFragment extends Fragment {
                         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String email = acct.getEmail();
                         String displayName = acct.getDisplayName();
+                        String profileImage = null;
+
+                        if (acct.getPhotoUrl() != null) {
+                            profileImage = acct.getPhotoUrl().toString();
+                        }
 
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-                        checkIfEmailExists(email, displayName, userId, databaseReference);
+                        checkIfEmailExists(email, displayName, userId,profileImage, databaseReference);
                     } else {
                         Toast.makeText(getContext(), "Đăng nhập thất bại!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void checkIfEmailExists(String email, String displayName, String userId, DatabaseReference databaseReference) {
+    private void checkIfEmailExists(String email, String displayName, String userId,String profileImage, DatabaseReference databaseReference) {
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -140,7 +146,7 @@ public class LoginFragment extends Fragment {
                     }
                 } else {
                     // Email does not exist, create new user profile
-                    createUserProfile(email, displayName, userId, databaseReference);
+                    createUserProfile(email, displayName, userId, profileImage, databaseReference);
                 }
             }
 
@@ -152,13 +158,13 @@ public class LoginFragment extends Fragment {
     }
 
 
-    private void createUserProfile(String email, String displayName, String userId, DatabaseReference databaseReference) {
+    private void createUserProfile(String email, String displayName, String userId, String profileImage, DatabaseReference databaseReference) {
         String newKey = databaseReference.push().getKey();
         String username;
 
         if (userId.length() > 10) {
-            username = userId.substring(0, 10); // Lấy 10 ký tự đầu tiên
-        }else{
+            username = userId.substring(0, 10); // Take the first 10 characters
+        } else {
             username = newKey;
         }
         HashMap<String, Object> userData = new HashMap<>();
@@ -169,6 +175,7 @@ public class LoginFragment extends Fragment {
         userData.put("name", displayName);
         userData.put("password", "123456");
         userData.put("phoneNumber", "");
+        userData.put("profileImage", profileImage);
         userData.put("username", username);
 
         // Save new user profile to Firebase
@@ -179,9 +186,12 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the write operation
                     Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("FirebaseError", "Error writing user profile to Firebase", e);
                 });
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

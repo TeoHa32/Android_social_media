@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.android_social_media.fragment.LoginFragment;
 import com.example.android_social_media.fragment.SignUpFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -90,12 +91,13 @@ public class MainActivity extends AppCompatActivity {
 //        rcv_post.setLayoutManager(linearLayoutManager1);
 //        postAdapter.setData(getListPost());
 //        rcv_post.setAdapter(postAdapter);
-        //Khởi tạo ban đầu sẽ ở trang đăng ký.
 
-        SignUpFragment signUpFragment = new SignUpFragment();
+
+        //Khởi tạo ban đầu sẽ ở trang đăng nhập.
+        LoginFragment loginFragment = new LoginFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, signUpFragment);
+        fragmentTransaction.replace(R.id.fragment_container, loginFragment);
         fragmentTransaction.addToBackStack(null); // Add to back stack if needed
         fragmentTransaction.commit();
         //đổi màu
