@@ -243,33 +243,34 @@
             android:padding="8dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="65dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="80dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/house_solid" />
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="65dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="80dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/magnifying_glass_solid" />
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="65dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="70dp"
                 android:layout_marginBottom="10dp"
 
                 android:src="@drawable/square_plus_regular" />
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/user_regular" />
@@ -277,6 +278,17 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/txtUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:text="TextView"
+
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
