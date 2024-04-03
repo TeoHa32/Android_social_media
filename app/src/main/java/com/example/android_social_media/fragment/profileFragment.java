@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +24,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class profileFragment extends Fragment {
 
     Button btnInfoProfile;
     String username;
+    String url;
     public profileFragment() {
         // Required empty public constructor
     }
@@ -42,14 +45,17 @@ public class profileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        ImageView img = view.findViewById(R.id.imageView5);
         TextView txtUsername = view.findViewById(R.id.txtUsername);
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
+            url = bundle.getString("img");
             username = bundle.getString("username");
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
+            Picasso.get().load(url).into(img);
         }
         return view;
     }

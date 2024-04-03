@@ -78,11 +78,23 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-//    Điều hướng đến trang cá nhân với username đã đăng nhập
+    //    Điều hướng đến trang cá nhân với username đã đăng nhập
+    public void navigateToProfile(String username,String img){
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        bundle.putString("img",img);
+        //Nếu đăng nhập thành công sẽ chuyển đến trang cá nhân
+        profileFragment profile = new profileFragment();
+        profile.setArguments(bundle); // Gán Bundle cho Fragment
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.replace(R.id.fragment_container, profile);
+        trans.addToBackStack(null);
+        trans.commit();
+    }
     public void navigateToProfile(String username){
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
-
         //Nếu đăng nhập thành công sẽ chuyển đến trang cá nhân
         profileFragment profile = new profileFragment();
         profile.setArguments(bundle); // Gán Bundle cho Fragment
@@ -242,12 +254,12 @@ public class LoginFragment extends Fragment {
         });
 
         btnSignInGG.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               Intent intent = client.getSignInIntent();
-               startActivityForResult(intent, 1234);
-           }
-       });
+            @Override
+            public void onClick(View v) {
+                Intent intent = client.getSignInIntent();
+                startActivityForResult(intent, 1234);
+            }
+        });
         txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,8 +286,9 @@ public class LoginFragment extends Fragment {
 
                         // Kiểm tra xem username và password có khớp với dữ liệu từ Firebase không
                         if (dbUsername != null && dbPassword != null  && dbUsername.equals(username) && dbPassword.equals(password)) {
+                            String img = userSnapshot.child("profileImage").getValue(String.class);
 
-                            navigateToProfile(dbUsername);
+                            navigateToProfile(dbUsername,img);
                             Toast.makeText(getContext(),"Đăng nhập thành công!",Toast.LENGTH_LONG).show();
                             return;
                         }
