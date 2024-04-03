@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
@@ -149,6 +150,11 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username",usernameUser);
+                infoProfileFragment.setArguments(bundle);
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
@@ -211,29 +217,34 @@ public class EditProfileFragment extends Fragment {
         btnXacNhan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String enteredPassword  = edtPasswordNow.getText().toString();
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
-                    String uid = currentUser.getUid();
-                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("password");
-                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String currentPassword = snapshot.getValue(String.class);
-                            if (enteredPassword.equals(currentPassword)){
-                                edtPassword.setText(edtPasswordNow.getText());
-                                edtPassword.setTransformationMethod(null); // Hiển thị mật khẩu không che
-                                edtPassword.setFocusable(true); // Cho phép người dùng nhập vào edtPassword
-                                edtPassword.setFocusableInTouchMode(true);
-                                isPasswordConfirmed = true;
-                                dialog.dismiss();
-                                Toast.makeText(requireContext(), "Mật khẩu nhập chính xác!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                // Hiển thị thông báo lỗi hoặc thực hiện các hành động phù hợp
-                                Toast.makeText(requireContext(), "Mật khẩu không chính xác!", Toast.LENGTH_SHORT).show();
-                                edtPasswordNow.getText().clear();
+                String enteredPassword = edtPasswordNow.getText().toString();
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+                Query query = userRef.orderByChild("username").equalTo(usernameUser);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                String currentPassword = userSnapshot.child("password").getValue(String.class);
+                                if (enteredPassword.equals(currentPassword)) {
+                                    edtPassword.setText(edtPasswordNow.getText());
+                                    edtPassword.setTransformationMethod(null); // Hiển thị mật khẩu không che
+                                    edtPassword.setFocusable(true); // Cho phép người dùng nhập vào edtPassword
+                                    edtPassword.setFocusableInTouchMode(true);
+                                    isPasswordConfirmed = true;
+                                    dialog.dismiss();
+                                    Toast.makeText(requireContext(), "Mật khẩu nhập chính xác!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Hiển thị thông báo lỗi hoặc thực hiện các hành động phù hợp
+                                    Toast.makeText(requireContext(), "Mật khẩu không chính xác!", Toast.LENGTH_SHORT).show();
+                                    edtPasswordNow.getText().clear();
+                                }
                             }
+                        } else {
+                            // Hiển thị thông báo lỗi hoặc thực hiện các hành động phù hợp
+                            Toast.makeText(requireContext(), "Người dùng không tồn tại!", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -241,7 +252,6 @@ public class EditProfileFragment extends Fragment {
                         }
                     });
                 }
-            }
         });
         dialog.show();
     }
@@ -391,6 +401,15 @@ public class EditProfileFragment extends Fragment {
                 }
             });
             usernameUser = newUsername;
+
+            profileFragment profileFragment = new profileFragment();
+            InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("username",usernameUser);
+            profileFragment.setArguments(bundle);
+            infoProfileFragment.setArguments(bundle);
+
+
             return true;
         } else {
             return false;

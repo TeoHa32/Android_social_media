@@ -6,17 +6,21 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".fragment.EditProfileFragment">
+
     <ImageView
         android:id="@+id/imageViewBack"
         android:layout_width="61dp"
         android:layout_height="39dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_arrow" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
@@ -46,7 +50,7 @@
             <EditText
                 android:id="@+id/edtName"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_person"
@@ -100,21 +104,21 @@
             <EditText
                 android:id="@+id/edtDob"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_calendar"
                 android:drawablePadding="8dp"
                 android:ems="10"
+                android:focusable="false"
                 android:hint="Ngày sinh"
                 android:inputType="text"
-                android:focusable="false"
                 android:padding="8dp" />
 
             <EditText
                 android:id="@+id/edtPhone"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_phone"
@@ -128,22 +132,21 @@
             <EditText
                 android:id="@+id/edtMail"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_mail"
                 android:drawablePadding="8dp"
                 android:ems="10"
-                android:hint="Gmail"
                 android:enabled="false"
+                android:hint="Gmail"
                 android:inputType="textEmailAddress"
-                android:padding="8dp"
-                />
+                android:padding="8dp" />
 
             <EditText
                 android:id="@+id/edtUsername"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_username"
@@ -157,15 +160,15 @@
             <EditText
                 android:id="@+id/edtPassword"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_lock"
                 android:drawablePadding="8dp"
                 android:ems="10"
+                android:focusable="false"
                 android:hint="Mật khẩu"
                 android:inputType="textPassword"
-                android:focusable="false"
                 android:padding="8dp" />
 
             <Button

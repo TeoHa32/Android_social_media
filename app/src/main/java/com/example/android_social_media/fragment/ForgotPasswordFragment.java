@@ -102,7 +102,6 @@ public class ForgotPasswordFragment extends Fragment {
                 usersRef.orderByChild("email").equalTo(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                             if (dataSnapshot.exists()) {
                                 //Sang trang SendOTPFragment
                                 SendOTPFragment sendOTPFragment = new SendOTPFragment();

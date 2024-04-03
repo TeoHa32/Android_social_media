@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.GenericLifecycleObserver;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -50,13 +52,20 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class InfoProfileFragment extends Fragment {
 
     TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword;
     TextView titleName, titleUsername, txtChangeImg;
     Button btnEdit;
-    ImageView imageViewBack, imgProfile;
+    ImageView imageViewBack;
+    CircleImageView imgProfile;
+    ProgressBar progressBar;
+
+    String username;
+
 
     public InfoProfileFragment() {
         // Required empty public constructor
@@ -75,6 +84,7 @@ public class InfoProfileFragment extends Fragment {
         init(view);
         showUserData();
         clickListener();
+        getUserInfo();
     }
 
 
@@ -92,24 +102,28 @@ public class InfoProfileFragment extends Fragment {
         imageViewBack = view.findViewById(R.id.imageViewBack);
         imgProfile = view.findViewById(R.id.imgProfile);
         txtChangeImg = view.findViewById(R.id.txtChangeImg);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 
     public void showUserData() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
-            userRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        String nameUser = dataSnapshot.child("name").getValue(String.class);
-                        String genderUser = dataSnapshot.child("gender").getValue(String.class);
-                        String dobUser = dataSnapshot.child("dob").getValue(String.class);
-                        String phoneUser = dataSnapshot.child("phoneNumber").getValue(String.class);
-                        String gmailUser = dataSnapshot.child("email").getValue(String.class);
-                        String usernameUser = dataSnapshot.child("username").getValue(String.class);
-                        String passwordUser = dataSnapshot.child("password").getValue(String.class);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            username = bundle.getString("username");
+        }
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        Query query = userRef.orderByChild("username").equalTo(username);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String nameUser = userSnapshot.child("name").getValue(String.class);
+                        String genderUser = userSnapshot.child("gender").getValue(String.class);
+                        String dobUser = userSnapshot.child("dob").getValue(String.class);
+                        String phoneUser = userSnapshot.child("phoneNumber").getValue(String.class);
+                        String gmailUser = userSnapshot.child("email").getValue(String.class);
+                        String usernameUser = userSnapshot.child("username").getValue(String.class);
+                        String passwordUser = userSnapshot.child("password").getValue(String.class);
 
                         // Hiển thị dữ liệu lên TextView
                         titleName.setText(nameUser);
@@ -126,14 +140,17 @@ public class InfoProfileFragment extends Fragment {
                         pfUsername.setText(usernameUser);
                         pfPassword.setText(passwordUser);
                     }
+                } else {
+                    Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Xử lý lỗi nếu có
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
+//        }
     } //end show data user
 
     private void clickListener() {
@@ -164,6 +181,9 @@ public class InfoProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 profileFragment profileFragment = new profileFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",username);
+                profileFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, profileFragment);
@@ -176,10 +196,48 @@ public class InfoProfileFragment extends Fragment {
         txtChangeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ChangeImageFragment changeImageFragment = new ChangeImageFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",username);
+                changeImageFragment.setArguments(bundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, changeImageFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });//end
 
     }
+    private void getUserInfo() {
+        progressBar.setVisibility(View.VISIBLE);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            username = bundle.getString("username");
+        }
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        Query query = userRef.orderByChild("username").equalTo(username);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    if (userSnapshot.hasChild("profileImage")) {
+                        String image = userSnapshot.child("profileImage").getValue().toString();
+                        Picasso.get().load(image).into(imgProfile);
+                        // Ẩn ProgressBar khi tải hoàn tất
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Lỗi khi truy xuất dữ liệu người dùng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
+
+
 

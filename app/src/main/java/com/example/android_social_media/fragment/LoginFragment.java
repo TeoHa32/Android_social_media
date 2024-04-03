@@ -64,10 +64,11 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        // Khởi tạo GoogleSignInOptions (lỗi)
+        // Khởi tạo GoogleSignInOptions
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         // Khởi tạo GoogleSignInClient
@@ -99,6 +100,8 @@ public class LoginFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount acc = task.getResult(ApiException.class);
+                // Xóa cache của Firebase Authentication
+                FirebaseAuth.getInstance().signOut();
                 firebaseAuthWithGoogle(acc);
             } catch (ApiException e) {
                 e.printStackTrace();
@@ -114,26 +117,36 @@ public class LoginFragment extends Fragment {
                         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String email = acct.getEmail();
                         String displayName = acct.getDisplayName();
+                        String profileImage = null;
+
+                        if (acct.getPhotoUrl() != null) {
+                            profileImage = acct.getPhotoUrl().toString();
+                        }
 
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-                        checkIfEmailExists(email, displayName, userId, databaseReference);
+                        checkIfEmailExists(email, displayName, userId,profileImage, databaseReference);
                     } else {
                         Toast.makeText(getContext(), "Đăng nhập thất bại!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void checkIfEmailExists(String email, String displayName, String userId, DatabaseReference databaseReference) {
+    private void checkIfEmailExists(String email, String displayName, String userId,String profileImage, DatabaseReference databaseReference) {
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Email already exists, proceed to profile
-                    navigateToProfile(userId);
-                    Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String username = userSnapshot.child("username").getValue(String.class);
+                        if (username != null) {
+                            navigateToProfile(username);
+                            Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
                 } else {
                     // Email does not exist, create new user profile
-                    createUserProfile(email, displayName, userId, databaseReference);
+                    createUserProfile(email, displayName, userId, profileImage, databaseReference);
                 }
             }
 
@@ -144,13 +157,14 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void createUserProfile(String email, String displayName, String userId, DatabaseReference databaseReference) {
+
+    private void createUserProfile(String email, String displayName, String userId, String profileImage, DatabaseReference databaseReference) {
         String newKey = databaseReference.push().getKey();
         String username;
 
-        if (newKey.length() > 10) {
-            username = newKey.substring(0, 10); // Lấy 10 ký tự đầu tiên
-        }else{
+        if (userId.length() > 10) {
+            username = userId.substring(0, 10); // Take the first 10 characters
+        } else {
             username = newKey;
         }
         HashMap<String, Object> userData = new HashMap<>();
@@ -161,6 +175,7 @@ public class LoginFragment extends Fragment {
         userData.put("name", displayName);
         userData.put("password", "123456");
         userData.put("phoneNumber", "");
+        userData.put("profileImage", profileImage);
         userData.put("username", username);
 
         // Save new user profile to Firebase
@@ -171,9 +186,12 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the write operation
                     Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("FirebaseError", "Error writing user profile to Firebase", e);
                 });
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -253,7 +271,6 @@ public class LoginFragment extends Fragment {
                         // Lấy thông tin tài khoản từ mỗi nút con
                         String dbUsername = userSnapshot.child("username").getValue(String.class);
                         String dbPassword = userSnapshot.child("password").getValue(String.class);
-//                        String dbEmail = userSnapshot.child("email").getValue(String.class);
 
                         // Kiểm tra xem username và password có khớp với dữ liệu từ Firebase không
                         if (dbUsername != null && dbPassword != null  && dbUsername.equals(username) && dbPassword.equals(password)) {
