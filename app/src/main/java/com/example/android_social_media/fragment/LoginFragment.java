@@ -152,6 +152,7 @@ public class LoginFragment extends Fragment {
                         String username = userSnapshot.child("username").getValue(String.class);
                         if (username != null) {
                             navigateToProfile(username, img);
+                            navigateToProfile(username);
                             Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                             return;
                         }
