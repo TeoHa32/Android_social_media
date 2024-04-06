@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 //        rcv.setAdapter(userAdapter);
 
         // Write a message to the database
-//        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-//        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        String key = "message";
-//        Map<String, Object> updates = new HashMap<>();
-//        updates.put("ID", id);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String key = "Messages";
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("ID", id);
 //        updates.put("message", "Test Message");
 //        // Get the current time
 //        LocalTime currentTime = LocalTime.now();
@@ -68,16 +68,16 @@ public class MainActivity extends AppCompatActivity {
 //        UUID uuid = UUID.randomUUID();
 //        updates.put("senderID", uuid.toString());
 //
-//        db.child(key).child(id).setValue(updates, new DatabaseReference.CompletionListener() {
-//            @Override
-//            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-//                if(error != null){
-//                    Toast.makeText(getApplicationContext(),"Không update được dữ liệu!", Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "Đăng ký thành công!", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
+        db.child(key).child(id).setValue(updates, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(error != null){
+                    Toast.makeText(getApplicationContext(),"Không update được dữ liệu!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Đăng ký thành công!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
 //        rcv = findViewById(R.id.rcv_id);
 //        userAdapter = new UserAdapter(this);

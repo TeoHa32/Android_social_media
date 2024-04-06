@@ -136,14 +136,14 @@ public class LoginFragment extends Fragment {
                         }
 
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-                        checkIfEmailExists(email, displayName, userId,profileImage, databaseReference);
+                        checkIfEmailExists(email, displayName, userId,profileImage, databaseReference,profileImage);
                     } else {
                         Toast.makeText(getContext(), "Đăng nhập thất bại!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void checkIfEmailExists(String email, String displayName, String userId,String profileImage, DatabaseReference databaseReference) {
+    private void checkIfEmailExists(String email, String displayName, String userId,String profileImage, DatabaseReference databaseReference, String img) {
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -151,7 +151,7 @@ public class LoginFragment extends Fragment {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         String username = userSnapshot.child("username").getValue(String.class);
                         if (username != null) {
-                            navigateToProfile(username);
+                            navigateToProfile(username, img);
                             Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                             return;
                         }
