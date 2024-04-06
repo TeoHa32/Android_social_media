@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText"
+    tools:context=".chat.ChatActivity">
+    :
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="massage"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/searchET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20px"
+        android:background="@drawable/text_box_edit"
+        android:drawableStart="@drawable/magnifying_glass_solid"
+        android:drawablePadding="10dp"
+        android:hint="nhập nội dung tìm kiếm"
+        tools:ignore="UnusedAttribute"
+        android:layout_margin="10dp"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerView"
+        />
+
+</LinearLayout>
