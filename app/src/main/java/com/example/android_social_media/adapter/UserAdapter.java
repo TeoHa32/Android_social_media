@@ -1,4 +1,4 @@
-package com.example.android_social_media;
+package com.example.android_social_media.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.android_social_media.R;
+import com.example.android_social_media.model.User;
 
 import java.util.List;
 

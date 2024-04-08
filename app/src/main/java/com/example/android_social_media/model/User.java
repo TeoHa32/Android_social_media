@@ -1,4 +1,4 @@
-package com.example.android_social_media;
+package com.example.android_social_media.model;
 
 public class User {
     private String name;

@@ -1,4 +1,4 @@
-package com.example.android_social_media;
+package com.example.android_social_media.model;
 
 public class post {
     private int id_userImg_post;

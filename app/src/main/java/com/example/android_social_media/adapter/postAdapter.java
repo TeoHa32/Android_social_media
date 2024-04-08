@@ -1,7 +1,6 @@
-package com.example.android_social_media;
+package com.example.android_social_media.adapter;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.android_social_media.R;
+import com.example.android_social_media.model.post;
 
 import java.util.List;
 
