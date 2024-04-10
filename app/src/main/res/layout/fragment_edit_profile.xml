@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -173,13 +179,11 @@
 
             <Button
                 android:id="@+id/btnSave"
-                android:layout_width="match_parent"
+                android:layout_width="303dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/custom_button"
                 android:text="Lưu"
-                android:textSize="18dp"
-                app:backgroundTint="@null" />
+                android:textSize="18dp" />
 
 
         </LinearLayout>
@@ -187,3 +191,4 @@
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
