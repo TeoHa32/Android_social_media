@@ -1,5 +1,6 @@
 package com.example.android_social_media.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,22 +9,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android_social_media.R;
+import com.example.android_social_media.chat.ChatUsersActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class profileFragment extends Fragment {
@@ -31,6 +28,7 @@ public class profileFragment extends Fragment {
     Button btnInfoProfile;
     String username;
     String url;
+    ImageView btnHome;
     public profileFragment() {
         // Required empty public constructor
     }
@@ -45,7 +43,7 @@ public class profileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ImageView img = view.findViewById(R.id.imageView5);
+        ImageView viewImg = view.findViewById(R.id.imageView5);
         TextView txtUsername = view.findViewById(R.id.txtUsername);
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
 
@@ -55,7 +53,15 @@ public class profileFragment extends Fragment {
             username = bundle.getString("username");
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
-            Picasso.get().load(url).into(img);
+            if(url != null && !url.isEmpty()){
+                  Log.d("đường dẫn avt:1 ", url);
+
+                Picasso.get().load(url).into(viewImg);
+            }
+            else{
+                //Log.d("co vao day ko", url);
+                viewImg.setImageResource(R.drawable.ic_profile);
+            }
         }
         return view;
     }
@@ -69,6 +75,8 @@ public class profileFragment extends Fragment {
 
     private void init(View view) {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
+        btnHome = view.findViewById(R.id.btnHome);
+
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +90,18 @@ public class profileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
                 fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                homepageFragment homepageFragment = new homepageFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, homepageFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
                 fragmentTransaction.commit();
             }
         });

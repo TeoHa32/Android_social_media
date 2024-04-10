@@ -49,11 +49,9 @@
             android:id="@+id/btnSave"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/custom_button"
-            app:backgroundTint="@null"
             android:layout_margin="7dp"
-            android:text="Lưu ảnh đại diện"/>
+            android:layout_weight="1"
+            android:text="Lưu ảnh đại diện" />
 
     </LinearLayout>
 

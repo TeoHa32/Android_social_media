@@ -89,6 +89,8 @@ public class InfoProfileFragment extends Fragment {
 
 
     private void init(View view) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d("người dùng hiện tại:", user.getUid());
         pfName = view.findViewById(R.id.pfName);
         pfGender = view.findViewById(R.id.pfGender);
         pfDob = view.findViewById(R.id.pfDob);
@@ -210,7 +212,7 @@ public class InfoProfileFragment extends Fragment {
 
     }
     private void getUserInfo() {
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         Bundle bundle = getArguments();
         if (bundle != null) {
             username = bundle.getString("username");
@@ -223,11 +225,33 @@ public class InfoProfileFragment extends Fragment {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     if (userSnapshot.hasChild("profileImage")) {
-                        String image = userSnapshot.child("profileImage").getValue().toString();
-                        Picasso.get().load(image).into(imgProfile);
+<<<<<<< HEAD
+                        String image = userSnapshot.child("profileImage").getValue(String.class);
+                        if (image != null && !image.isEmpty()) {
+                            Picasso.get().load(image).into(imgProfile);
+                        } else {
+                            imgProfile.setImageResource(R.drawable.ic_profile);
+                        }
                         // Ẩn ProgressBar khi tải hoàn tất
                         progressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        imgProfile.setImageResource(R.drawable.ic_profile);
+                        progressBar.setVisibility(View.INVISIBLE);
+=======
+
+                        String image = userSnapshot.child("profileImage").getValue().toString();
+                        if (image != null && !image.isEmpty()) {
+                            Picasso.get().load(image).into(imgProfile);
+                            // Ẩn ProgressBar khi tải hoàn tất
+//                            progressBar.setVisibility(View.INVISIBLE);
+
+                        } else {
+                            //Ảnh đại diện mặc định khi user không có ảnh đại diện
+                            imgProfile.setImageResource(R.drawable.ic_profile);
+                        }
+>>>>>>> 1e96404328cc1b611b88357e45449803b86a1d01
                     }
+
                 }
             }
 
@@ -238,6 +262,3 @@ public class InfoProfileFragment extends Fragment {
         });
     }
 }
-
-
-

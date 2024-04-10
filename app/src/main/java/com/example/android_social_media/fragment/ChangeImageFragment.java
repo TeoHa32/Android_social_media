@@ -224,12 +224,16 @@ public class ChangeImageFragment extends Fragment {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     if (userSnapshot.hasChild("profileImage")) {
-                        String image = userSnapshot.child("profileImage").getValue().toString();
-                        Picasso.get().load(image).into(imgProfile);
+                        String image = userSnapshot.child("profileImage").getValue(String.class);
+                        if (image != null && !image.isEmpty()) {
+                            Picasso.get().load(image).into(imgProfile);
+                        } else {
+                            //Ảnh đại diện mặc định khi user không có ảnh đại diện
+                            imgProfile.setImageResource(R.drawable.ic_profile);
+                        }
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), "Lỗi khi truy xuất dữ liệu người dùng", Toast.LENGTH_SHORT).show();
