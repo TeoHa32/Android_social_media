@@ -1,6 +1,7 @@
 package com.example.android_social_media;
 
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,20 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.fragment.LoginFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView rcv;
-    private UserAdapter userAdapter;
-    private RecyclerView rcv_post;
-    private postAdapter postAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,47 +38,33 @@ public class MainActivity extends AppCompatActivity {
 //        rcv.setAdapter(userAdapter);
 
         // Write a message to the database
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String key = "Messages";
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("ID", id);
-//        updates.put("message", "Test Message");
-//        // Get the current time
-//        LocalTime currentTime = LocalTime.now();
 //
-//        // Define a custom format
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+//        // Lấy ID của người dùng hiện tại
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+//        String currentUserID = currentUser != null ? currentUser.getUid() : null;
+//        DatabaseReference messageRef = rootRef.child("Message").push();
+//        String messageID = messageRef.getKey(); //
 //
-//        // Format the current time
-//        String formattedTime = currentTime.format(formatter);
-//        updates.put("time",formattedTime);
-//        UUID uuid = UUID.randomUUID();
-//        updates.put("senderID", uuid.toString());
 //
-        db.child(key).child(id).setValue(updates, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                if(error != null){
-                    Toast.makeText(getApplicationContext(),"Không update được dữ liệu!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Đăng ký thành công!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+//        // Tạo một hashmap để đại diện cho dữ liệu tin nhắn
+//        HashMap<String, Object> messageData = new HashMap<>();
+//        messageData.put("id", messageID);
+//        messageData.put("message", "Test");
+//        messageData.put("time", "02:40:00");
+//        messageData.put("senderID", "ghuiijko");
+//
+//        // Tạo một hashmap để đại diện cho dữ liệu của user
+//        HashMap<String, Object> userData = new HashMap<>();
+//        userData.put("id", currentUserID);
+//        userData.put("uid", Arrays.asList("asdf", "sdfgh"));
+//        userData.put("time", "02:50:00");
+//        userData.put("lastMessage", "final");
+//        userData.put("message", messageData);
+//
+//        // Đẩy dữ liệu của user lên Firebase Realtime Database
+//        rootRef.child("Messages").child(messageID).setValue(userData);
 
-//        rcv = findViewById(R.id.rcv_id);
-//        userAdapter = new UserAdapter(this);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false);
-//        rcv.setLayoutManager(linearLayoutManager);
-//        userAdapter.setData(getListUser());
-//        rcv.setAdapter(userAdapter);
-//        rcv_post = findViewById(R.id.rcv_post);
-//        postAdapter = new postAdapter(this);
-//        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this, RecyclerView.VERTICAL,false);
-//        rcv_post.setLayoutManager(linearLayoutManager1);
-//        postAdapter.setData(getListPost());
-//        rcv_post.setAdapter(postAdapter);
 
 
         //Khởi tạo ban đầu sẽ ở trang đăng nhập.
@@ -91,24 +76,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
         //đổi màu
         getWindow().setStatusBarColor(getResources().getColor(R.color.gray));
-    }
-    public List<User> getListUser(){
-        List<User> list = new ArrayList<>();
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        list.add(new User("ha",R.drawable.ic_launcher_background));
-        return list;
-    }
-    public List<post> getListPost(){
-        List<post> list = new ArrayList<>();
-        list.add(new post(R.drawable.ic_launcher_background, R.drawable.post_mew, "ha",R.drawable.heart,R.drawable.comment, R.drawable.share));
-        list.add(new post(R.drawable.ic_launcher_background, R.drawable.post_mew, "Trinh",R.drawable.heart,R.drawable.comment, R.drawable.share));
-        list.add(new post(R.drawable.ic_launcher_background, R.drawable.post_mew, "ha",R.drawable.heart,R.drawable.comment, R.drawable.share));
-        return list;
     }
 
 }

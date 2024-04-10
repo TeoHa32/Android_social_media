@@ -1,7 +1,10 @@
 package com.example.android_social_media.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.UserAdapter;
 import com.example.android_social_media.adapter.postAdapter;
+import com.example.android_social_media.chat.ChatUsersActivity;
 import com.example.android_social_media.model.User;
 import com.example.android_social_media.model.post;
 
@@ -24,42 +29,12 @@ public class homepageFragment extends Fragment {
     private RecyclerView rcv_post;
     private com.example.android_social_media.adapter.postAdapter postAdapter;
 
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
+    ImageView btnChat;
 
     public homepageFragment() {
         // Required empty public constructor
     }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment homepageFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static homepageFragment newInstance(String param1, String param2) {
-//        homepageFragment fragment = new homepageFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +54,28 @@ public class homepageFragment extends Fragment {
         rcv_post.setAdapter(postAdapter);
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+        clickListener();
+    }
+
+    public void init(View view){
+        btnChat = view.findViewById(R.id.btnChat);
+    }
+
+    public void clickListener(){
+        btnChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChatUsersActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     public List<User> getListUser(){
         List<User> list = new ArrayList<>();
         list.add(new User("ha",R.drawable.ic_launcher_background));

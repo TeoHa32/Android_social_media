@@ -89,6 +89,8 @@ public class InfoProfileFragment extends Fragment {
 
 
     private void init(View view) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d("người dùng hiện tại:", user.getUid());
         pfName = view.findViewById(R.id.pfName);
         pfGender = view.findViewById(R.id.pfGender);
         pfDob = view.findViewById(R.id.pfDob);
@@ -223,9 +225,16 @@ public class InfoProfileFragment extends Fragment {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     if (userSnapshot.hasChild("profileImage")) {
-                        String image = userSnapshot.child("profileImage").getValue().toString();
-                        Picasso.get().load(image).into(imgProfile);
+                        String image = userSnapshot.child("profileImage").getValue(String.class);
+                        if (image != null && !image.isEmpty()) {
+                            Picasso.get().load(image).into(imgProfile);
+                        } else {
+                            imgProfile.setImageResource(R.drawable.ic_profile);
+                        }
                         // Ẩn ProgressBar khi tải hoàn tất
+                        progressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        imgProfile.setImageResource(R.drawable.ic_profile);
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -238,6 +247,3 @@ public class InfoProfileFragment extends Fragment {
         });
     }
 }
-
-
-
