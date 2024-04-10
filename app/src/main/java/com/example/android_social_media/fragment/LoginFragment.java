@@ -43,7 +43,6 @@ import java.util.HashMap;
 
 
 public class LoginFragment extends Fragment {
-
     EditText txtUsername, txtPassword;
     TextView txtSignUp, txtForgotPassword;
     Button btnLogin;
@@ -274,7 +273,6 @@ public class LoginFragment extends Fragment {
             }
         });
     }
-
     public void checkAcc(String username, String password){
         db.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

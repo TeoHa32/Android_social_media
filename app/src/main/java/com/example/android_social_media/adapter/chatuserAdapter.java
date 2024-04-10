@@ -24,7 +24,6 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
         this.context = context;
         this.list = list;
     }
-
     @NonNull
     @Override
     public ChatUserHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,7 +31,6 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
 
         return new ChatUserHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ChatUserHolder holder, int position) {
         //fetchImageUrl(list.get(position));
@@ -55,7 +53,6 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
             time = itemView.findViewById(R.id.timeTV);
             count = itemView.findViewById(R.id.messageCountTV);
             name = itemView.findViewById(R.id.nameTV);
-
         }
     }
 }

@@ -90,7 +90,6 @@ public class ChangeImageFragment extends Fragment {
         btnChange = view.findViewById(R.id.btnChange);
         btnClose = view.findViewById(R.id.btnClose);
         btnSave = view.findViewById(R.id.btnSave);
-
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
         storageReference = FirebaseStorage.getInstance().getReference().child("imgProfile");
 

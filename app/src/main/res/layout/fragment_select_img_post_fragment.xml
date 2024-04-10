@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-
-
     <LinearLayout
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
@@ -16,13 +14,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:background="@drawable/xmark_solid" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +30,6 @@
 
 
         </TextView>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,14 +37,23 @@
             android:textColor="#4780EF"
             android:textSize="30dp" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/img_select_post"
+    <Button
+        android:id="@+id/btn_select_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/img_1"
+        android:src="@color/blue"
+        android:text="Thêm ảnh"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_post"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

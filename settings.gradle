@@ -8,10 +8,12 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+       google()
         mavenCentral()
+        jcenter()
+        maven {url "https://jitpack.io"}
     }
 }
-
 rootProject.name = "Android_social_media"
 include(":app")
+

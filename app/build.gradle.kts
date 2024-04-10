@@ -60,4 +60,9 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation ("io.github.ParkSangGwon:tedimagepicker:1.5.0")
+    implementation ("pub.devrel:easypermissions:3.0.0")
+    implementation ("com.droidninja:filepicker:2.2.5")
+    implementation ("com.github.bumptech.glide:glide:4.13.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
 }
