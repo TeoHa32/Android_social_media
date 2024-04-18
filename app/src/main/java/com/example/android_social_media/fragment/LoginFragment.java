@@ -1,5 +1,7 @@
 package com.example.android_social_media.fragment;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -30,6 +32,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +54,7 @@ public class LoginFragment extends Fragment {
 
     // Đăng nhập bằng Google
     private GoogleSignInClient client;
+    String key = "";
 
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
@@ -81,6 +86,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        checkTokenExpiration();
         init(view);
         clickListener();
     }
@@ -94,24 +100,14 @@ public class LoginFragment extends Fragment {
         txtForgotPassword = view.findViewById(R.id.txtForgotPassword);
     }
 
-    public void navigateToProfile(String username){
-        Bundle bundle = new Bundle();
-        bundle.putString("username", username);
-        //Nếu đăng nhập thành công sẽ chuyển đến trang cá nhân
-        profileFragment profile = new profileFragment();
-        profile.setArguments(bundle); // Gán Bundle cho Fragment
-        FragmentManager manager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.replace(R.id.fragment_container, profile);
-        trans.addToBackStack(null);
-        trans.commit();
-    }
-
     // Điều hướng đến trang cá nhân với username và hình ảnh đã đăng nhập
     public void navigateToProfile(String username, String img) {
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
         bundle.putString("img", img);
+        if(key != null){
+            bundle.putString("key", key);
+        }
         // Chuyển đến trang cá nhân
         profileFragment profile = new profileFragment();
         profile.setArguments(bundle); // Gán Bundle cho Fragment
@@ -140,22 +136,29 @@ public class LoginFragment extends Fragment {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        FirebaseAuth.getInstance().signInWithCredential(credential)
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        String email = acct.getEmail();
-                        String displayName = acct.getDisplayName();
-                        String profileImage = null;
+                        // Sign in success, update UI with the signed-in user's information
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            String userId = user.getUid();
+                            String email = acct.getEmail();
+                            String displayName = acct.getDisplayName();
+                            String profileImage = acct.getPhotoUrl() != null ? acct.getPhotoUrl().toString() : null;
 
-                        if (acct.getPhotoUrl() != null) {
-                            profileImage = acct.getPhotoUrl().toString();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+                            checkIfEmailExists(email, displayName, userId, profileImage, databaseReference);
                         }
-
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-                        checkIfEmailExists(email, displayName, userId,profileImage, databaseReference);
                     } else {
-                        Toast.makeText(getContext(), "Đăng nhập thất bại!", Toast.LENGTH_LONG).show();
+                        // If sign in fails, display a message to the user.
+//                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+//                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+//                            Toast.makeText(getContext(), "The supplied auth credential is incorrect or malformed.", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+//                        }
                     }
                 });
     }
@@ -170,13 +173,16 @@ public class LoginFragment extends Fragment {
                         String username = userSnapshot.child("username").getValue(String.class);
                         String password = userSnapshot.child("password").getValue(String.class);
                         if (username != null) {
-                            signInWithEmailPassword(username,password);
+                            signInWithEmailPassword(email,password);
                             navigateToProfile(username,profileImage);
+                            Log.d("có vào không?", "không biết");
                             Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
                 } else {
+                    String newUserId = databaseReference.push().getKey();
+                    Log.d("UID người dùng: ", newUserId);
                     // Email does not exist, create new user profile
                     createUserProfile(email, displayName, userId, profileImage, databaseReference);
                 }
@@ -190,6 +196,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void checkIfEmailExists(String email) {
+        Log.d("email có tồn tại không?", email);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
 
         Query query = databaseReference.orderByChild("email").equalTo(email);
@@ -202,15 +209,14 @@ public class LoginFragment extends Fragment {
                         String password = userSnapshot.child("password").getValue(String.class);
                         String profileImage = userSnapshot.child("profileImage").getValue(String.class);
                         if (username != null) {
-                            signInWithEmailPassword(username, password);
+                            signInWithEmailPassword(email, password);
                             navigateToProfile(username, profileImage);
                             Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
                 } else {
-                    // Email does not exist, create new user profile
-                    // createUserProfile(email, displayName, userId, profileImage, databaseReference);
+                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -222,7 +228,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void createUserProfile(String email, String displayName, String userId, String profileImage, DatabaseReference databaseReference) {
-        String newKey = databaseReference.push().getKey();
+//        String newKey = databaseReference.push().getKey();
+        String newKey = userId;
         String username;
 
         if (userId.length() > 10) {
@@ -245,7 +252,7 @@ public class LoginFragment extends Fragment {
         databaseReference.child(newKey).setValue(userData)
                 .addOnSuccessListener(aVoid -> {
                     checkAcc(username, "123456");
-                    navigateToProfile(username);
+                    navigateToProfile(username, profileImage);
                     Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
@@ -273,8 +280,6 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 String username = txtUsername.getText().toString();
                 String password = txtPassword.getText().toString();
-//                Log.d("username: ",username);
-//                Log.d("password: ", password);
 
                 if(username.isEmpty()){
                     txtUsername.setError("Trường này không được để trống!");
@@ -331,32 +336,46 @@ public class LoginFragment extends Fragment {
         });
     }
 
+
+    //gặp vấn đề khi login binh thường bằng tài khoản đã từng login google
     private void signInWithEmailPassword(String email, String password) {
+        Log.d("email người đăng nhập: ", email);
+        Log.d("password: ", password);
+
+        // Check if the email address is properly formatted
+        if (!isValidEmail(email)) {
+            Toast.makeText(getContext(), "Địa chỉ email không hợp lệ!", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
+
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
-                            // Đăng nhập thành công, chuyển đến trang cá nhân
+                            // Successfully signed in with email and password
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d("có thành công ko?","vô đc");
                             if (user != null) {
+                                Log.d("có tồn tại người dùng nào không?", user.getUid());
+                                // Fetch user data from Firebase Realtime Database
                                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
                                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if (snapshot.exists()) {
-                                            for (DataSnapshot userSnapshot : snapshot.getChildren()){
+                                            for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                                                 String userKey = userSnapshot.getKey();
-                                                Log.d("mã người dùng: ", userKey);
-                                                if(userKey != null && userKey.equals(user.getUid())){
+
+                                                if (userKey != null && userKey.equals(user.getUid())) {
                                                     String username = userSnapshot.child("username").getValue(String.class);
                                                     String profileImage = userSnapshot.child("profileImage").getValue(String.class);
                                                     navigateToProfile(username, profileImage);
                                                     Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
-                                                    break;
+                                                    return; // Exit loop once user data is found
                                                 }
                                             }
                                         } else {
@@ -371,14 +390,20 @@ public class LoginFragment extends Fragment {
                                 });
                             }
                         } else {
-                            // Đăng nhập thất bại, hiển thị thông báo lỗi
-//                            Toast.makeText(getContext(), "Email hoặc mật khẩu không chính xác!", Toast.LENGTH_LONG).show();
+                            // Failed to sign in
+                            Log.d("Sign-in Error", task.getException().getMessage());
                             txtUsername.setText("");
                             txtPassword.setText("");
                         }
                     }
                 });
     }
+
+    // Helper method to validate email format
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
     // Lấy email từ username trong Firebase Realtime Database
     public void getEmailFromUser(String username, final OnEmailResultListener listener) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
@@ -386,6 +411,9 @@ public class LoginFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userKey = userSnapshot.getKey();
+                    key = userKey;
+                    Log.d("khoa tu dong",userKey);
                     String email = userSnapshot.child("email").getValue(String.class);
                     if (email != null) {
                         listener.onEmailResult(email);
@@ -410,5 +438,4 @@ public class LoginFragment extends Fragment {
     public interface OnEmailResultListener {
         void onEmailResult(String email);
     }
-
 }

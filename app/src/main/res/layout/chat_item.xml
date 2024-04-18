@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/left_chat"
-        android:layout_width="70dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/left_chat"
         android:paddingVertical="10dp"
         android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:text="Hi"
+        android:layout_marginVertical="5dp"
         android:textSize="18dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginStart="10dp"/>
 
     <TextView
         android:id="@+id/right_chat"
-        android:layout_width="88dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_marginVertical="5dp"
+        android:paddingRight="20dp"
         android:background="@drawable/right_chat"
         android:paddingVertical="10dp"
         android:paddingLeft="20dp"
         android:text="Hello"
         android:textColor="@color/white"
         android:textSize="18dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginEnd="10dp"/>
 
 </RelativeLayout>

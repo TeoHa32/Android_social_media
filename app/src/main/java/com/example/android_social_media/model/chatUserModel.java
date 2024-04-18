@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 public class chatUserModel {
-    private String id, lastMessage, name, profileIamge;
+    private String id, lastMessage;
     private List<String> uid;
+
     private String time;
+
 
     public chatUserModel() {
     }
@@ -48,21 +50,5 @@ public class chatUserModel {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProfileIamge() {
-        return profileIamge;
-    }
-
-    public void setProfileIamge(String profileIamge) {
-        this.profileIamge = profileIamge;
     }
 }

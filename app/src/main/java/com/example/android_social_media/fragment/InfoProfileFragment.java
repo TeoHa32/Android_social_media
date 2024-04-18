@@ -225,7 +225,6 @@ public class InfoProfileFragment extends Fragment {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     if (userSnapshot.hasChild("profileImage")) {
-<<<<<<< HEAD
                         String image = userSnapshot.child("profileImage").getValue(String.class);
                         if (image != null && !image.isEmpty()) {
                             Picasso.get().load(image).into(imgProfile);
@@ -237,7 +236,6 @@ public class InfoProfileFragment extends Fragment {
                     } else {
                         imgProfile.setImageResource(R.drawable.ic_profile);
                         progressBar.setVisibility(View.INVISIBLE);
-=======
 
                         String image = userSnapshot.child("profileImage").getValue().toString();
                         if (image != null && !image.isEmpty()) {
@@ -249,7 +247,6 @@ public class InfoProfileFragment extends Fragment {
                             //Ảnh đại diện mặc định khi user không có ảnh đại diện
                             imgProfile.setImageResource(R.drawable.ic_profile);
                         }
->>>>>>> 1e96404328cc1b611b88357e45449803b86a1d01
                     }
 
                 }
