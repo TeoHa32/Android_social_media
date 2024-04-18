@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,9 +102,6 @@ public class ChangeImageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("username",username);
-                infoProfileFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
@@ -212,28 +210,23 @@ public class ChangeImageFragment extends Fragment {
         });
     }
     private void getUserInfo() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            username = bundle.getString("username");
-        }
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
-        Query query = userRef.orderByChild("username").equalTo(username);
-        query.addValueEventListener(new ValueEventListener() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String userId = userSnapshot.getKey();
-                    if (userSnapshot.hasChild("profileImage")) {
-                        String image = userSnapshot.child("profileImage").getValue(String.class);
-                        if (image != null && !image.isEmpty()) {
-                            Picasso.get().load(image).into(imgProfile);
-                        } else {
-                            //Ảnh đại diện mặc định khi user không có ảnh đại diện
-                            imgProfile.setImageResource(R.drawable.ic_profile);
-                        }
-                    }
+                String image = dataSnapshot.child("profileImage").getValue().toString();
+                Log.d("IMAGE", image);
+                if (image != null && !image.isEmpty()) {
+                    Picasso.get().load(image).into(imgProfile);
+                } else {
+                    //Ảnh đại diện mặc định khi user không có ảnh đại diện
+                    imgProfile.setImageResource(R.drawable.ic_profile);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), "Lỗi khi truy xuất dữ liệu người dùng", Toast.LENGTH_SHORT).show();
