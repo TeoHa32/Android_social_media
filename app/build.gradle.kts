@@ -1,4 +1,3 @@
-import org.gradle.internal.impldep.bsh.commands.dir
 
 plugins {
     id("com.android.application")
@@ -65,5 +64,11 @@ dependencies {
     implementation ("com.droidninja:filepicker:2.2.5")
     implementation ("com.github.bumptech.glide:glide:4.13.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+
+    implementation ("com.karumi:dexter:6.2.2")
+
+    //Thư viện tải video cho story
+    implementation ("com.github.a914-gowtham:android-video-trimmer:1.7.19")
+
 
 }

@@ -17,16 +17,17 @@
         android:theme="@style/Theme.Android_social_media"
         tools:targetApi="31">
         <activity
+            android:name=".StoryAddActivity"
+            android:exported="false" />
+        <activity
             android:name=".chat.ChatUsersActivity"
             android:exported="false" />
-
         <activity
             android:name=".chat.chatItemActivity"
             android:exported="false" />
         <activity
             android:name=".chat.ChatActivity"
             android:exported="false" />
-
         <activity android:name=".fragment.SignUpFragment" />
         <activity android:name=".fragment.SendOTPFragment" />
         <activity

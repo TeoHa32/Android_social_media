@@ -4,34 +4,46 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android_social_media.R;
-import com.example.android_social_media.adapter.UserAdapter;
+import com.example.android_social_media.adapter.StoriesAdapter;
 import com.example.android_social_media.adapter.postAdapter;
 import com.example.android_social_media.chat.ChatUsersActivity;
-import com.example.android_social_media.model.User;
+import com.example.android_social_media.model.StoriesModel;
 import com.example.android_social_media.model.post;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class homepageFragment extends Fragment {
-    private RecyclerView rcv;
-    private UserAdapter userAdapter;
+
     private ImageView imgNewPost;
-    private RecyclerView rcvPost;
+    private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
-    private ImageView btnChat;
+    private ImageView btnChat, bgStories;
+    FirebaseUser user;
+    StoriesAdapter storiesAdapter;
+    List<StoriesModel> storiesModelList;
+
 
     public homepageFragment() {
         // Required empty public constructor
@@ -41,12 +53,6 @@ public class homepageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
-        rcv = view.findViewById(R.id.rcv_id);
-        userAdapter = new UserAdapter(getContext());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        rcv.setLayoutManager(linearLayoutManager);
-        userAdapter.setData(getListUser());
-        rcv.setAdapter(userAdapter);
 
         rcvPost = view.findViewById(R.id.rcv_post);
         postAdapter = new postAdapter(getContext());
@@ -64,7 +70,48 @@ public class homepageFragment extends Fragment {
     private void init(View view) {
         imgNewPost = view.findViewById(R.id.img_new_post);
         btnChat = view.findViewById(R.id.btnChat);
+        bgStories = view.findViewById(R.id.imageView4);
+
+        storiesRecylerView = view.findViewById(R.id.storiesRecyclerView);
+        storiesRecylerView.setHasFixedSize(true);
+        storiesRecylerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+
+        storiesModelList = new ArrayList<>();
+        storiesModelList.add(new StoriesModel("","","",""));
+        storiesAdapter = new StoriesAdapter(storiesModelList, getActivity());
+        storiesRecylerView.setAdapter(storiesAdapter);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
     }
+
+
+    void loadStories(List<String> followingList) {
+        DatabaseReference storiesRef = FirebaseDatabase.getInstance().getReference().child("Stories");
+        Query query = storiesRef.orderByChild("uid").startAt(followingList.get(0)).endAt(followingList.get(followingList.size() - 1));
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        StoriesModel model = snapshot.getValue(StoriesModel.class);
+                        if (model != null) {
+                            storiesModelList.add(model);
+                        }
+                    }
+                    storiesAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Error:", databaseError.getMessage());
+            }
+        });
+    }
+
+
 
     private void setOnClickListener() {
         imgNewPost.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +125,22 @@ public class homepageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startChatActivity();
+            }
+        });
+
+        rcvPost.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Nếu người dùng cuộn xuống, ẩn storiesRecyclerView
+                if (dy > 0) {
+                    storiesRecylerView.setVisibility(View.GONE);
+                    bgStories.setVisibility(View.GONE);
+                } else { // Nếu người dùng cuộn lên, hiển thị storiesRecyclerView
+                    storiesRecylerView.setVisibility(View.VISIBLE);
+                    bgStories.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -96,17 +159,6 @@ public class homepageFragment extends Fragment {
         startActivity(intent);
     }
 
-    private List<User> getListUser() {
-        List<User> list = new ArrayList<>();
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        list.add(new User("ha", R.drawable.ic_launcher_background));
-        return list;
-    }
 
     private List<post> getListPost() {
         List<post> list = new ArrayList<>();
