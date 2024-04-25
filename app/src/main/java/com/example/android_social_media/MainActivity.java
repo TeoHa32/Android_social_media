@@ -29,30 +29,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //-------------------------------------
-//        rcv = findViewById(R.id.rcv_id);
-//        userAdapter = new UserAdapter(this);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false);
-//        rcv.setLayoutManager(linearLayoutManager);
-//        userAdapter.setData(getListUser());
-//        rcv.setAdapter(userAdapter);
+
 
         // Write a message to the database
 //
 //        // Lấy ID của người dùng hiện tại
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference msgRef = database.getReference("Messages");
-//        String id = msgRef.push().getKey();
+//        DatabaseReference storyRef = database.getReference("Follow");
 //
-//// Tạo một hashmap để đại diện cho dữ liệu của user
-//        HashMap<String, Object> userData = new HashMap<>();
-//        userData.put("uid", Arrays.asList("asdf", "sdfgh"));
-//        userData.put("time", "02:50:00");
-//        userData.put("lastMessage", "final");
-//        userData.put("id", id);
-//
-//// Đẩy dữ liệu của user lên Firebase Realtime Database với key tự động// Tạo key tự động cho user
-//        msgRef.child(id).setValue(userData);
+//        List<String> followingList = new ArrayList<>();
+//        followingList.add("4X1AusHwrVQQf9yLSUixMCZnLhY2");
+//        followingList.add("PVz33IummMfEXX6594CKN0nCJhC3");
+////
+////// Đẩy dữ liệu của user lên Firebase Realtime Database với key tự động// Tạo key tự động cho user
+//        storyRef.child("vYEYezjxu8QT5HgpCRgcxuEOsUs1").child("following").setValue(followingList);
 
 
 

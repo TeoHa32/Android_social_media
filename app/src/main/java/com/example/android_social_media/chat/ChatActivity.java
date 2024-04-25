@@ -38,6 +38,7 @@ import com.squareup.picasso.Picasso;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -125,9 +126,13 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewChat);
 
         list = new ArrayList<>();
+
         adapter = new ChatAdapter(this, list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         recyclerView.setAdapter(adapter);
+
     }
 
     void loadUserData() {
@@ -161,7 +166,6 @@ public class ChatActivity extends AppCompatActivity {
 
     void loadMessages(){
         chatID = getIntent().getStringExtra("id");
-        Log.d("ChatID: ", chatID);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Messages")
@@ -206,8 +210,6 @@ public class ChatActivity extends AppCompatActivity {
 
                     chatRef.child("time").setValue(currentTimeISO8601);
                 }
-
-                Log.d("kích thước của adapter: ", String.valueOf(adapter.getItemCount()));
                 adapter.notifyDataSetChanged();
             }
 

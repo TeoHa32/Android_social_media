@@ -90,16 +90,16 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
                 // Chuyển đổi khoảng thời gian thành dạng "Just now", "X minutes ago",...
                 long seconds = duration.getSeconds();
                 if (seconds < 60) {
-                    return "Just now";
+                    return "Hiện tại";
                 } else if (seconds < 3600) {
                     long minutes = seconds / 60;
-                    return minutes + " minutes ago";
+                    return minutes + " phút trước";
                 } else if (seconds < 86400) {
                     long hours = seconds / 3600;
-                    return hours + " hours ago";
+                    return hours + " giờ trước";
                 } else {
                     long days = seconds / 86400;
-                    return days + " days ago";
+                    return days + " ngày trước";
                 }
             } catch (Exception e) {
                 Log.e("DateTimeParseException", "Error parsing time: " + e.getMessage());

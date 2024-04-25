@@ -3,6 +3,8 @@ package com.example.android_social_media.chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,8 @@ public class ChatUsersActivity extends AppCompatActivity {
     chatuserAdapter adapter;
     List<chatUserModel> list;
     FirebaseUser user;
+    ImageView btnBack;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +49,8 @@ public class ChatUsersActivity extends AppCompatActivity {
 
     void init() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        btnBack = findViewById(R.id.btnBackMsg);
+
         list = new ArrayList<>();
         adapter = new chatuserAdapter(this, list);
 
@@ -110,6 +116,13 @@ public class ChatUsersActivity extends AppCompatActivity {
                 } else {
                     Log.e("clickListener", "Không thể lấy được oppositeUID!");
                 }
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

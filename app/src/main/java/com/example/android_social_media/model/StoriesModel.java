@@ -2,47 +2,60 @@ package com.example.android_social_media.model;
 
 public class StoriesModel {
 
-    String videoUrl, id, name, uid;
+   private String imageUrl;
+   private long startTime;
+   private long endTime;
+   private String storyId;
+   private String userId;
+
+    public StoriesModel(String imageUrl, long startTime, long endTime, String storyId, String userId) {
+        this.imageUrl = imageUrl;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.storyId = storyId;
+        this.userId = userId;
+    }
 
     public StoriesModel() {
     }
 
-    public StoriesModel(String videoUrl, String id, String name, String uid) {
-        this.videoUrl = videoUrl;
-        this.id = id;
-        this.name = name;
-        this.uid = uid;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public long getStartTime() {
+        return startTime;
     }
 
-    public String getId() {
-        return id;
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public long getEndTime() {
+        return endTime;
     }
 
-    public String getName() {
-        return name;
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getStoryId() {
+        return storyId;
     }
 
-    public String getUid() {
-        return uid;
+    public void setStoryId(String storyId) {
+        this.storyId = storyId;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

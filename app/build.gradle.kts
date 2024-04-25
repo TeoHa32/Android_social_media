@@ -70,5 +70,11 @@ dependencies {
     //Thư viện tải video cho story
     implementation ("com.github.a914-gowtham:android-video-trimmer:1.7.19")
 
+    //Thư viện dùng làm tính năng story
+    implementation("com.github.shts:StoriesProgressView:3.0.0")
+
+    //thư viện dùng để cắt ảnh đăng story
+    implementation("com.theartofdev.edmodo:android-image-cropper:2.7.+")
+
 
 }
