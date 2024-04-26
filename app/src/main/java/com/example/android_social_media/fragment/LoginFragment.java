@@ -2,13 +2,6 @@ package com.example.android_social_media.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.android_social_media.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,21 +25,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-
 
 public class LoginFragment extends Fragment {
 
@@ -48,8 +46,8 @@ public class LoginFragment extends Fragment {
     TextView txtSignUp, txtForgotPassword;
     Button btnLogin;
     ImageView btnSignInGG;
-
-    //đăng nhập bằng google
+    String key;
+    // Đăng nhập bằng Google
     private GoogleSignInClient client;
 
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -57,6 +55,7 @@ public class LoginFragment extends Fragment {
     public LoginFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,11 +77,25 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    //    Điều hướng đến trang cá nhân với username đã đăng nhập
-    public void navigateToProfile(String username,String img){
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+        clickListener();
+    }
+
+    public void init(View view){
+        txtSignUp = view.findViewById(R.id.txtSignUp);
+        btnLogin = view.findViewById(R.id.btnLogin);
+        txtUsername = view.findViewById(R.id.txtUsername);
+        txtPassword = view.findViewById(R.id.txtPassword);
+        btnSignInGG = view.findViewById(R.id.btnSignInGG);
+        txtForgotPassword = view.findViewById(R.id.txtForgotPassword);
+    }
+
+    public void navigateToProfile(String username){
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
-        bundle.putString("img",img);
         //Nếu đăng nhập thành công sẽ chuyển đến trang cá nhân
         profileFragment profile = new profileFragment();
         profile.setArguments(bundle); // Gán Bundle cho Fragment
@@ -92,10 +105,16 @@ public class LoginFragment extends Fragment {
         trans.addToBackStack(null);
         trans.commit();
     }
-    public void navigateToProfile(String username){
+
+    // Điều hướng đến trang cá nhân với username và hình ảnh đã đăng nhập
+    public void navigateToProfile(String username, String img) {
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
-        //Nếu đăng nhập thành công sẽ chuyển đến trang cá nhân
+        bundle.putString("img", img);
+        if(key != null){
+            bundle.putString("key", key);
+        }
+        // Chuyển đến trang cá nhân
         profileFragment profile = new profileFragment();
         profile.setArguments(bundle); // Gán Bundle cho Fragment
         FragmentManager manager = requireActivity().getSupportFragmentManager();
@@ -126,40 +145,116 @@ public class LoginFragment extends Fragment {
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        String email = acct.getEmail();
-                        String displayName = acct.getDisplayName();
-                        String profileImage = null;
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String userId = user.getUid();
+//                            Log.d("UID của người dùng: ", userId);
+                            String email = acct.getEmail();
+                            String displayName = acct.getDisplayName();
+                            String profileImage = acct.getPhotoUrl() != null ? acct.getPhotoUrl().toString() : null;
 
-                        if (acct.getPhotoUrl() != null) {
-                            profileImage = acct.getPhotoUrl().toString();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+                            checkIfEmailExists(email, displayName, userId, profileImage, databaseReference);
+                        } else {
+                            Toast.makeText(getContext(), "Không thể lấy thông tin người dùng!", Toast.LENGTH_LONG).show();
                         }
-
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-                        checkIfEmailExists(email, displayName, userId,profileImage, databaseReference);
                     } else {
                         Toast.makeText(getContext(), "Đăng nhập thất bại!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void checkIfEmailExists(String email, String displayName, String userId,String profileImage, DatabaseReference databaseReference) {
-        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//    private void checkIfEmailExists(String email, String displayName, String userId, String profileImage, DatabaseReference databaseReference) {
+//        Log.d("UID của người dùng: ", userId);
+//        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+//                        String username = userSnapshot.child("username").getValue(String.class);
+//                        String password = userSnapshot.child("password").getValue(String.class);
+//                        if (username != null) {
+//                            signInWithEmailPassword(username, password);
+//                            navigateToProfile(username, profileImage);
+//                            Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+//                            return;
+//                        }
+//                    }
+//                } else {
+//                    Log.d("UID người dùng: ", userId);
+//                    // Email does not exist, create new user profile
+//                    createUserProfile(email, displayName, userId, profileImage, databaseReference);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.e("FirebaseError", "Failed to read value.", databaseError.toException());
+//            }
+//        });
+//    }
+
+    private void checkIfEmailExists(String email, String displayName, String userId, String profileImage, DatabaseReference databaseReference) {
+        Log.d("email người dùng: ", email); // Kiểm tra xem userId có null không
+        if (userId != null) {
+            databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                            String username = userSnapshot.child("username").getValue(String.class);
+                            String password = userSnapshot.child("password").getValue(String.class);
+                            if (username != null) {
+                                signInWithEmailPassword(username, password);
+                                navigateToProfile(username, profileImage);
+                                Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                    } else {
+                        String newUserId = databaseReference.push().getKey();
+                        Log.d("UID người dùng: ", newUserId);
+                        // Email does not exist, create new user profile
+                        createUserProfile(email, displayName, newUserId, profileImage, databaseReference);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("FirebaseError", "Failed to read value.", databaseError.toException());
+                }
+            });
+        } else {
+            Log.e("Error", "UserId is null");
+        }
+    }
+
+
+    private void checkIfEmailExists(String email) {
+
+        Log.d("email user: ", email);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+
+        Query query = databaseReference.orderByChild("email").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         String username = userSnapshot.child("username").getValue(String.class);
+                        String password = userSnapshot.child("password").getValue(String.class);
+                        String profileImage = userSnapshot.child("profileImage").getValue(String.class);
                         if (username != null) {
-
-                            navigateToProfile(username);
-                            Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                            signInWithEmailPassword(username, password);
+                            navigateToProfile(username, profileImage);
+                            Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
                 } else {
                     // Email does not exist, create new user profile
-                    createUserProfile(email, displayName, userId, profileImage, databaseReference);
+//                     createUserProfile(email, displayName, userId, profileImage, databaseReference);
                 }
             }
 
@@ -170,8 +265,9 @@ public class LoginFragment extends Fragment {
         });
     }
 
-
     private void createUserProfile(String email, String displayName, String userId, String profileImage, DatabaseReference databaseReference) {
+
+//        checkIfEmailExists(email);
         String newKey = databaseReference.push().getKey();
         String username;
 
@@ -195,7 +291,7 @@ public class LoginFragment extends Fragment {
         databaseReference.child(newKey).setValue(userData)
                 .addOnSuccessListener(aVoid -> {
                     checkAcc(username, "123456");
-                    navigateToProfile(username);
+                    navigateToProfile(username, profileImage);
                     Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
@@ -205,28 +301,10 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init(view);
-        clickListener();
-    }
-
-    public void init(View view){
-        txtSignUp = view.findViewById(R.id.txtSignUp);
-        btnLogin = view.findViewById(R.id.btnLogin);
-        txtUsername = view.findViewById(R.id.txtUsername);
-        txtPassword = view.findViewById(R.id.txtPassword);
-        btnSignInGG = view.findViewById(R.id.btnSignInGG);
-        txtForgotPassword = view.findViewById(R.id.txtForgotPassword);
-    }
-
     public void clickListener(){
         txtSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 SignUpFragment signUpFragment = new SignUpFragment();
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction trans = manager.beginTransaction();
@@ -250,6 +328,7 @@ public class LoginFragment extends Fragment {
                     txtPassword.setError("Trường này không được để trống!");
                     return;
                 }
+                // Kiểm tra tài khoản
                 checkAcc(username, password);
             }
         });
@@ -261,10 +340,10 @@ public class LoginFragment extends Fragment {
                 startActivityForResult(intent, 1234);
             }
         });
+
         txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction trans = manager.beginTransaction();
@@ -275,37 +354,113 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void checkAcc(String username, String password){
-        db.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+    // Kiểm tra tài khoản trong Firebase Realtime Database
+    public void checkAcc(String username, String password) {
+        getEmailFromUser(username, new OnEmailResultListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                        // Lấy thông tin tài khoản từ mỗi nút con
-                        String dbUsername = userSnapshot.child("username").getValue(String.class);
-                        String dbPassword = userSnapshot.child("password").getValue(String.class);
+            public void onEmailResult(String email) {
 
-                        // Kiểm tra xem username và password có khớp với dữ liệu từ Firebase không
-                        if (dbUsername != null && dbPassword != null  && dbUsername.equals(username) && dbPassword.equals(password)) {
-                            String img = userSnapshot.child("profileImage").getValue(String.class);
+                if (email != null) {
+                    checkIfEmailExists(email);
+                    // Nếu tìm thấy email, tiến hành đăng nhập
+//                    signInWithEmailPassword(email, password);
 
-                            navigateToProfile(dbUsername,img);
-                            Toast.makeText(getContext(),"Đăng nhập thành công!",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                    }
-                    Toast.makeText(getContext(),"Tài khoản không tồn tại!",Toast.LENGTH_LONG).show();
+                } else {
+                    // Hiển thị thông báo lỗi nếu không tìm thấy email tương ứng với username
+                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_LONG).show();
                     txtUsername.setText("");
                     txtPassword.setText("");
                 }
-                else{
-                    Log.d("key users: ", "No data for key users.");
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Failed to read value.", error.toException());
             }
         });
     }
+
+    private void signInWithEmailPassword(String email, String password) {
+
+        Log.d("email người đăng nhập: ",email);
+        Log.d("password: ",password);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("thành công? ", password);
+                            // Đăng nhập thành công, chuyển đến trang cá nhân
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                Log.d("người dùng hiện tại: ", user.getUid());
+                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+                                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            for (DataSnapshot userSnapshot : snapshot.getChildren()){
+                                                String userKey = userSnapshot.getKey();
+                                                key = userKey;
+
+                                                if(userKey != null && userKey.equals(user.getUid())){
+                                                    String username = userSnapshot.child("username").getValue(String.class);
+                                                    String profileImage = userSnapshot.child("profileImage").getValue(String.class);
+                                                    navigateToProfile(username, profileImage);
+                                                    Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
+                                                    break;
+                                                }
+                                            }
+                                        } else {
+                                            Log.d("FirebaseError", "User data not found for UID: " + user.getUid());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Log.e("FirebaseError", "Database error: " + error.getMessage());
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.d("thành công? ", "thất bại");
+                            // Đăng nhập thất bại, hiển thị thông báo lỗi
+//                            Toast.makeText(getContext(), "Email hoặc mật khẩu không chính xác!", Toast.LENGTH_LONG).show();
+                            txtUsername.setText("");
+                            txtPassword.setText("");
+                        }
+                    }
+                });
+    }
+    // Lấy email từ username trong Firebase Realtime Database
+    public void getEmailFromUser(String username, final OnEmailResultListener listener) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userKey = userSnapshot.getKey();
+                    key = userKey;
+                    Log.d("khoa tu dong",userKey);
+                    String email = userSnapshot.child("email").getValue(String.class);
+                    if (email != null) {
+                        listener.onEmailResult(email);
+                        return;
+                    }
+                }
+                // Gửi kết quả null nếu không tìm thấy email tương ứng với username
+                listener.onEmailResult(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+                Log.e("FirebaseError", "Failed to read value.", databaseError.toException());
+                // Gửi kết quả null khi có lỗi
+                listener.onEmailResult(null);
+            }
+        });
+    }
+
+    // Interface để xử lý kết quả trả về
+    public interface OnEmailResultListener {
+        void onEmailResult(String email);
+    }
+
 }

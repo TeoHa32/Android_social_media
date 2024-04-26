@@ -1,20 +1,19 @@
 package com.example.android_social_media.fragment;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.android_social_media.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +30,9 @@ public class profileFragment extends Fragment {
     Button btnInfoProfile;
     String username;
     String url;
+
+    String uid,key;
+    TextView follow, following;
     public profileFragment() {
         // Required empty public constructor
     }
@@ -43,20 +45,36 @@ public class profileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ImageView img = view.findViewById(R.id.imageView5);
         TextView txtUsername = view.findViewById(R.id.txtUsername);
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
 
-        Bundle bundle = getArguments();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (bundle != null) {
+            key = bundle.getString("key");
             url = bundle.getString("img");
             username = bundle.getString("username");
+            key = bundle.getString("key");
+            Log.d("bundle khoa tu dong",key);
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
             Picasso.get().load(url).into(img);
         }
+        if (user != null) {
+             uid = user.getUid();
+            Log.d("co uid", uid);
+            getFollowerCount();
+        } else {
+            Log.d("ko co uid", "khong");
+            // Xử lý trường hợp người dùng chưa đăng nhập
+        }
+
+        follow = view.findViewById(R.id.textView5);
+        following = view.findViewById(R.id.textView6);
         return view;
     }
 
@@ -85,5 +103,32 @@ public class profileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    private void getFollowerCount() {
+        if(key != null){
+            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(key);
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    long followerCount = dataSnapshot.child("follower").getChildrenCount();
+                    long followingCount = dataSnapshot.child("following").getChildrenCount();
+                    // long followerCount = dataSnapshot.getChildrenCount();
+                    // Sử dụng followerCount ở đây, ví dụ:
+                    Log.d("co hien thi khong ", String.valueOf(followingCount));
+                    // Gọi một phương thức hoặc thực hiện một hành động khác với followerCount ở đây nếu cần
+                    //Log.d("dem so luong", String.valueOf(followingCount));
+
+                    follow.setText(String.valueOf(followerCount));
+                   following.setText(String.valueOf(followingCount));
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
+                }
+            });
+        }
+
     }
 }
