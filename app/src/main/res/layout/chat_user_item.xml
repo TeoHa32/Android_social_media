@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameTV"
         android:layout_marginStart="4dp"
-        android:layout_toStartOf="@id/messageCountTV"
+        android:layout_toStartOf="@id/timeTV"
         android:layout_toEndOf="@id/profileImage"
         android:text="this is message"
         android:textColor="#333333" />
@@ -42,22 +42,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="4dp"
+        android:layout_marginEnd="24dp"
         android:text="now"
-        android:textColor="#7FFF00" />
-
-    <TextView
-        android:id="@+id/messageCountTV"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_below="@id/timeTV"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/circle"
-        android:backgroundTint="#7FFF00"
-        android:gravity="center"
-        android:text="2"
-        android:textColor="@color/white" />
+        android:textColor="#11823b"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"/>
 
 
 </RelativeLayout>

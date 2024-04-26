@@ -1,6 +1,7 @@
 package com.example.android_social_media.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
 import com.example.android_social_media.model.ChatModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -19,22 +22,36 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder> {
     Context context;
     List<ChatModel> list;
 
+    public ChatAdapter(Context context, List<ChatModel> list) {
+        this.context = context;
+        this.list = list;
+    }
+
     @NonNull
     @Override
     public ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //chat_user_item: phần Trinh làm.
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item, parent, false);
         return new ChatHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatHolder holder, int position) {
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(list.get(position).getSenderID().equalsIgnoreCase(user.getUid())){
+            holder.leftChat.setVisibility(View.GONE);
+            holder.rightChat.setVisibility(View.VISIBLE);
+            holder.rightChat.setText(list.get(position).getMessage());
+        }
+        else{
+            holder.rightChat.setVisibility(View.GONE);
+            holder.leftChat.setVisibility(View.VISIBLE);
+            holder.leftChat.setText(list.get(position).getMessage());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     static class ChatHolder extends RecyclerView.ViewHolder{

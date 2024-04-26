@@ -2,28 +2,38 @@ package com.example.android_social_media;
 
 import android.os.Bundle;
 
+import android.provider.Contacts;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.android_social_media.fragment.profile;
+import com.example.android_social_media.fragment.LoginFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //-------------------------------------
-//        rcv = findViewById(R.id.rcv_id);
-//        userAdapter = new UserAdapter(this);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false);
-//        rcv.setLayoutManager(linearLayoutManager);
-//        userAdapter.setData(getListUser());
-//        rcv.setAdapter(userAdapter);
+
 
         // Write a message to the database
 //
 //        // Lấy ID của người dùng hiện tại
+
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 //        String currentUserID = currentUser != null ? currentUser.getUid() : null;
@@ -48,6 +58,17 @@ public class MainActivity extends AppCompatActivity {
 //
 //        // Đẩy dữ liệu của user lên Firebase Realtime Database
 //        rootRef.child("Messages").child(messageID).setValue(userData);
+
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference storyRef = database.getReference("Follow");
+//
+//        List<String> followingList = new ArrayList<>();
+//        followingList.add("4X1AusHwrVQQf9yLSUixMCZnLhY2");
+//        followingList.add("PVz33IummMfEXX6594CKN0nCJhC3");
+////
+////// Đẩy dữ liệu của user lên Firebase Realtime Database với key tự động// Tạo key tự động cho user
+//        storyRef.child("vYEYezjxu8QT5HgpCRgcxuEOsUs1").child("following").setValue(followingList);
+
 
 
 

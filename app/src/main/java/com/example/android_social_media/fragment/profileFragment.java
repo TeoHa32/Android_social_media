@@ -33,6 +33,9 @@ public class profileFragment extends Fragment {
 
     String uid,key;
     TextView follow, following;
+
+    ImageView btnHome;
+
     public profileFragment() {
         // Required empty public constructor
     }
@@ -54,18 +57,40 @@ public class profileFragment extends Fragment {
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         if (bundle != null) {
             key = bundle.getString("key");
             url = bundle.getString("img");
             username = bundle.getString("username");
+
             key = bundle.getString("key");
             Log.d("bundle khoa tu dong",key);
+
+            if(bundle.getString("key").equals("")){
+                key = user.getUid();
+                Log.d("id người dùng:",key);
+            }
+            else{
+                key = bundle.getString("key");
+                Log.d("current user:",key);
+            }
+
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
-            Picasso.get().load(url).into(img);
+            if (url != null && !url.isEmpty()) {
+                // Sử dụng Picasso để tải hình ảnh từ URL và hiển thị nó trong ImageView
+                Picasso.get().load(url).into(img);
+            } else {
+                // Nếu imageUrl là null hoặc rỗng, bạn có thể thực hiện các xử lý khác tùy thuộc vào yêu cầu của bạn
+                // Ví dụ: Hiển thị một hình ảnh mặc định hoặc hiển thị một tin nhắn lỗi
+                img.setImageResource(R.drawable.ic_profile);
+            }
         }
         if (user != null) {
+
              uid = user.getUid();
+
+            uid = user.getUid();
             Log.d("co uid", uid);
             getFollowerCount();
         } else {
@@ -87,6 +112,7 @@ public class profileFragment extends Fragment {
 
     private void init(View view) {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
+        btnHome = view.findViewById(R.id.btnHome);
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +126,19 @@ public class profileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
                 fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //chuyển đến trang chủ
+                homepageFragment homepageFragment = new homepageFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, homepageFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
                 fragmentTransaction.commit();
             }
         });
@@ -120,7 +159,7 @@ public class profileFragment extends Fragment {
                     //Log.d("dem so luong", String.valueOf(followingCount));
 
                     follow.setText(String.valueOf(followerCount));
-                   following.setText(String.valueOf(followingCount));
+                    following.setText(String.valueOf(followingCount));
                 }
 
                 @Override
@@ -131,4 +170,31 @@ public class profileFragment extends Fragment {
         }
 
     }
+
+//    private void getFollowerCount() {
+//        if(key != null){
+//            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(key);
+//            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    long followerCount = dataSnapshot.child("follower").getChildrenCount();
+//                    long followingCount = dataSnapshot.child("following").getChildrenCount();
+//
+//                    Log.d("co hien thi khong ", String.valueOf(followingCount));
+//                    // Gọi một phương thức hoặc thực hiện một hành động khác với followerCount ở đây nếu cần
+//                    //Log.d("dem so luong", String.valueOf(followingCount));
+//
+//                    follow.setText(String.valueOf(followerCount));
+//                   following.setText(String.valueOf(followingCount));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
+//                }
+//            });
+//        }
+//
+//    }
+
 }

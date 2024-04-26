@@ -191,7 +191,7 @@ public class profile extends Fragment {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                         String followerID = childSnapshot.getValue(String.class);
                         if(followerID.equals(username)){
-                            flbt.setText("Hủy theo dõi");
+                            flbt.setText("Un follow");
                             break;
                         }
                     }
@@ -204,6 +204,56 @@ public class profile extends Fragment {
         });
     }
 
+    private void unfollow(){
+        String userIdToRemove = "jukhx1A154W2ERD0nJ9AG3LtyMI2";
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child("NuXjEdYF637E4qikFCB").child("following");
+        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String userId = userSnapshot.getKey();
+                        if (userId.equals(userIdToRemove)) {
+                            // Xóa người dùng khỏi mảng
+                            userSnapshot.getRef().removeValue();
+                            // hoặc userSnapshot.getRef().setValue(null);
+                            break; // Thoát khỏi vòng lặp sau khi xóa
+                        }
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
+
+    }
+    private void addfollow(){
+        String userIdToAdd = "ID_of_user_to_add";
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child("current_user_id").child("following");
+
+// Kiểm tra xem người dùng đã tồn tại trong mảng chưa
+        followingRef.child(userIdToAdd).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // Người dùng chưa tồn tại trong mảng, thêm người dùng mới vào
+                    followingRef.child(userIdToAdd).setValue(true);
+                    // hoặc followingRef.child(userIdToAdd).setValue("any_value"); nếu cần
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
+    }
 
 
     }

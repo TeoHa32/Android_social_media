@@ -106,51 +106,48 @@ public class InfoProfileFragment extends Fragment {
     }
 
     public void showUserData() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            username = bundle.getString("username");
-        }
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
-        Query query = userRef.orderByChild("username").equalTo(username);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String nameUser = userSnapshot.child("name").getValue(String.class);
-                        String genderUser = userSnapshot.child("gender").getValue(String.class);
-                        String dobUser = userSnapshot.child("dob").getValue(String.class);
-                        String phoneUser = userSnapshot.child("phoneNumber").getValue(String.class);
-                        String gmailUser = userSnapshot.child("email").getValue(String.class);
-                        String usernameUser = userSnapshot.child("username").getValue(String.class);
-                        String passwordUser = userSnapshot.child("password").getValue(String.class);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
 
-                        // Hiển thị dữ liệu lên TextView
-                        titleName.setText(nameUser);
-                        titleUsername.setText(usernameUser);
-                        pfName.setText(nameUser);
-                        if (genderUser.equals("nam")) {
-                            pfGender.setText("Nam");
-                        } else {
-                            pfGender.setText("Nữ");
-                        }
-                        pfDob.setText(dobUser);
-                        pfPhone.setText(phoneUser);
-                        pfGmail.setText(gmailUser);
-                        pfUsername.setText(usernameUser);
-                        pfPassword.setText(passwordUser);
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String nameUser = snapshot.child("name").getValue(String.class);
+                    String genderUser = snapshot.child("gender").getValue(String.class);
+                    String dobUser = snapshot.child("dob").getValue(String.class);
+                    String phoneUser = snapshot.child("phoneNumber").getValue(String.class);
+                    String gmailUser = snapshot.child("email").getValue(String.class);
+                    String usernameUser = snapshot.child("username").getValue(String.class);
+                    String passwordUser = snapshot.child("password").getValue(String.class);
+
+                    username = snapshot.child("username").getValue(String.class);
+
+                    // Hiển thị dữ liệu lên TextView
+                    titleName.setText(nameUser);
+                    titleUsername.setText(usernameUser);
+                    pfName.setText(nameUser);
+                    if (genderUser.equals("nam")) {
+                        pfGender.setText("Nam");
+                    } else {
+                        pfGender.setText("Nữ");
                     }
+                    pfDob.setText(dobUser);
+                    pfPhone.setText(phoneUser);
+                    pfGmail.setText(gmailUser);
+                    pfUsername.setText(usernameUser);
+                    pfPassword.setText(passwordUser);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Xử lý lỗi nếu có
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Lỗi!", Toast.LENGTH_SHORT).show();
             }
         });
-//        }
     } //end show data user
 
     private void clickListener() {
@@ -210,24 +207,20 @@ public class InfoProfileFragment extends Fragment {
 
     }
     private void getUserInfo() {
-        progressBar.setVisibility(View.VISIBLE);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            username = bundle.getString("username");
-        }
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
-        Query query = userRef.orderByChild("username").equalTo(username);
-        query.addValueEventListener(new ValueEventListener() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String userId = userSnapshot.getKey();
-                    if (userSnapshot.hasChild("profileImage")) {
-                        String image = userSnapshot.child("profileImage").getValue().toString();
-                        Picasso.get().load(image).into(imgProfile);
-                        // Ẩn ProgressBar khi tải hoàn tất
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
+                String image = dataSnapshot.child("profileImage").getValue().toString();
+                Log.d("IMAGE", image);
+                if (image != null && !image.isEmpty()) {
+                    Picasso.get().load(image).into(imgProfile);
+                } else {
+                    //Ảnh đại diện mặc định khi user không có ảnh đại diện
+                    imgProfile.setImageResource(R.drawable.ic_profile);
                 }
             }
 

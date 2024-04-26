@@ -1,4 +1,3 @@
-import org.gradle.internal.impldep.bsh.commands.dir
 
 plugins {
     id("com.android.application")
@@ -60,4 +59,22 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation ("io.github.ParkSangGwon:tedimagepicker:1.5.0")
+    implementation ("pub.devrel:easypermissions:3.0.0")
+    implementation ("com.droidninja:filepicker:2.2.5")
+    implementation ("com.github.bumptech.glide:glide:4.13.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+
+    implementation ("com.karumi:dexter:6.2.2")
+
+    //Thư viện tải video cho story
+    implementation ("com.github.a914-gowtham:android-video-trimmer:1.7.19")
+
+    //Thư viện dùng làm tính năng story
+    implementation("com.github.shts:StoriesProgressView:3.0.0")
+
+    //thư viện dùng để cắt ảnh đăng story
+    implementation("com.theartofdev.edmodo:android-image-cropper:2.7.+")
+
+
 }

@@ -11,11 +11,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.android_social_media.R;
 import com.example.android_social_media.fragment.LoginFragment;
 import com.example.android_social_media.fragment.SignUpFragment;
 
 public class FragmentReplaceActivity extends AppCompatActivity {
-
     FrameLayout frameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
