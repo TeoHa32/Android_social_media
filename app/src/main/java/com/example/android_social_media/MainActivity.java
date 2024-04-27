@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.android_social_media.fragment.LoginFragment;
 import com.example.android_social_media.fragment.profile;
 
 public class MainActivity extends AppCompatActivity {

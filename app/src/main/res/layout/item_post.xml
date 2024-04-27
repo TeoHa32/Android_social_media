@@ -1,86 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/imageView10"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:id="@+id/image_profile"
+            android:src="@drawable/ic_launcher_background"
+            
+            />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img" />
-        <ImageView
-            android:id="@+id/image_post"
-            android:layout_width="match_parent"
-            android:layout_height="410dp"
-            android:layout_marginTop="30dp"
-            android:padding="0dp"
-            android:src="@drawable/post_mew" />
+            android:id="@+id/username"
+            android:layout_gravity="center_vertical"
+            android:textSize="16dp"
+            android:text="username"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_image"
+        android:src="@drawable/ic_launcher_background"
+        />
         <RelativeLayout
-            android:id="@+id/post"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            >
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:padding="5dp"
-                android:id="@+id/img_user_post"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/ic_launcher_background"
-                ></de.hdodenhof.circleimageview.CircleImageView>
-
-            <TextView
-                android:id="@+id/tv_name_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/img_user_post"
-                android:text="@string/app_name" />
-        </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/interact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image_post"
-            >
+            android:padding="8dp">
             <ImageView
-                android:id="@+id/heart"
-                android:paddingStart="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/heart">
 
-
-            </ImageView>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/heart"
+                android:id="@+id/like"
+                />
             <ImageView
-                android:id="@+id/comment"
-                android:paddingStart="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/comment"
+                android:id="@+id/comment"
+                android:layout_toEndOf="@+id/like"
+                android:layout_marginStart="10dp"
 
-                >
 
-            </ImageView>
-
+                />
             <ImageView
-                android:id="@+id/share"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:src="@drawable/share"
-                android:paddingStart="280dp">
+                android:id="@+id/share"
+                android:layout_alignParentEnd="true"
+                />
 
 
-
-            </ImageView>
-
-        </LinearLayout>
-        <ImageView
-            android:layout_below="@+id/interact"
-            android:layout_marginTop="10dp"
+        </RelativeLayout>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img" />
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            android:id="@+id/likes"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            android:id="@+id/publisher"
+
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            android:id="@+id/description"
+
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            android:id="@+id/comments"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="View all 20 comment"
+            android:textColor="@color/colorAccent"
+
+            />
+    </LinearLayout>
+</RelativeLayout>

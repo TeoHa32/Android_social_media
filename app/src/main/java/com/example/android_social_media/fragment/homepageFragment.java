@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.android_social_media.PostActivity;
@@ -41,6 +42,7 @@ public class homepageFragment extends Fragment {
     private ImageView imgNewPost;
     private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
+    private List<post> postList;
     private ImageView btnChat;
     FirebaseUser user;
     StoriesAdapter storiesAdapter;
@@ -58,18 +60,22 @@ public class homepageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
         rcvPost = view.findViewById(R.id.rcv_post);
-        postAdapter = new postAdapter(getContext());
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        rcvPost.setLayoutManager(linearLayoutManager1);
-        postAdapter.setData(getListPost());
+        rcvPost.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        rcvPost.setLayoutManager(linearLayoutManager);
+        postList = new ArrayList<post>();
+        postAdapter = new postAdapter(getContext(), postList);
         rcvPost.setAdapter(postAdapter);
-
         init(view);
         setOnClickListener();
         checkFollowing();
 
         return view;
     }
+
+
 
     private void init(View view) {
         imgNewPost = view.findViewById(R.id.img_new_post);
@@ -113,11 +119,7 @@ public class homepageFragment extends Fragment {
     }
 
 
-    private List<post> getListPost() {
-        List<post> list = new ArrayList<>();
-        list.add(new post(R.drawable.ic_launcher_background, R.drawable.post_mew, "ha", R.drawable.heart, R.drawable.comment, R.drawable.share));
-        return list;
-    }
+
     private void checkFollowing(){
         followingList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users")
@@ -129,13 +131,16 @@ public class homepageFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 followingList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    followingList.add(snapshot.getValue(String.class));
+                   followingList.add(snapshot.getValue(String.class));
+
                     Log.d("phần tử của following List: ", snapshot.getValue(String.class));
+
                 }
 
-//                readPosts();
+                readPost();
                 readStory();
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -143,7 +148,31 @@ public class homepageFragment extends Fragment {
             }
         });
     }
+    private void readPost(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange( DataSnapshot snapshot) {
+                postList.clear();
+                for(DataSnapshot datasnapshot: snapshot.getChildren()){
+                    post post = datasnapshot.getValue(post.class);
+                    Log.d("TAG", post.getPublisher());
+                    for(String id : followingList){
+                        Log.d("TAG", id);
+                        if(post.getPublisher().equals(id)){
+                            postList.add(post);
+                        }
+                    }
+                }
+                postAdapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     //Xem story của nguời mình theo dõi
     private void readStory(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
