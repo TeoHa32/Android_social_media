@@ -1,6 +1,5 @@
 package com.example.android_social_media.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.android_social_media.R;
-import com.example.android_social_media.chat.ChatUsersActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +33,7 @@ public class profileFragment extends Fragment {
 
     String uid,key;
     TextView follow, following;
+
     ImageView btnHome;
 
     public profileFragment() {
@@ -63,6 +62,10 @@ public class profileFragment extends Fragment {
             key = bundle.getString("key");
             url = bundle.getString("img");
             username = bundle.getString("username");
+
+            key = bundle.getString("key");
+            Log.d("bundle khoa tu dong",key);
+
             if(bundle.getString("key").equals("")){
                 key = user.getUid();
                 Log.d("id người dùng:",key);
@@ -71,6 +74,7 @@ public class profileFragment extends Fragment {
                 key = bundle.getString("key");
                 Log.d("current user:",key);
             }
+
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
             if (url != null && !url.isEmpty()) {
@@ -83,6 +87,9 @@ public class profileFragment extends Fragment {
             }
         }
         if (user != null) {
+
+             uid = user.getUid();
+
             uid = user.getUid();
             Log.d("co uid", uid);
             getFollowerCount();
@@ -163,4 +170,31 @@ public class profileFragment extends Fragment {
         }
 
     }
+
+//    private void getFollowerCount() {
+//        if(key != null){
+//            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(key);
+//            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    long followerCount = dataSnapshot.child("follower").getChildrenCount();
+//                    long followingCount = dataSnapshot.child("following").getChildrenCount();
+//
+//                    Log.d("co hien thi khong ", String.valueOf(followingCount));
+//                    // Gọi một phương thức hoặc thực hiện một hành động khác với followerCount ở đây nếu cần
+//                    //Log.d("dem so luong", String.valueOf(followingCount));
+//
+//                    follow.setText(String.valueOf(followerCount));
+//                   following.setText(String.valueOf(followingCount));
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
+//                }
+//            });
+//        }
+//
+//    }
+
 }
