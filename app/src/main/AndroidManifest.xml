@@ -20,6 +20,9 @@
             android:name=".StoryActivity"
             android:exported="false" />
         <activity
+            android:name=".PostActivity"
+            android:exported="false" />
+        <activity
             android:name=".StoryAddActivity"
             android:exported="false" />
         <activity

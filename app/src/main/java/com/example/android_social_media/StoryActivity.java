@@ -245,7 +245,6 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -263,7 +262,6 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 seen_number.setText(""+snapshot.getChildrenCount());
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

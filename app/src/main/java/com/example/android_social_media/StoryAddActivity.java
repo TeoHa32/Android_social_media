@@ -110,23 +110,18 @@ public class StoryAddActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
                         Uri downloadUri = task.getResult();
                         myUrl = downloadUri.toString();
-
                         String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story").child(myid);
                         String storyId = reference.push().getKey();
                         long timeend = System.currentTimeMillis() + 86400000; // thời gian 1 ngày
-
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("startTime", ServerValue.TIMESTAMP);
                         hashMap.put("imageUrl",myUrl);
                         hashMap.put("endTime",timeend);
                         hashMap.put("storyId", storyId);
                         hashMap.put("userId", myid);
-
                         reference.child(storyId).setValue(hashMap);
                         pd.dismiss();
-
                         finish();
                     }
                     else{
