@@ -23,13 +23,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id="@+id/skip"/>
+            android:id="@+id/reverse"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id="@+id/reverse"/>
+            android:id="@+id/skip"/>
+
     </LinearLayout>
 
     <jp.shts.android.storiesprogressview.StoriesProgressView
@@ -60,7 +61,7 @@
             android:layout_height="wrap_content"
             android:text="username"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/black_54"
             android:textSize="20dp"
             android:id="@+id/story_username"
             android:layout_centerVertical="true"
@@ -68,4 +69,45 @@
             android:layout_toEndOf="@+id/story_photo"/>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/r_seen"
+        android:layout_width="69dp"
+        android:layout_height="38dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="58dp"
+        android:background="#949F9A9A"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        android:paddingHorizontal="10dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/eye_regular" />
+
+        <TextView
+            android:id="@+id/seen_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:text="0"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/trash_can_regular"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="30dp"
+        android:id="@+id/story_delete"/>
 </RelativeLayout>

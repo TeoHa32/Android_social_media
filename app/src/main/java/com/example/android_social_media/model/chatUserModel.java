@@ -1,5 +1,6 @@
 package com.example.android_social_media.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class chatUserModel {

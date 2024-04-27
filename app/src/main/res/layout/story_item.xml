@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="60dp"
-    android:layout_height="wrap_content"
+    android:layout_width="70dp"
+    android:layout_height="85dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginStart="10dp"
-    android:paddingBottom="50dp">
+    android:layout_marginStart="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="60dp"
@@ -18,8 +17,8 @@
         android:id="@+id/story_photo"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         app:civ_border_width="2dp"
         android:visibility="gone"
         app:civ_border_color="#f23b5a"
@@ -32,8 +31,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="username"
+        android:textStyle="bold"
         android:id="@+id/story_username"
         android:textColor="@color/black"
         android:layout_gravity="center"
+        android:textSize="15dp"
         android:maxLines="1"/>
 </LinearLayout>

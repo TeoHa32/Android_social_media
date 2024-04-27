@@ -59,12 +59,10 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
     @Override
     public StoriesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == 0){
-            Log.d("ViewType: ", "0");
             View view = LayoutInflater.from(mContext).inflate(R.layout.add_story_item, parent, false);
             return new StoriesAdapter.StoriesHolder(view);
         }
         else{
-            Log.d("ViewType: ", "!= 0");
             View view = LayoutInflater.from(mContext).inflate(R.layout.story_item, parent, false);
             return new StoriesAdapter.StoriesHolder(view);
         }
@@ -78,7 +76,6 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
             seenStory(holder, story.getUserId());
         }
         if(holder.getAdapterPosition() == 0){
-//            private void myStory(TextView textView, ImageView imageView, boolean click)
             myStory(holder.add_story_text, holder.story_plus, false);
         }
 

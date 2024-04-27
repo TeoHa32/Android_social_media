@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //        rootRef.child("Messages").child(messageID).setValue(userData);
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference storyRef = database.getReference("Follow");
+//        DatabaseReference storyRef = database.getReference("users");
 //
 //        List<String> followingList = new ArrayList<>();
 //        followingList.add("4X1AusHwrVQQf9yLSUixMCZnLhY2");
@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Khởi tạo ban đầu sẽ ở trang đăng nhập.
-        //LoginFragment loginFragment = new LoginFragment();
-        profile p = new profile();
+        LoginFragment loginFragment = new LoginFragment();
+//        profile p = new profile();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.replace(R.id.fragment_container, loginFragment);
-        fragmentTransaction.replace(R.id.fragment_container, p);
+        fragmentTransaction.replace(R.id.fragment_container, loginFragment);
+//        fragmentTransaction.replace(R.id.fragment_container, p);
         fragmentTransaction.addToBackStack(null); // Add to back stack if needed
         fragmentTransaction.commit();
 
