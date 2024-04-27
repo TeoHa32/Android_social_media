@@ -1,4 +1,3 @@
-import org.gradle.internal.impldep.bsh.commands.dir
 
 plugins {
     id("com.android.application")
@@ -65,4 +64,17 @@ dependencies {
     implementation ("com.droidninja:filepicker:2.2.5")
     implementation ("com.github.bumptech.glide:glide:4.13.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+
+    implementation ("com.google.android.material:material:1.4.0")
+
+
+    implementation ("com.karumi:dexter:6.2.2")
+
+    //Thư viện dùng làm tính năng story
+    implementation("com.github.shts:StoriesProgressView:3.0.0")
+
+    //thư viện dùng để cắt ảnh đăng story
+    implementation("com.theartofdev.edmodo:android-image-cropper:2.7.+")
+
+
 }

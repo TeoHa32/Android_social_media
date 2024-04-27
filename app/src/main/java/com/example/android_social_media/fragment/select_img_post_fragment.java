@@ -18,10 +18,6 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
-import pub.devrel.easypermissions.EasyPermissions;
-
 public class select_img_post_fragment extends Fragment {
     Button btn_search;
     Button btPick;
@@ -37,40 +33,40 @@ public class select_img_post_fragment extends Fragment {
 
     return view;
     }
-    public void onClickListener(){
-        btPick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String[] strings = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
-                if(EasyPermissions.hasPermissions(getContext(), strings)){
-                    imagePicker();
-                }
-                else {
-                    EasyPermissions.requestPermissions(
-                            this,
-                            "App need access to your CAMERA and STORAGE",
-                            100,
-                            strings
-                    );
-                }
-            }
-        });
-    }
+//    public void onClickListener(){
+//        btPick.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String[] strings = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
+//                if(EasyPermissions.hasPermissions(getContext(), strings)){
+//                    imagePicker();
+//                }
+//                else {
+//                    EasyPermissions.requestPermissions(
+//                            this,
+//                            "App need access to your CAMERA and STORAGE",
+//                            100,
+//                            strings
+//                    );
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void imagePicker(){
-        FilePickerBuilder.getInstance()
-                .setActivityTitle("Select image")
-                .setSpan(FilePickerConst.SPAN_TYPE.FOLDER_SPAN,3)
-                .setSpan(FilePickerConst.SPAN_TYPE.DETAIL_SPAN,4)
-                .setMaxCount(4)
-                .setSelectedFiles(arrayList)
-                .pickPhoto(this);
-    }
+//    public void imagePicker(){
+//        FilePickerBuilder.getInstance()
+//                .setActivityTitle("Select image")
+//                .setSpan(FilePickerConst.SPAN_TYPE.FOLDER_SPAN,3)
+//                .setSpan(FilePickerConst.SPAN_TYPE.DETAIL_SPAN,4)
+//                .setMaxCount(4)
+//                .setSelectedFiles(arrayList)
+//                .pickPhoto(this);
+//    }
     public void init(View view){
         btPick = view.findViewById(R.id.btn_select_post);
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -78,6 +74,6 @@ public class select_img_post_fragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init(view);
-        onClickListener();
+//        onClickListener();
     }
 }

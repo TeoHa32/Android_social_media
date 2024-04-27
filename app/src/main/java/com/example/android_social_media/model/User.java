@@ -1,15 +1,35 @@
 package com.example.android_social_media.model;
 
 public class User {
+    private String UserID;
+    private String username;
     private String name;
-    private int resourceId;
-
-    public User(String name, int resourceId) {
-        this.name = name;
-        this.resourceId = resourceId;
-    }
+    private String profileImage;
 
     public User() {
+    }
+
+    public User(String userID, String username, String name, String profileImage) {
+        UserID = userID;
+        this.username = username;
+        this.name = name;
+        this.profileImage = profileImage;
+    }
+
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -20,11 +40,11 @@ public class User {
         this.name = name;
     }
 
-    public int getResourceId() {
-        return resourceId;
+    public String getProfileImage() {
+        return profileImage;
     }
 
-    public void setResourceId(int resourceId) {
-        this.resourceId = resourceId;
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

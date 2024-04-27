@@ -3,6 +3,8 @@ package com.example.android_social_media.chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,11 +31,17 @@ public class ChatUsersActivity extends AppCompatActivity {
     chatuserAdapter adapter;
     List<chatUserModel> list;
     FirebaseUser user;
+    ImageView btnBack;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_users);
+
+        // Khởi tạo biến user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         init();
         fetchUserData();
         clickListener();
@@ -41,6 +49,8 @@ public class ChatUsersActivity extends AppCompatActivity {
 
     void init() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        btnBack = findViewById(R.id.btnBackMsg);
+
         list = new ArrayList<>();
         adapter = new chatuserAdapter(this, list);
 
@@ -50,63 +60,35 @@ public class ChatUsersActivity extends AppCompatActivity {
 
 
     void fetchUserData() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            Log.d("Current Account: ", "User is null");
-            return;
-        }
-
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-        DatabaseReference messageRef = FirebaseDatabase.getInstance().getReference("Messages");
-
-        userRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Messages");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String userID = snapshot.child("UserID").getValue(String.class);
-                    if (userID != null && userID.equals(user.getUid())) {
-                        String name = snapshot.child("name").getValue(String.class);
-                        String profileImage = snapshot.child("profileImage").getValue(String.class);
-                        if (list == null) {
-                            list = new ArrayList<>();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    list.clear();
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        DataSnapshot uidSnapshot = userSnapshot.child("uid");
+                        for (DataSnapshot uidChildSnapshot : uidSnapshot.getChildren()) {
+                            // Truy cập vào giá trị của uidChildSnapshot và chuyển đổi sang chuỗi
+                            String uid = uidChildSnapshot.getValue().toString();
+                            Log.d("UID?", uid); // Log uid ra
+                            if (uid != null && uid.equals(user.getUid())) {
+                                // Nếu user có trong mảng uid của nút hiện tại
+                                chatUserModel model = userSnapshot.getValue(chatUserModel.class);
+                                list.add(model);
+                                break;
+                            }
                         }
-                        chatUserModel userModel = new chatUserModel();
-                        userModel.setName(name);
-                        userModel.setProfileIamge(profileImage);
-                        list.add(userModel);
-
-                        // Cập nhật adapter
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    } else {
-                        Log.d("Tên người dùng: ", "Không có tên");
                     }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d("fetchUserData", "No data found");
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("ChatUsersActivity", "Failed to read user data.", error.toException());
-            }
-        });
-        messageRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Xử lý dữ liệu từ node "Message" ở đây
-                list.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    chatUserModel model = dataSnapshot.getValue(chatUserModel.class);
-                    if (model != null) {
-                        list.add(model);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("ChatUsersActivity", "Failed to read message data.", error.toException());
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("fetchUserData", "Listen failed", databaseError.toException());
             }
         });
     }
@@ -115,20 +97,34 @@ public class ChatUsersActivity extends AppCompatActivity {
         adapter.OnStartChat(new chatuserAdapter.OnStartChat() {
             @Override
             public void clicked(int position, List<String> uids, String chatID) {
-                String oppositeUID;
-                if(uids.get(0).equalsIgnoreCase(user.getUid())){
-                    oppositeUID = uids.get(0);
-                }
-                else{
-                    oppositeUID = uids.get(1);
+                String oppositeUID = null;
+                if (uids != null && uids.size() >= 2) { // Kiểm tra xem danh sách có ít nhất 2 phần tử hay không
+                    if (uids.get(0).equalsIgnoreCase(user.getUid())) {
+                        oppositeUID = uids.get(1);
+                    } else {
+                        oppositeUID = uids.get(0);
+                    }
+                } else {
+                    Log.e("clickListener", "Danh sách UID không hợp lệ!");
                 }
 
-                Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
-                intent.putExtra("uid", oppositeUID);
-                intent.putExtra("id", chatID);
-                startActivity(intent);
+                if (oppositeUID != null) {
+                    Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
+                    intent.putExtra("uid", oppositeUID);
+                    intent.putExtra("id", chatID);
+                    startActivity(intent);
+                } else {
+                    Log.e("clickListener", "Không thể lấy được oppositeUID!");
+                }
             }
+        });
 
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
     }
+
 }

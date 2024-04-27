@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,11 +35,17 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     CircleImageView imageView;
     TextView name, status;
     EditText chatET;
-    ImageView sendBtn;
+    ImageView sendBtn, btnBack;
     RecyclerView recyclerView;
 
     ChatAdapter adapter;
@@ -64,6 +71,7 @@ public class ChatActivity extends AppCompatActivity {
         loadMessages();
 
         sendBtn.setOnClickListener(v -> {
+            list.clear();
             String message = chatET.getText().toString().trim();
             if (message.isEmpty()) {
                 return;
@@ -72,13 +80,19 @@ public class ChatActivity extends AppCompatActivity {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Messages").child(chatID);
             String messageID = reference.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
 
+            // Tạo đối tượng SimpleDateFormat với định dạng mong muốn
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+            // Lấy thời gian hiện tại
+            String currentTime = sdf.format(new Date());
+
             Map<String, Object> messageMap = new HashMap<>();
             messageMap.put("id", messageID);
             messageMap.put("message", message);
             messageMap.put("senderID", user.getUid());
-            messageMap.put("time", ServerValue.TIMESTAMP);
+            messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
 
-            reference.child(messageID).setValue(messageMap)
+
+            reference.child("message").child(messageID).setValue(messageMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -89,6 +103,13 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
         });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 
@@ -98,31 +119,34 @@ public class ChatActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.profileImage);
         name = findViewById(R.id.txtName);
-        status = findViewById(R.id.statusTV);
         chatET = findViewById(R.id.chatET);
         sendBtn = findViewById(R.id.btnSend);
+        btnBack = findViewById(R.id.btnBack);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerViewChat);
 
         list = new ArrayList<>();
+
         adapter = new ChatAdapter(this, list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         recyclerView.setAdapter(adapter);
+
     }
 
     void loadUserData() {
 
         String oppositeUID = getIntent().getStringExtra("uid");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(oppositeUID);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(oppositeUID);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    boolean isOnline = snapshot.child("online").getValue(Boolean.class);
-                    status.setText(isOnline ? "online" : "offline");
 
                     String profileImage = snapshot.child("profileImage").getValue(String.class);
+                    Log.d("ảnh: ", profileImage);
 
                     // Load image using Picasso or any other library
                     Picasso.get().load(profileImage).into(imageView);
@@ -140,7 +164,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    void loadMessages() {
+    void loadMessages(){
         chatID = getIntent().getStringExtra("id");
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
@@ -151,14 +175,41 @@ public class ChatActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<ChatModel> newList = new ArrayList<>();
+                ChatModel lastChat = null;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    ChatModel model = dataSnapshot.getValue(ChatModel.class);
-                    newList.add(model);
+                    String messageId = dataSnapshot.child("id").getValue(String.class);
+                    String message = dataSnapshot.child("message").getValue(String.class);
+                    String senderID = dataSnapshot.child("senderID").getValue(String.class);
+                    String timeString = dataSnapshot.child("time").getValue(String.class);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    try {
+                        Date time = dateFormat.parse(timeString);
+
+                        ChatModel model = new ChatModel(messageId, message, time, senderID);
+                        list.add(model);
+
+                        // So sánh thời gian của tin nhắn với thời gian của lastMessage hiện tại
+                        if (lastChat == null || time.after(lastChat.getTime())) {
+                            lastChat = model;
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                list.clear();
-                list.addAll(newList);
+                // Cập nhật lastMessage mới trong cơ sở dữ liệu Firebase
+                if (lastChat != null) {
+                    DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(chatID);
+                    chatRef.child("lastMessage").setValue(lastChat.getMessage());
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    String currentTimeISO8601 = sdf.format(lastChat.getTime());
+
+                    chatRef.child("time").setValue(currentTimeISO8601);
+                }
                 adapter.notifyDataSetChanged();
             }
 
@@ -167,6 +218,7 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e(TAG, "Không thể đọc được dữ liệu.", error.toException());
             }
         });
+
     }
 
 }
