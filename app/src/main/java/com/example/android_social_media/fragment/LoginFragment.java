@@ -153,12 +153,6 @@ public class LoginFragment extends Fragment {
                         }
                     } else {
                         // If sign in fails, display a message to the user.
-//                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-//                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-//                            Toast.makeText(getContext(), "The supplied auth credential is incorrect or malformed.", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
-//                        }
                     }
                 });
     }
@@ -176,7 +170,7 @@ public class LoginFragment extends Fragment {
                             signInWithEmailPassword(email,password);
                             navigateToProfile(username,profileImage);
                             Log.d("có vào không?", "không biết");
-                            Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -211,12 +205,12 @@ public class LoginFragment extends Fragment {
                         if (username != null) {
                             signInWithEmailPassword(email, password);
                             navigateToProfile(username, profileImage);
-                            Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
                 } else {
-                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -253,11 +247,11 @@ public class LoginFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     checkAcc(username, "123456");
                     navigateToProfile(username, profileImage);
-                    Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors that occur during the write operation
-                    Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("FirebaseError", "Error writing user profile to Firebase", e);
                 });
     }
@@ -328,7 +322,7 @@ public class LoginFragment extends Fragment {
 
                 } else {
                     // Hiển thị thông báo lỗi nếu không tìm thấy email tương ứng với username
-                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
                     txtUsername.setText("");
                     txtPassword.setText("");
                 }
@@ -344,7 +338,7 @@ public class LoginFragment extends Fragment {
 
         // Check if the email address is properly formatted
         if (!isValidEmail(email)) {
-            Toast.makeText(getContext(), "Địa chỉ email không hợp lệ!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Địa chỉ email không hợp lệ!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -374,7 +368,7 @@ public class LoginFragment extends Fragment {
                                                     String username = userSnapshot.child("username").getValue(String.class);
                                                     String profileImage = userSnapshot.child("profileImage").getValue(String.class);
                                                     navigateToProfile(username, profileImage);
-                                                    Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                                                     return; // Exit loop once user data is found
                                                 }
                                             }

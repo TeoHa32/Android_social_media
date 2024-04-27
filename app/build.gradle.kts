@@ -65,10 +65,10 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.13.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
 
-    implementation ("com.karumi:dexter:6.2.2")
+    implementation ("com.google.android.material:material:1.4.0")
 
-    //Thư viện tải video cho story
-    implementation ("com.github.a914-gowtham:android-video-trimmer:1.7.19")
+
+    implementation ("com.karumi:dexter:6.2.2")
 
     //Thư viện dùng làm tính năng story
     implementation("com.github.shts:StoriesProgressView:3.0.0")

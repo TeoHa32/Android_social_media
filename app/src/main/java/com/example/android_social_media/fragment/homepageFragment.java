@@ -39,7 +39,7 @@ public class homepageFragment extends Fragment {
     private ImageView imgNewPost;
     private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
-    private ImageView btnChat, bgStories, imageView5;
+    private ImageView btnChat;
     FirebaseUser user;
     StoriesAdapter storiesAdapter;
     List<StoriesModel> storiesModelList;
@@ -70,17 +70,14 @@ public class homepageFragment extends Fragment {
     }
 
     private void init(View view) {
-        imgNewPost = view.findViewById(R.id.img_new_post);
+//        imgNewPost = view.findViewById(R.id.img_new_post);
         btnChat = view.findViewById(R.id.btnChat);
-        bgStories = view.findViewById(R.id.imageView4);
-        imageView5 = view.findViewById(R.id.imageView5);
 
         storiesRecylerView = view.findViewById(R.id.storiesRecyclerView);
         storiesRecylerView.setHasFixedSize(true);
         storiesRecylerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         storiesModelList = new ArrayList<>();
-        Log.d("story list: ", storiesModelList.toString());
         storiesAdapter = new StoriesAdapter(getContext(), storiesModelList);
         storiesRecylerView.setAdapter(storiesAdapter);
 
@@ -88,40 +85,14 @@ public class homepageFragment extends Fragment {
         user = auth.getCurrentUser();
     }
 
-//    void loadStories(List<String> followingList) {
-//        DatabaseReference storiesRef = FirebaseDatabase.getInstance().getReference().child("Stories");
-//        Query query = storiesRef.orderByChild("uid").startAt(followingList.get(0)).endAt(followingList.get(followingList.size() - 1));
-//
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        StoriesModel model = snapshot.getValue(StoriesModel.class);
-//                        if (model != null) {
-//                            storiesModelList.add(model);
-//                        }
-//                    }
-//                    storiesAdapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.d("Error:", databaseError.getMessage());
-//            }
-//        });
-//    }
-
-
 
     private void setOnClickListener() {
-        imgNewPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImgPostFragment();
-            }
-        });
+//        imgNewPost.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                selectImgPostFragment();
+//            }
+//        });
 
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,31 +101,6 @@ public class homepageFragment extends Fragment {
             }
         });
 
-        rcvPost.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    storiesRecylerView.setVisibility(View.GONE);
-                    bgStories.setVisibility(View.GONE);
-//
-                    float scale = getResources().getDisplayMetrics().density;
-                    int marginTopInPixels = (int) (40 * scale + 0.5f);
-                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) imageView5.getLayoutParams();
-                    layoutParams.topMargin = marginTopInPixels; // Thay thế marginTop bằng giá trị mong muốn
-                    imageView5.setLayoutParams(layoutParams);
-
-                } else { // Nếu người dùng cuộn lên, hiển thị storiesRecyclerView
-                    storiesRecylerView.setVisibility(View.VISIBLE);
-                    bgStories.setVisibility(View.VISIBLE);
-                    float scale = getResources().getDisplayMetrics().density;
-                    int marginTopInPixels = (int) (60 * scale + 0.5f);
-                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) imageView5.getLayoutParams();
-                    layoutParams.topMargin = marginTopInPixels; // Thay thế marginTop bằng giá trị mong muốn
-                    imageView5.setLayoutParams(layoutParams);
-                }
-            }
-        });
     }
 
     private void selectImgPostFragment() {
@@ -182,7 +128,7 @@ public class homepageFragment extends Fragment {
 
     private void checkFollowing(){
         followingList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child("following");
 
@@ -206,6 +152,7 @@ public class homepageFragment extends Fragment {
         });
     }
 
+    //Xem story của nguời mình theo dõi
     private void readStory(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
         reference.addValueEventListener(new ValueEventListener() {
@@ -216,16 +163,13 @@ public class homepageFragment extends Fragment {
                 storiesModelList.add(new StoriesModel("",0,0,"",
                         FirebaseAuth.getInstance().getCurrentUser().getUid()));
 
-                Log.d("size of followingList: ", String.valueOf(followingList.size()));
                 for(String id : followingList){
-                    Log.d("story of user? ", id);
                     int countStory = 0;
                     StoriesModel story = null;
                     for(DataSnapshot data : snapshot.child(id).getChildren()){
                         story = data.getValue(StoriesModel.class);
                         if(timeCurrent > story.getStartTime() && timeCurrent < story.getEndTime()){
                             countStory++;
-                            Log.d("countStory? ", String.valueOf(countStory));
                         }
                     }
 
@@ -242,4 +186,5 @@ public class homepageFragment extends Fragment {
             }
         });
     }
+
 }

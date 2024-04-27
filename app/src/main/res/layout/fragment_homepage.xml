@@ -1,86 +1,100 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.homepageFragment">
 
-    <ImageView
-        android:id="@+id/imageView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
-
-    <ImageView
-        android:id="@+id/imageView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="17dp"
-        app:layout_constraintEnd_toStartOf="@+id/btnChat"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/heart" />
-
-    <ImageView
-        android:id="@+id/btnChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/message" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="65dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/storiesRecyclerView"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/rcv_post"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:background="?android:attr/windowBackground">
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/storiesRecyclerView"
-        app:srcCompat="@drawable/img" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_post"
-        android:layout_width="0dp"
+            <RelativeLayout
+                android:paddingTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cardview_light_background">
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/logo" />
+
+                <ImageView
+                    android:id="@+id/btnChat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:src="@drawable/message"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+                <ImageView
+                    android:id="@+id/btnNotify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="80dp"
+                    android:src="@drawable/heart"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/lightGray"
+            tools:layout_editor_absoluteX="0dp" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        android:layout_below="@id/bar"
+        android:background="@color/cardview_light_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/storiesRecyclerView"
+                android:layout_margin="5dp"
+                android:layout_below="@id/bar"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rcv_post"
+                android:layout_below="@id/storiesRecyclerView"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
         android:background="@color/cardview_light_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:padding="8dp">
 
         <ImageView
             android:layout_width="30dp"
@@ -117,4 +131,4 @@
             android:src="@drawable/user_regular" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //        // Lấy ID của người dùng hiện tại
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference storyRef = database.getReference("Follow");
+//        DatabaseReference storyRef = database.getReference("users");
 //
 //        List<String> followingList = new ArrayList<>();
 //        followingList.add("4X1AusHwrVQQf9yLSUixMCZnLhY2");
