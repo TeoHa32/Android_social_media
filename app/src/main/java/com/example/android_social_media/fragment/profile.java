@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class profile extends Fragment {
     private TextView nameTv, toolbarNameTv,statusTv,followersCountTv,followingCountTv,postCountTv;
     private CircleImageView profileImage;
-    private Button flbt;
+    private Button flbt,chatButton;
     private Button followBtn;
     private RecyclerView recyclerView;
 
@@ -73,7 +73,7 @@ public class profile extends Fragment {
             }
         });
 
-        Button chatButton = view.findViewById(R.id.chatBtn);
+
 
         String buttonText = chatButton.getText().toString();
         chatButton.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +103,7 @@ public class profile extends Fragment {
         toolbarNameTv = view.findViewById(R.id.toolbarNameTV);
         followingCountTv = view.findViewById(R.id.followingCountTv);
         flbt = view.findViewById(R.id.followBtn);
+        chatButton = view.findViewById(R.id.chatBtn);
 
 //        postCountTv = view.findViewById(R.id.postCountTv);
 //        profileImage = view.findViewById(R.id.profileImage);
@@ -204,56 +205,56 @@ public class profile extends Fragment {
         });
     }
 
-    private void unfollow(){
-        String userIdToRemove = "jukhx1A154W2ERD0nJ9AG3LtyMI2";
-        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-                .child("users").child("NuXjEdYF637E4qikFCB").child("following");
-        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String userId = userSnapshot.getKey();
-                        if (userId.equals(userIdToRemove)) {
-                            // Xóa người dùng khỏi mảng
-                            userSnapshot.getRef().removeValue();
-                            // hoặc userSnapshot.getRef().setValue(null);
-                            break; // Thoát khỏi vòng lặp sau khi xóa
-                        }
-                    }
-                }
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra
-            }
-        });
-
-    }
-    private void addfollow(){
-        String userIdToAdd = "ID_of_user_to_add";
-        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-                .child("users").child("current_user_id").child("following");
-
-// Kiểm tra xem người dùng đã tồn tại trong mảng chưa
-        followingRef.child(userIdToAdd).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    // Người dùng chưa tồn tại trong mảng, thêm người dùng mới vào
-                    followingRef.child(userIdToAdd).setValue(true);
-                    // hoặc followingRef.child(userIdToAdd).setValue("any_value"); nếu cần
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra
-            }
-        });
-    }
+//    private void unfollow(){
+//        String userIdToRemove = "jukhx1A154W2ERD0nJ9AG3LtyMI2";
+//        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+//                .child("users").child("NuXjEdYF637E4qikFCB").child("following");
+//        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+//                        String userId = userSnapshot.getKey();
+//                        if (userId.equals(userIdToRemove)) {
+//                            // Xóa người dùng khỏi mảng
+//                            userSnapshot.getRef().removeValue();
+//                            // hoặc userSnapshot.getRef().setValue(null);
+//                            break; // Thoát khỏi vòng lặp sau khi xóa
+//                        }
+//                    }
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Xử lý khi có lỗi xảy ra
+//            }
+//        });
+//
+//    }
+//    private void addfollow(){
+//        String userIdToAdd = "ID_of_user_to_add";
+//        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+//                .child("users").child("current_user_id").child("following");
+//
+//// Kiểm tra xem người dùng đã tồn tại trong mảng chưa
+//        followingRef.child(userIdToAdd).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (!dataSnapshot.exists()) {
+//                    // Người dùng chưa tồn tại trong mảng, thêm người dùng mới vào
+//                    followingRef.child(userIdToAdd).setValue(true);
+//                    // hoặc followingRef.child(userIdToAdd).setValue("any_value"); nếu cần
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Xử lý khi có lỗi xảy ra
+//            }
+//        });
+//    }
 
 
     }
