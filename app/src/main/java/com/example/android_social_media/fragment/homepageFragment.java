@@ -137,6 +137,7 @@ public class homepageFragment extends Fragment {
     }
     private void readPost(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange( DataSnapshot snapshot) {
@@ -149,6 +150,12 @@ public class homepageFragment extends Fragment {
                         if(post.getPublisher().equals(id)){
                             postList.add(post);
                         }
+                    }
+                }
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    post post = dataSnapshot.getValue(post.class);
+                    if(post.getPublisher().equals(Uid)){
+                        postList.add(post);
                     }
                 }
                 postAdapter.notifyDataSetChanged();
