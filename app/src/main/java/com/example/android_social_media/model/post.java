@@ -1,67 +1,50 @@
 package com.example.android_social_media.model;
 
 public class post {
-    private int id_userImg_post;
-    private int id_image_post;
-    private String name;
-    private int id_heart;
-    private int id_comment;
-    private int id_share;
+    private  String postId;
+    private String postImage;
+    private String description;
+    private String publisher;
 
-    public post(int id_userImg_post, int id_image_post, String name, int id_heart, int id_comment, int id_share) {
-        this.id_userImg_post = id_userImg_post;
-        this.id_image_post = id_image_post;
-        this.name = name;
-        this.id_heart = id_heart;
-        this.id_comment = id_comment;
-        this.id_share = id_share;
+    public post() {
     }
 
-    public int getId_userImg_post() {
-        return id_userImg_post;
+    public post(String postId, String postImage, String description, String publisher) {
+        this.postId = postId;
+        this.postImage = postImage;
+        this.description = description;
+        this.publisher = publisher;
     }
 
-    public void setId_userImg_post(int id_userImg_post) {
-        this.id_userImg_post = id_userImg_post;
+    public String getPostId() {
+        return postId;
     }
 
-    public int getId_image_post() {
-        return id_image_post;
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
-    public void setId_image_post(int id_image_post) {
-        this.id_image_post = id_image_post;
+    public String getPostImage() {
+        return postImage;
     }
 
-    public String getName() {
-        return name;
+    public void setPostImage(String postImage) {
+        this.postImage = postImage;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getDescription() {
+        return description;
     }
 
-    public int getId_heart() {
-        return id_heart;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setId_heart(int id_heart) {
-        this.id_heart = id_heart;
+    public String getPublisher() {
+        return publisher;
     }
 
-    public int getId_comment() {
-        return id_comment;
-    }
-
-    public void setId_comment(int id_comment) {
-        this.id_comment = id_comment;
-    }
-
-    public int getId_share() {
-        return id_share;
-    }
-
-    public void setId_share(int id_share) {
-        this.id_share = id_share;
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 }

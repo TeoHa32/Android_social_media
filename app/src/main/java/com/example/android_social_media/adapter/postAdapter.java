@@ -10,63 +10,97 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android_social_media.R;
+import com.example.android_social_media.model.User;
 import com.example.android_social_media.model.post;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-public class postAdapter  extends  RecyclerView.Adapter<postAdapter.PostViewHolder>{
-    private Context mcontext;
-    private List<post> listPost;
-    public void setData(List<post> list){
-        this.listPost=list;
-        notifyDataSetChanged();
-    }
-    public postAdapter(Context mcontext) {
+public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
+    public Context mcontext;
+    public List<post> mPost;
+    private FirebaseUser firebaseUser;
+
+    public postAdapter(Context mcontext, List<post> mPost) {
         this.mcontext = mcontext;
+        this.mPost = mPost;
     }
 
     @NonNull
     @Override
-    public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
-        return new PostViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mcontext).inflate(R.layout.item_post,parent, false);
+        return new postAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-        post    post = listPost.get(position);
-        if(post == null) return ;
-        holder.imgUser.setImageResource(post.getId_userImg_post());
-        holder.tvName.setText(post.getName());
-        holder.imgPost.setImageResource(post.getId_image_post());
-        holder.heart.setImageResource(post.getId_heart());
-        holder.comment.setImageResource(post.getId_comment());
-        holder.share.setImageResource(post.getId_share());
-    }
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        post post = mPost.get(position);
+        Glide.with(mcontext).load(post.getPostImage()).into(holder.post_image);
+        if(post.getDescription().equals("")){
+            holder.description.setVisibility(View.GONE);
+        }
+        else{
+            holder.description.setVisibility(View.VISIBLE);
+            holder.description.setText(post.getDescription());
 
+        }
+
+        publisherInfo(holder.image_profile, holder.username, holder.publisher, post.getPublisher());
+    }
     @Override
     public int getItemCount() {
-        if(listPost !=null) return listPost.size();
-        return 0;
+        return mPost.size();
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgUser;
-        private TextView tvName;
-        private ImageView imgPost;
-        private ImageView heart;
-        private ImageView comment;
-        private ImageView share;
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
-        public PostViewHolder(@NonNull View itemView) {
+        public ImageView image_profile, post_image, comment , save;
+        public TextView username, likes, publisher, description, comments;
+
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-        imgUser = itemView.findViewById(R.id.img_user_post);
-        tvName = itemView.findViewById(R.id.tv_name_post);
-        imgPost = itemView.findViewById(R.id.image_post);
-        heart = itemView.findViewById(R.id.heart);
-        comment = itemView.findViewById(R.id.comment);
-        share = itemView.findViewById(R.id.share);
+            image_profile = itemView.findViewById(R.id.image_profile);
+            post_image = itemView.findViewById(R.id.post_image);
+            comment = itemView.findViewById(R.id.comment);
+            save = itemView.findViewById(R.id.share);
+            username = itemView.findViewById(R.id.username);
+            likes = itemView.findViewById(R.id.likes);
+            publisher = itemView.findViewById(R.id.publisher);
+            description = itemView.findViewById(R.id.description);
+            comments = itemView.findViewById(R.id.comments);
         }
     }
+    private void publisherInfo(ImageView image_profile, TextView username, TextView publisher, String userId){
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("users").child(userId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                Glide.with(mcontext).load(user.getProfileImage()).into(image_profile);
+                username.setText(user.getUsername());
+                publisher.setText(user.getUsername());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 }

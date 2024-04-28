@@ -59,7 +59,7 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
-    implementation ("io.github.ParkSangGwon:tedimagepicker:1.5.0")
+
     implementation ("pub.devrel:easypermissions:3.0.0")
     implementation ("com.droidninja:filepicker:2.2.5")
     implementation ("com.github.bumptech.glide:glide:4.13.0")
@@ -75,6 +75,9 @@ dependencies {
 
     //thư viện dùng để cắt ảnh đăng story
     implementation("com.theartofdev.edmodo:android-image-cropper:2.7.+")
+
+    //post
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
 
 
 }
