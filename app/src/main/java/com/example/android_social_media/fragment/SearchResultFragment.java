@@ -24,6 +24,8 @@ import com.example.android_social_media.model.SearchUser;
 import com.example.android_social_media.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,13 +73,18 @@ public class SearchResultFragment extends Fragment {
         adapter.OnUserClicked(new SearchAdapter.OnUserClicked() {
             @Override
             public void onItemClicked(View view, SearchUser searchUser) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
                 // Tạo Bundle để truyền UID qua ProfileFragment
                 Bundle bundle = new Bundle();
                 bundle.putString("username", searchUser.getUsername());
+                bundle.putString("UserID", searchUser.getUserID());
 
                 // Tạo instance của ProfileFragment và thiết lập UID
                 profile profile = new profile();
                 profile.setArguments(bundle);
+
+
 
                 // Thực hiện chuyển Fragment
                 FragmentManager manager = requireActivity().getSupportFragmentManager();

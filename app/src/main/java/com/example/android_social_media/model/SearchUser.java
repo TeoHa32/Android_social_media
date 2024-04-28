@@ -1,10 +1,10 @@
 package com.example.android_social_media.model;
 
 public class SearchUser {
-    private String uid, name, username, profileImage;
+    private String UserID, name, username, profileImage;
 
-    public SearchUser(String uid, String name, String username, String profileImage ) {
-        this.uid = uid;
+    public SearchUser(String userID, String name, String username, String profileImage) {
+        UserID = userID;
         this.name = name;
         this.username = username;
         this.profileImage = profileImage;
@@ -13,20 +13,20 @@ public class SearchUser {
     public SearchUser() {
     }
 
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getUsername() {
