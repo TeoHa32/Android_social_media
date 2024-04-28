@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +22,6 @@ import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.SearchAdapter;
 import com.example.android_social_media.model.SearchUser;
 import com.example.android_social_media.model.User;
-import com.example.android_social_media.adapter.UserAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -61,6 +62,31 @@ public class SearchResultFragment extends Fragment {
         loadUserData();
 
         searchUser();
+
+        clickListener();
+    }
+
+    private void clickListener() {
+
+        adapter.OnUserClicked(new SearchAdapter.OnUserClicked() {
+            @Override
+            public void onItemClicked(View view, SearchUser searchUser) {
+                // Tạo Bundle để truyền UID qua ProfileFragment
+                Bundle bundle = new Bundle();
+                bundle.putString("username", searchUser.getUsername());
+
+                // Tạo instance của ProfileFragment và thiết lập UID
+                profile profile = new profile();
+                profile.setArguments(bundle);
+
+                // Thực hiện chuyển Fragment
+                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction trans = manager.beginTransaction();
+                trans.replace(R.id.fragment_container, profile);
+                trans.addToBackStack(null);
+                trans.commit();
+            }
+        });
     }
 
     private void searchUser() {
