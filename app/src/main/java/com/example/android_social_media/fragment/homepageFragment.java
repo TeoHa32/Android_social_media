@@ -176,14 +176,12 @@ public class homepageFragment extends Fragment {
                             countStory++;
                         }
                     }
-
                     if(countStory > 0){
                         storiesModelList.add(story);
                     }
                 }
                 storiesAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
