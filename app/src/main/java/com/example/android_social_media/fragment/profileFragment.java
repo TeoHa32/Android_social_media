@@ -88,7 +88,7 @@ public class profileFragment extends Fragment {
         }
         if (user != null) {
 
-             uid = user.getUid();
+            uid = user.getUid();
 
             uid = user.getUid();
             Log.d("co uid", uid);
@@ -143,7 +143,6 @@ public class profileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
