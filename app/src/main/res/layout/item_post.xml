@@ -17,7 +17,6 @@
             android:layout_margin="10dp"
             android:id="@+id/image_profile"
             android:src="@drawable/ic_launcher_background"
-            
             />
         <TextView
             android:layout_width="wrap_content"
@@ -29,9 +28,17 @@
             android:textStyle="bold"
             />
     </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textStyle="bold"
+            android:id="@+id/description"
+            />
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:id="@+id/post_image"
         android:src="@drawable/ic_launcher_background"
         />
@@ -83,15 +90,7 @@
 
 
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textStyle="bold"
-            android:id="@+id/description"
 
-
-            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,7 +101,6 @@
             android:layout_marginBottom="10dp"
             android:text="View all 20 comment"
             android:textColor="@color/colorAccent"
-
             />
     </LinearLayout>
 </RelativeLayout>

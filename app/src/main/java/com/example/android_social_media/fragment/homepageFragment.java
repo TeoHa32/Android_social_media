@@ -2,7 +2,6 @@ package com.example.android_social_media.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class homepageFragment extends Fragment {
-
     private ImageView imgNewPost;
     private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
@@ -48,12 +46,9 @@ public class homepageFragment extends Fragment {
     StoriesAdapter storiesAdapter;
     List<StoriesModel> storiesModelList;
     private List<String> followingList;
-
-
     public homepageFragment() {
         // Required empty public constructor
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,13 +69,9 @@ public class homepageFragment extends Fragment {
 
         return view;
     }
-
-
-
     private void init(View view) {
         imgNewPost = view.findViewById(R.id.img_new_post);
         btnChat = view.findViewById(R.id.btnChat);
-
         storiesRecylerView = view.findViewById(R.id.storiesRecyclerView);
         storiesRecylerView.setHasFixedSize(true);
         storiesRecylerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -132,16 +123,11 @@ public class homepageFragment extends Fragment {
                 followingList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                    followingList.add(snapshot.getValue(String.class));
-
                     Log.d("phần tử của following List: ", snapshot.getValue(String.class));
-
                 }
-
                 readPost();
                 readStory();
             }
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -156,9 +142,9 @@ public class homepageFragment extends Fragment {
                 postList.clear();
                 for(DataSnapshot datasnapshot: snapshot.getChildren()){
                     post post = datasnapshot.getValue(post.class);
-                    Log.d("TAG", post.getPublisher());
+                    Log.d("TAG1", post.getPublisher());
                     for(String id : followingList){
-                        Log.d("TAG", id);
+                        Log.d("TAG2", id);
                         if(post.getPublisher().equals(id)){
                             postList.add(post);
                         }
@@ -168,7 +154,6 @@ public class homepageFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -182,7 +167,6 @@ public class homepageFragment extends Fragment {
                 storiesModelList.clear();
                 storiesModelList.add(new StoriesModel("",0,0,"",
                         FirebaseAuth.getInstance().getCurrentUser().getUid()));
-
                 for(String id : followingList){
                     int countStory = 0;
                     StoriesModel story = null;
