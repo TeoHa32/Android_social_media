@@ -113,11 +113,12 @@ public class homepageFragment extends Fragment {
         Intent intent = new Intent(getActivity(), PostActivity.class);
         startActivity(intent);
     }
+
+    
     private void startChatActivity() {
         Intent intent = new Intent(getActivity(), ChatUsersActivity.class);
         startActivity(intent);
     }
-
 
 
     private void checkFollowing(){

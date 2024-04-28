@@ -15,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +70,7 @@ public class PostActivity extends Activity {
                 .setAspectRatio(1,1)
                 .start(PostActivity.this);
     }
+
     private String getFileExtension(Uri uri){
         ContentResolver  contentResolver = getContentResolver();
         MimeTypeMap mine = MimeTypeMap.getSingleton();

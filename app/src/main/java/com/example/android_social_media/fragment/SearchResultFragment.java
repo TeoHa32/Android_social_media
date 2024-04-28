@@ -13,16 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.SearchAdapter;
 import com.example.android_social_media.model.SearchUser;
-import com.example.android_social_media.model.User;
-import com.example.android_social_media.adapter.UserAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
