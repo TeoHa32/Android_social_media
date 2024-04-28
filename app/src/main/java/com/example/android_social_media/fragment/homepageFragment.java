@@ -166,7 +166,6 @@ public class homepageFragment extends Fragment {
                 }
                 postAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

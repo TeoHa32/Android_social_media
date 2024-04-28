@@ -15,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import java.util.HashMap;
-public class PostActivity extends Activity {
+public class PostActivity extends AppCompatActivity  {
     Uri imageUri;
     String myUrl;
     StorageTask uploadTask;
@@ -55,6 +59,8 @@ public class PostActivity extends Activity {
                 finish();
             }
         });
+
+        openGallery();
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,9 +68,25 @@ public class PostActivity extends Activity {
             }
         });
 
-        CropImage.activity()
-                .setAspectRatio(1,1)
-                .start(PostActivity.this);
+
+    }
+    private void openGallery() {
+        ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri result) {
+                        if (result != null) {
+                            imageUri = result;
+                            CropImage.activity(imageUri)
+                                    .setAspectRatio(1,1)
+                                    .start(PostActivity.this);
+                        } else {
+                            finish();
+                        }
+                    }
+                });
+
+        galleryLauncher.launch("image/*");
     }
     private String getFileExtension(Uri uri){
         ContentResolver  contentResolver = getContentResolver();
@@ -94,8 +116,6 @@ public class PostActivity extends Activity {
                         myUrl = dowloadUri.toString();
                         Log.d("TAG", myUrl);
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-
-
                         String postId = reference.push().getKey();
                         Log.d("TAG", postId);
                         HashMap<String,Object> hashMap = new HashMap<>();
@@ -123,19 +143,29 @@ public class PostActivity extends Activity {
             Toast.makeText(this,"No image selected",Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode==RESULT_OK){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            imageUri=result.getUri();
-            image_added.setImageURI(imageUri);
-        }
-        else{
-            Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(PostActivity.this, MainActivity.class));
-            finish();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                imageUri = result.getUri();
+                Log.d("TAG", imageUri.toString());
+                if (imageUri != null) {
+                    Log.d("TAG1", imageUri.toString());
+                    image_added.setImageURI(imageUri);
+                } else {
+                    Toast.makeText(this, "Không có ảnh nào được chọn!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Đã xảy ra lỗi khi cắt ảnh!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Đã hủy cắt ảnh!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 }
