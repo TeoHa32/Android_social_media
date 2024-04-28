@@ -1,6 +1,7 @@
 package com.example.android_social_media.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,6 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
         this.mcontext = mcontext;
         this.mPost = mPost;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,9 +55,26 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
             holder.description.setText(post.getDescription());
 
         }
+        holder.datetime.setText(post.getDatetime());
+
+
         publisherInfo(holder.image_profile, holder.username, holder.publisher, post.getPublisher());
+        isSave(post.getPostId(),  holder.save);
         isLike(post.getPostId(), holder.like);
         nrLikes(holder.likes, post.getPostId());
+        holder.save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.save.getTag().equals("save")){
+                    FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid())
+                            .child(post.getPostId()).setValue(true);
+                }
+                else{
+                    FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid())
+                            .child(post.getPostId()).removeValue();
+                }
+            }
+        });
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,23 +96,48 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView image_profile, post_image, comment , save,like;
-        public TextView username, likes, publisher, description, comments;
-
-
+        public TextView username, likes, publisher, description, comments, datetime;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image_profile = itemView.findViewById(R.id.image_profile);
             post_image = itemView.findViewById(R.id.post_image);
             comment = itemView.findViewById(R.id.comment);
-            save = itemView.findViewById(R.id.share);
+            save = itemView.findViewById(R.id.save);
             username = itemView.findViewById(R.id.username);
             like = itemView.findViewById(R.id.like);
             likes = itemView.findViewById(R.id.likes);
             publisher = itemView.findViewById(R.id.publisher);
             description = itemView.findViewById(R.id.description);
             comments = itemView.findViewById(R.id.comments);
+            datetime=itemView.findViewById(R.id.datetime);
+
+
         }
     }
+    private void isSave(String postId, ImageView imageview){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Saves")
+                .child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(postId).exists()){
+                    imageview.setImageResource(R.drawable.ic_saved);
+                    imageview.setTag("saved");
+                }
+                else{
+                    imageview.setImageResource(R.drawable.ic_save);
+                    imageview.setTag("save");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void isLike(String postId, ImageView imageView){
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
@@ -112,7 +154,6 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
                         imageView.setTag("like");
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
@@ -124,19 +165,17 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                likes.setText(snapshot.getChildrenCount()+"likes");
-
+                likes.setText(snapshot.getChildrenCount()+" Lượt thích");
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
     }
     private void publisherInfo(ImageView image_profile, TextView username, TextView publisher, String userId){
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("users").child(userId);
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -144,9 +183,7 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
                 Glide.with(mcontext).load(user.getProfileImage()).into(image_profile);
                 username.setText(user.getUsername());
                 publisher.setText(user.getUsername());
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

@@ -5,15 +5,22 @@ public class post {
     private String postImage;
     private String description;
     private String publisher;
-
+    private String dateTime;
     public post() {
     }
-
-    public post(String postId, String postImage, String description, String publisher) {
+    public post(String postId, String postImage, String description, String publisher, String datetime) {
         this.postId = postId;
         this.postImage = postImage;
         this.description = description;
         this.publisher = publisher;
+        this.dateTime=datetime;
+    }
+
+    public String getDatetime() {
+        return dateTime;
+    }
+    public void setDatetime(String datetime) {
+        this.dateTime = datetime;
     }
 
     public String getPostId() {
