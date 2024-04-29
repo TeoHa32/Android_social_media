@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.android_social_media.fragment.profile;
+import com.example.android_social_media.fragment.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Khởi tạo ban đầu sẽ ở trang đăng nhập.
-        //LoginFragment loginFragment = new LoginFragment();
-        profile p = new profile();
+        LoginFragment loginFragment = new LoginFragment();
+        //profile p = new profile();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, p);
-//        fragmentTransaction.replace(R.id.fragment_container, p);
+        fragmentTransaction.replace(R.id.fragment_container, loginFragment);
+      // fragmentTransaction.replace(R.id.fragment_container, p);
         fragmentTransaction.addToBackStack(null); // Add to back stack if needed
         fragmentTransaction.commit();
 

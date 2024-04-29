@@ -34,7 +34,7 @@ public class profileFragment extends Fragment {
     String uid,key;
     TextView follow, following;
 
-    ImageView btnHome;
+    ImageView btnHome, btnSearch;
 
     public profileFragment() {
         // Required empty public constructor
@@ -113,6 +113,7 @@ public class profileFragment extends Fragment {
     private void init(View view) {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
         btnHome = view.findViewById(R.id.btnHome);
+        btnSearch = view.findViewById(R.id.btnSearch);
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +143,17 @@ public class profileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchFragment searchFragment = new SearchFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, searchFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
     }
 
     private void getFollowerCount() {
@@ -160,7 +172,7 @@ public class profileFragment extends Fragment {
 
                     follow.setText(String.valueOf(followerCount));
                     following.setText(String.valueOf(followingCount));
-                    return followerCount;
+//                    return followerCount;
                 }
 
                 @Override

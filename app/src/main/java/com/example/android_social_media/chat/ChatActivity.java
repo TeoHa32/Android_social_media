@@ -148,7 +148,7 @@ public class ChatActivity extends AppCompatActivity {
                     String userName = snapshot.child("username").getValue(String.class);
                     name.setText(userName);
                 }
-                return 0;
+//                return 0;
             }
 
             @Override
@@ -206,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatRef.child("time").setValue(currentTimeISO8601);
                 }
                 adapter.notifyDataSetChanged();
-                return 0;
+//                return 0;
             }
 
             @Override

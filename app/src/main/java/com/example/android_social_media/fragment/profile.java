@@ -21,12 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
 import com.example.android_social_media.chat.ChatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.jakewharton.threetenabp.AndroidThreeTen;
+
+//import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDateTime;
@@ -44,9 +51,12 @@ public class profile extends Fragment {
     private Button flbt,chatButton;
     private Button followBtn;
     private RecyclerView recyclerView;
+
     private long cout;
 
+    private long count;
 
+    private String UserID;
 
     public profile() {
         // Required empty public constructor
@@ -59,18 +69,22 @@ public class profile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         AndroidThreeTen.init(getActivity());
+//        AndroidThreeTen.init(getActivity());
         return inflater.inflate(R.layout.profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       init(view);
+        init(view);
 
         //View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Khởi tạo các thành phần giao diện và gán giá trị
         init(view);
+
+        Bundle bundle = getArguments();
+        UserID = bundle.getString("UserID");
 
         // Load dữ liệu từ Firebase Realtime Database và hiển thị lên giao diện
         loadUserDataFromFirebase();
@@ -94,7 +108,11 @@ public class profile extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+
                 AndroidThreeTen.init(getActivity());
+
+//                AndroidThreeTen.init(getActivity());
+
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String iduser1 = "vYEYezjxu8QT5HgpCRgcxuEOsUs1";
                 String iduser2 = "PVz33IummMfEXX6594CKN0nCJhC3";
@@ -125,11 +143,27 @@ public class profile extends Fragment {
                 startActivity(intent);
 //                Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
 //                intent.putExtra("uid", oppositeUID);
+
                // Log.d("nhan chat","roi ne");
+
+                // Log.d("nhan chat","roi ne");
             }
         });
 
-       // return view;
+        flbt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flbt.getText().equals("Follow")){
+                    addfollow();
+                    flbt.setText("Unfollow");
+                } else {
+                    unfollow();
+                    flbt.setText("Follow");
+                }
+            }
+        });
+
+        // return view;
     }
 
 
@@ -165,7 +199,7 @@ public class profile extends Fragment {
     }
 
     private void loadUserDataFromFirebase() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child("-NuXjEdYF637E4qikFCB");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -174,10 +208,10 @@ public class profile extends Fragment {
                     String status = dataSnapshot.child("status").getValue(String.class);
                     String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
                     String toolbarusername = dataSnapshot.child("username").getValue(String.class);
-                   // int followersCount = follow();
+                    // int followersCount = follow();
 
-                //    String followingCount = dataSnapshot.child("profileImage").getValue(String.class);
-          //          String postCount = dataSnapshot.child("profileImage").getValue(String.class);
+                    //    String followingCount = dataSnapshot.child("profileImage").getValue(String.class);
+                    //          String postCount = dataSnapshot.child("profileImage").getValue(String.class);
 //                    long followersCount = dataSnapshot.child("follower").getValue(Long.class);
 //                    long followingCount = dataSnapshot.child("following").getValue(Long.class);
 //                    long postCount = dataSnapshot.child("postCount").getValue(Long.class);
@@ -198,7 +232,7 @@ public class profile extends Fragment {
                         Picasso.get().load(profileImageUrl).into(profileImage);
                     }
                 } else Log.d("co vao day khong", "khong co");
-                return 0;
+
             }
 
             @Override
@@ -209,17 +243,22 @@ public class profile extends Fragment {
     }
 
     private void getFollowerCount() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child("-NuXjEdYF637E4qikFCB");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 long followerCount = dataSnapshot.child("follower").getChildrenCount();
                 long followingCount = dataSnapshot.child("following").getChildrenCount();
+
                 cout = followingCount;
+
+                count = followingCount;
+                Log.d("Count " , String.valueOf(count));
+
                 followersCountTv.setText(String.valueOf(followerCount));
                 followingCountTv.setText(String.valueOf(followingCount));
-                return followerCount;
+
             }
 
             @Override
@@ -232,7 +271,7 @@ public class profile extends Fragment {
     private void checkfollowing(){
         String username = "jukhx1A154W2ERD0nJ9AG3LtyMI2"; //username của trang cá nhân người nhấn vào
         // thay thế child("users").child("-NuXjEdYF637E4qikFCB").child("follower"); thành child("users").child(username).child("following");
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child("-NuXjEdYF637E4qikFCB").child("follower");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID).child("follower");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -241,12 +280,12 @@ public class profile extends Fragment {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                         String followerID = childSnapshot.getValue(String.class);
                         if(followerID.equals(username)){
-                            flbt.setText("Un follow");
+                            flbt.setText("Unfollow");
                             break;
                         }
                     }
                 }
-                return 0;
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -255,14 +294,58 @@ public class profile extends Fragment {
         });
     }
 
-//    private void unfollow(){
-//        String userIdToRemove = "jukhx1A154W2ERD0nJ9AG3LtyMI2";
-//        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-//                .child("users").child("NuXjEdYF637E4qikFCB").child("following");
-//        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
+    private void unfollow(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+        String userIdToRemove = UserID;
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(uid).child("following");
+        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String userId = userSnapshot.getKey();
+                        if (userId.equals(userIdToRemove)) {
+                            // Xóa người dùng khỏi mảng
+                            userSnapshot.getRef().removeValue();
+                            // hoặc userSnapshot.getRef().setValue(null);
+                            break; // Thoát khỏi vòng lặp sau khi xóa
+                        }
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
+
+    }
+    private void addfollow(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+        String userIdToAdd = UserID;
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("users");
+
+        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    long followingCount = dataSnapshot.child(uid).child("following").getChildrenCount();
+                    long followerCount = dataSnapshot.child(UserID).child("follower").getChildrenCount();
+                    Log.d("Chao moij nguoi", String.valueOf(followingCount));
+                    String dem =  String.valueOf(followingCount);
+                    followingRef.child(uid).child("following").child(dem).setValue(userIdToAdd);
+                    followingRef.child(UserID).child("follower").child(dem).setValue(userIdToAdd);
+                    String count1 = String.valueOf(followersCountTv.getText());
+                    long number = Long.parseLong(count1)+1;
+
+//                    followingCount = followingCount + 1;
+                    followersCountTv.setText(String.valueOf(number));
 //                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
 //                        String userId = userSnapshot.getKey();
 //                        if (userId.equals(userIdToRemove)) {
@@ -272,6 +355,7 @@ public class profile extends Fragment {
 //                            break; // Thoát khỏi vòng lặp sau khi xóa
 //                        }
 //                    }
+
 //                }
 //            }
 //
@@ -305,29 +389,19 @@ public class profile extends Fragment {
 //            }
 //        });
 //    }
-    public long cout(long a){
-        long a =0;
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child("-NuXjEdYF637E4qikFCB");
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-               // long followerCount = dataSnapshot.child("follower").getChildrenCount();
-                 long followingCount = dataSnapshot.child("following").getChildrenCount();
 
-                //cout = followingCount;
-               // followersCountTv.setText(String.valueOf(followerCount));
-              //  followingCountTv.setText(String.valueOf(followingCount));
+                }
             }
 
+
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
             }
         });
-        return 0;
     }
 
 
-    }
-
+}

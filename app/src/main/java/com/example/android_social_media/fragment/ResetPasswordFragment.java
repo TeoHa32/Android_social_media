@@ -1,14 +1,6 @@
 package com.example.android_social_media.fragment;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -19,6 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.android_social_media.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -139,7 +137,7 @@ public class ResetPasswordFragment extends Fragment {
                             } else {
                                 Toast.makeText(getContext(), "Địa chỉ Email không tồn tại!", Toast.LENGTH_SHORT).show();
                             }
-                            return 0;
+//                            return 0;
                         }
 
                         @Override

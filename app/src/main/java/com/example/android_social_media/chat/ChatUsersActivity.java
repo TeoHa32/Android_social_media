@@ -84,7 +84,7 @@ public class ChatUsersActivity extends AppCompatActivity {
                 } else {
                     Log.d("fetchUserData", "No data found");
                 }
-                return 0;
+//                return 0;
             }
 
             @Override

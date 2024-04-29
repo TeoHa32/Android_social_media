@@ -223,7 +223,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
                 addView(storyids.get(counter));
                 seenNumber(storyids.get(counter));
-                return 0;
+//                return 0;
             }
 
             @Override
@@ -247,7 +247,6 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -266,7 +265,6 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 seen_number.setText(""+snapshot.getChildrenCount());
                 return 0;
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
