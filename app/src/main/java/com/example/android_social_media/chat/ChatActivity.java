@@ -10,13 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,16 +26,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     List<ChatModel> list;
 
     String chatID;
+    //String
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +81,8 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, Object> messageMap = new HashMap<>();
             messageMap.put("id", messageID);
             messageMap.put("message", message);
-            messageMap.put("senderID", user.getUid());
+            //messageMap.put("senderID", user.getUid());
+            messageMap.put("senderID",getIntent().getStringExtra("userid"));
             messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
 
 
@@ -154,6 +148,7 @@ public class ChatActivity extends AppCompatActivity {
                     String userName = snapshot.child("username").getValue(String.class);
                     name.setText(userName);
                 }
+                return 0;
             }
 
             @Override
@@ -211,6 +206,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatRef.child("time").setValue(currentTimeISO8601);
                 }
                 adapter.notifyDataSetChanged();
+                return 0;
             }
 
             @Override

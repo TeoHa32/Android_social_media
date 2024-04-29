@@ -141,6 +141,7 @@ public class InfoProfileFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
+                return 0;
             }
 
             @Override
@@ -222,6 +223,7 @@ public class InfoProfileFragment extends Fragment {
                     //Ảnh đại diện mặc định khi user không có ảnh đại diện
                     imgProfile.setImageResource(R.drawable.ic_profile);
                 }
+                return 0;
             }
 
             @Override

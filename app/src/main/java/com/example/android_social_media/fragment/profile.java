@@ -1,5 +1,7 @@
 package com.example.android_social_media.fragment;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,18 +13,27 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
+import com.example.android_social_media.chat.ChatActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.picasso.Picasso;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,6 +44,8 @@ public class profile extends Fragment {
     private Button flbt,chatButton;
     private Button followBtn;
     private RecyclerView recyclerView;
+    private long cout;
+
 
 
     public profile() {
@@ -45,6 +58,7 @@ public class profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        AndroidThreeTen.init(getActivity());
         return inflater.inflate(R.layout.profile, container, false);
     }
 
@@ -77,9 +91,41 @@ public class profile extends Fragment {
 
         String buttonText = chatButton.getText().toString();
         chatButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                Log.d("nhan chat","roi ne");
+                AndroidThreeTen.init(getActivity());
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                String iduser1 = "vYEYezjxu8QT5HgpCRgcxuEOsUs1";
+                String iduser2 = "PVz33IummMfEXX6594CKN0nCJhC3";
+                DatabaseReference msgRef = database.getReference("Messages");
+                String id = msgRef.push().getKey();
+                LocalDateTime currentTime = null;
+                currentTime = LocalDateTime.now();
+
+                // Định dạng thời gian
+                DateTimeFormatter formatter = null;
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                String  formattedTime = currentTime.format(formatter);
+
+
+                // Tạo một hashmap để đại diện cho dữ liệu của user
+                HashMap<String, Object> userData = new HashMap<>();
+                userData.put("uid", Arrays.asList(iduser1, iduser2));
+                userData.put("time", formattedTime );
+                userData.put("lastMessage", "hello");
+                userData.put("id", id);
+
+//              Đẩy dữ liệu của user lên Firebase Realtime Database với key tự động// Tạo key tự động cho user
+                msgRef.child(id).setValue(userData);
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("uid", iduser2);
+                intent.putExtra("userid", iduser1);
+                intent.putExtra("id", id);
+                startActivity(intent);
+//                Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
+//                intent.putExtra("uid", oppositeUID);
+               // Log.d("nhan chat","roi ne");
             }
         });
 
@@ -152,6 +198,7 @@ public class profile extends Fragment {
                         Picasso.get().load(profileImageUrl).into(profileImage);
                     }
                 } else Log.d("co vao day khong", "khong co");
+                return 0;
             }
 
             @Override
@@ -169,8 +216,10 @@ public class profile extends Fragment {
 
                 long followerCount = dataSnapshot.child("follower").getChildrenCount();
                 long followingCount = dataSnapshot.child("following").getChildrenCount();
+                cout = followingCount;
                 followersCountTv.setText(String.valueOf(followerCount));
                 followingCountTv.setText(String.valueOf(followingCount));
+                return followerCount;
             }
 
             @Override
@@ -197,6 +246,7 @@ public class profile extends Fragment {
                         }
                     }
                 }
+                return 0;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -255,6 +305,28 @@ public class profile extends Fragment {
 //            }
 //        });
 //    }
+    public long cout(long a){
+        long a =0;
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child("-NuXjEdYF637E4qikFCB");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+               // long followerCount = dataSnapshot.child("follower").getChildrenCount();
+                 long followingCount = dataSnapshot.child("following").getChildrenCount();
+
+                //cout = followingCount;
+               // followersCountTv.setText(String.valueOf(followerCount));
+              //  followingCountTv.setText(String.valueOf(followingCount));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
+            }
+        });
+        return 0;
+    }
 
 
     }

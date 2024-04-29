@@ -149,6 +149,7 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
                                 holder.name.setText(name);
                             }
                         }
+                        return 0;
                     }
 
                     @Override

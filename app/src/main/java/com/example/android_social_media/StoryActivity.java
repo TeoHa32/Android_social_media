@@ -223,6 +223,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
                 addView(storyids.get(counter));
                 seenNumber(storyids.get(counter));
+                return 0;
             }
 
             @Override
@@ -241,6 +242,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 User user = snapshot.getValue(User.class);
                 Glide.with(getApplicationContext()).load(user.getProfileImage()).into(story_photo);
                 story_username.setText(user.getUsername());
+                return 0;
             }
 
             @Override
@@ -262,6 +264,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 seen_number.setText(""+snapshot.getChildrenCount());
+                return 0;
             }
 
             @Override

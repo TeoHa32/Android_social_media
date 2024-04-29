@@ -171,7 +171,7 @@ public class LoginFragment extends Fragment {
                             navigateToProfile(username,profileImage);
                             Log.d("có vào không?", "không biết");
                             Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_SHORT).show();
-                            return;
+                            return 0;
                         }
                     }
                 } else {
@@ -180,6 +180,7 @@ public class LoginFragment extends Fragment {
                     // Email does not exist, create new user profile
                     createUserProfile(email, displayName, userId, profileImage, databaseReference);
                 }
+                return 0;
             }
 
             @Override
@@ -206,12 +207,13 @@ public class LoginFragment extends Fragment {
                             signInWithEmailPassword(email, password);
                             navigateToProfile(username, profileImage);
                             Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                            return;
+                            return 0;
                         }
                     }
                 } else {
                     Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
                 }
+                return 0;
             }
 
             @Override
@@ -369,12 +371,13 @@ public class LoginFragment extends Fragment {
                                                     String profileImage = userSnapshot.child("profileImage").getValue(String.class);
                                                     navigateToProfile(username, profileImage);
                                                     Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                                                    return; // Exit loop once user data is found
+                                                    return 0;
                                                 }
                                             }
                                         } else {
                                             Log.d("FirebaseError", "User data not found for UID: " + user.getUid());
                                         }
+                                        return 0;
                                     }
 
                                     @Override
@@ -411,11 +414,12 @@ public class LoginFragment extends Fragment {
                     String email = userSnapshot.child("email").getValue(String.class);
                     if (email != null) {
                         listener.onEmailResult(email);
-                        return;
+                        return 0;
                     }
                 }
                 // Gửi kết quả null nếu không tìm thấy email tương ứng với username
                 listener.onEmailResult(null);
+                return 0;
             }
 
             @Override

@@ -139,6 +139,7 @@ public class ResetPasswordFragment extends Fragment {
                             } else {
                                 Toast.makeText(getContext(), "Địa chỉ Email không tồn tại!", Toast.LENGTH_SHORT).show();
                             }
+                            return 0;
                         }
 
                         @Override

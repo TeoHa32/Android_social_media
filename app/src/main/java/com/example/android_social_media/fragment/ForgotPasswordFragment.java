@@ -119,6 +119,7 @@ public class ForgotPasswordFragment extends Fragment {
                                 // Email không tồn tại trong cơ sở dữ liệu
                                 Toast.makeText(getContext(), "Địa chỉ email không tồn tại", Toast.LENGTH_SHORT).show();
                             }
+                            return 0;
                         }
 
                         @Override

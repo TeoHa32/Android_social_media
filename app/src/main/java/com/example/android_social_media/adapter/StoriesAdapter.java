@@ -134,6 +134,7 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
                     Glide.with(mContext).load(user.getProfileImage()).into(viewHolder.story_photo_seen);
                     viewHolder.story_username.setText(user.getUsername());
                 }
+                return 0;
             }
 
             @Override
@@ -209,6 +210,7 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
                         imageView.setVisibility(View.VISIBLE);
                     }
                 }
+                return currentTime;
             }
 
             @Override
@@ -240,6 +242,7 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
                     viewHolder.story_photo.setVisibility(View.GONE);
                     viewHolder.story_photo_seen.setVisibility(View.VISIBLE);
                 }
+                return 0;
             }
 
             @Override

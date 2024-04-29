@@ -201,6 +201,7 @@ public class ChangeImageFragment extends Fragment {
                                 }
                             });
                 }
+                return 0;
             }
 
             @Override
@@ -225,6 +226,7 @@ public class ChangeImageFragment extends Fragment {
                     //Ảnh đại diện mặc định khi user không có ảnh đại diện
                     imgProfile.setImageResource(R.drawable.ic_profile);
                 }
+                return 0;
             }
 
             @Override

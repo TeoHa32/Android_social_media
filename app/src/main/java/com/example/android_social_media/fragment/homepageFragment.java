@@ -143,6 +143,7 @@ public class homepageFragment extends Fragment {
 
 //                readPosts();
                 readStory();
+                return 0;
             }
 
             @Override
@@ -178,6 +179,7 @@ public class homepageFragment extends Fragment {
                     }
                 }
                 storiesAdapter.notifyDataSetChanged();
+                return timeCurrent;
             }
 
             @Override
