@@ -81,8 +81,9 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, Object> messageMap = new HashMap<>();
             messageMap.put("id", messageID);
             messageMap.put("message", message);
-            //messageMap.put("senderID", user.getUid());
-            messageMap.put("senderID",getIntent().getStringExtra("userid"));
+            messageMap.put("senderID", user.getUid());
+//            messageMap.put("senderID",getIntent().getStringExtra("userid"));
+//            Log.d("Người gửi là: ",getIntent().getStringExtra("userid"));
             messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
 
 
@@ -160,7 +161,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void loadMessages(){
+        list.clear();
         chatID = getIntent().getStringExtra("id");
+        Log.d("ChatID?", chatID);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Messages")
