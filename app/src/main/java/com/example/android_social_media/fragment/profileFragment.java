@@ -14,8 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
+import com.example.android_social_media.adapter.MyfotosAdapter;
+import com.example.android_social_media.model.post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class profileFragment extends Fragment {
 
@@ -35,6 +44,9 @@ public class profileFragment extends Fragment {
     TextView follow, following;
 
     ImageView btnHome, btnSearch;
+    private RecyclerView recyclerView;
+    MyfotosAdapter myfotosAdapter;
+    List<post> postList;
 
     public profileFragment() {
         // Required empty public constructor
@@ -100,6 +112,7 @@ public class profileFragment extends Fragment {
 
         follow = view.findViewById(R.id.textView5);
         following = view.findViewById(R.id.textView6);
+
         return view;
     }
 
@@ -108,12 +121,21 @@ public class profileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init(view);
         clickListener();
+        myFotos();
     }
 
     private void init(View view) {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
         btnHome = view.findViewById(R.id.btnHome);
         btnSearch = view.findViewById(R.id.btnSearch);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager =new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        postList = new ArrayList<>();
+        myfotosAdapter = new MyfotosAdapter(getContext(),postList);
+        recyclerView.setAdapter(myfotosAdapter);
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {
@@ -209,5 +231,26 @@ public class profileFragment extends Fragment {
 //        }
 //
 //    }
+private void myFotos(){
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+    reference.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+            postList.clear();
+            for (DataSnapshot snapshot : datasnapshot.getChildren()){
+                post p = snapshot.getValue(post.class);
+                if(p.getPublisher().equals(key)){
+                    postList.add(p);
+                }
+            }
+            Collections.reverse(postList);
+            myfotosAdapter.notifyDataSetChanged();
+        }
 
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    });
+}
 }

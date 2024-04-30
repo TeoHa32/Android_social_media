@@ -58,7 +58,7 @@
         app:civ_border_color="@color/gray"
         app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"/>
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -210,26 +210,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="162dp"
-        android:layout_height="140dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="120dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8"
-        app:srcCompat="@drawable/img_5" />
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView9"-->
+    <!--        android:layout_width="162dp"-->
+    <!--        android:layout_height="140dp"-->
+    <!--        android:layout_marginStart="104dp"-->
+    <!--        android:layout_marginTop="120dp"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/imageView8"-->
+    <!--        app:srcCompat="@drawable/img_5" />-->
 
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="8dp"
-        android:text="Chia sẻ ảnh và video"
-        android:textStyle="bold"
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView12"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="116dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:text="Chia sẻ ảnh và video"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/imageView9" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/view20"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="2dp"-->
+    <!--        android:layout_below="@id/imageView8"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginTop="12dp"-->
+    <!--        android:background="#C8C8C8"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/baiviet"-->
+    <!--        tools:ignore="MissingConstraints" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/baiviet"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+        app:layout_constraintTop_toBottomOf="@+id/baiviet" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -250,9 +271,9 @@
                 android:id="@+id/btnHome"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="80dp"
-                android:layout_marginStart="20dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/house_solid" />
 
