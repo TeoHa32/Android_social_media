@@ -1,7 +1,16 @@
 package com.example.android_social_media.fragment;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.android_social_media.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,6 +32,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
@@ -166,7 +171,7 @@ public class LoginFragment extends Fragment {
                             navigateToProfile(username,profileImage);
                             Log.d("có vào không?", "không biết");
                             Toast.makeText(getContext(), "Đăng nhập bằng Google thành công!", Toast.LENGTH_SHORT).show();
-//                            return 0;
+                            return;
                         }
                     }
                 } else {
@@ -175,7 +180,6 @@ public class LoginFragment extends Fragment {
                     // Email does not exist, create new user profile
                     createUserProfile(email, displayName, userId, profileImage, databaseReference);
                 }
-//                return 0;
             }
 
             @Override
@@ -202,13 +206,12 @@ public class LoginFragment extends Fragment {
                             signInWithEmailPassword(email, password);
                             navigateToProfile(username, profileImage);
                             Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-//                            return 0;
+                            return;
                         }
                     }
                 } else {
                     Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
                 }
-//                return 0;
             }
 
             @Override
@@ -366,13 +369,12 @@ public class LoginFragment extends Fragment {
                                                     String profileImage = userSnapshot.child("profileImage").getValue(String.class);
                                                     navigateToProfile(username, profileImage);
                                                     Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-//                                                    return 0;
+                                                    return; // Exit loop once user data is found
                                                 }
                                             }
                                         } else {
                                             Log.d("FirebaseError", "User data not found for UID: " + user.getUid());
                                         }
-//                                        return 0;
                                     }
 
                                     @Override
@@ -409,12 +411,11 @@ public class LoginFragment extends Fragment {
                     String email = userSnapshot.child("email").getValue(String.class);
                     if (email != null) {
                         listener.onEmailResult(email);
-//                        return 0;
+                        return;
                     }
                 }
                 // Gửi kết quả null nếu không tìm thấy email tương ứng với username
                 listener.onEmailResult(null);
-//                return 0;
             }
 
             @Override
