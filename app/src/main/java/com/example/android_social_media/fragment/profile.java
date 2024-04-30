@@ -19,23 +19,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
-
 import com.example.android_social_media.adapter.MyfotosAdapter;
 import com.example.android_social_media.chat.ChatActivity;
+import com.example.android_social_media.model.ChatModel;
 import com.example.android_social_media.model.post;
-
-
-import com.example.android_social_media.chat.ChatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -51,17 +46,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-
-//import com.jakewharton.threetenabp.AndroidThreeTen;
-
-import com.squareup.picasso.Picasso;
-
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -75,6 +59,8 @@ public class profile extends Fragment {
     private RecyclerView recyclerView;
     MyfotosAdapter myfotosAdapter;
     List<post> postList;
+
+    List<ChatModel> chat;
 
     ImageButton list;
     String key;
@@ -541,6 +527,7 @@ public class profile extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = currentUser.getUid();
         String userIdToRemove = UserID;
+        long dem = 0;
         DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
                 .child("users");
         followingRef.child(uid).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -552,12 +539,12 @@ public class profile extends Fragment {
                         String userId1 = (String) userSnapshot.getValue();
                         if (userId1.equals(userIdToRemove)) {
                             // Xóa người dùng khỏi mảng
-
                             userSnapshot.getRef().removeValue();
-
                             break;
                         }
                     }
+
+
                 }
             }
             @Override
@@ -590,26 +577,94 @@ public class profile extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xử lý khi có lỗi xảy ra
             }
+
         });
+
     }
     private void addfollow(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = currentUser.getUid();
         String userIdToAdd = UserID;
+        String demgt1;
+        List <String> dem = new ArrayList<>();
+        List <String> demflw = new ArrayList<>();
         DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
                 .child("users");
+
+        if(!dem.isEmpty()){
+            Log.d("gia tri cuoi cung", dem.get(0));
+
+        }
 
         followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    DataSnapshot data = dataSnapshot.child(uid).child("following");
+                    for (DataSnapshot userSnapshot : data.getChildren()) {
+
+                        String demgt = userSnapshot.getKey();
+                        dem.add(demgt);
+
+                    }
+
+                    DataSnapshot data1 = dataSnapshot.child(UserID).child("follower");
+                    for (DataSnapshot userSnapshot : data1.getChildren()) {
+                        String demgt = userSnapshot.getKey();
+                        demflw.add(demgt);
+                    }
+                    if(!demflw.isEmpty()){
+                        Log.d("gia tri cuoi cung1", demflw.get(demflw.size()-1));
+                    }
+
                     long followingCount = dataSnapshot.child(uid).child("following").getChildrenCount();
                     long followerCount = dataSnapshot.child(UserID).child("follower").getChildrenCount();
                     Log.d("Chao moij nguoi", String.valueOf(followingCount));
-                    String dem =  String.valueOf(followingCount);
-                    String dem2 = String.valueOf(followerCount);
-                    followingRef.child(uid).child("following").child(dem).setValue(userIdToAdd);
+
+                    String dem1 = "";
+                    String dem2 = "";
+                    if(dem.isEmpty()){
+                        if(demflw.isEmpty()){
+                            dem2 = "0";
+                        }
+                        else {
+                            long b = Long.parseLong(demflw.get(demflw.size()-1))+1;
+
+                            dem2 = String.valueOf(b);
+
+                        }
+                         dem1 =  "0";
+                        dem1 =  String.valueOf(dem1);
+                    }
+                    else if(demflw.isEmpty()){
+                        if (dem.isEmpty()){
+                            dem1 =  "0";
+                            dem1 =  String.valueOf(dem1);
+                        }
+                        else{
+                            long a = Long.parseLong(dem.get(dem.size()-1))+1;
+                            dem1 =  String.valueOf(a);
+
+                        }
+                        dem2 = "0";
+                       dem2 = String.valueOf(dem2);
+                    }
+                    else {
+                        long a = Long.parseLong(dem.get(dem.size()-1))+1;
+                        long b = Long.parseLong(demflw.get(demflw.size()-1))+1;
+
+                        dem1 =  String.valueOf(a);
+                        dem2 = String.valueOf(b);
+
+                    }
+                    Log.d("dem1",dem1);
+                    Log.d("dem2",dem2);
+                    followingRef.child(uid).child("following").child(dem1).setValue(userIdToAdd);
                     followingRef.child(UserID).child("follower").child(dem2).setValue(uid);
+
+
+//                    followingRef.child(uid).child("following").setValue(userIdToAdd);
+//                    followingRef.child(UserID).child("follower").setValue(uid);
                     String count1 = String.valueOf(followersCountTv.getText());
                     long number = Long.parseLong(count1)+1;
 
@@ -630,6 +685,9 @@ public class profile extends Fragment {
     }
 
     private void addmessage(){
+
+//        AndroidThreeTen.init(getActivity());
+
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //        String uid = currentUser.getUid();
 //        String userIdToAdd = UserID;
@@ -672,8 +730,12 @@ public class profile extends Fragment {
 //                Log.d("Data from Firebase", data);
 //                d
                 if(snapshot.exists()){
+                   // ChatModel c = new ChatModel();
                     // Thực hiện kiểm tra xem cuộc trò chuyện đã tồn tại
                     for (DataSnapshot data : snapshot.getChildren()) {
+                        String d = snapshot.getKey();
+                        ChatModel c = new ChatModel();
+                        c.setId(d);
                         Iterable<DataSnapshot> uidSnapshots = data.child("uid").getChildren();
 
                         for (DataSnapshot uidSnapshot : uidSnapshots) {
@@ -683,7 +745,67 @@ public class profile extends Fragment {
 
                             }
                         }
+                        c.getUid(uids);
+                        chat.add(c);
                     }
+                    if(!uids.isEmpty()){
+                        Log.d("tk 1",uids.get(2));
+                        Log.d("tk 1",iduser1);
+                        Log.d("tk 2",uids.get(3));
+                        Log.d("tk 2",iduser2);
+                        Log.d("dieu kien ds", String.valueOf(iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))));
+                        for(int i = 0; i< uids.size();i++){
+                            if( i %2 == 0){
+                                if (iduser1.equals(uids.get(i)) && iduser2.equals(uids.get(i+1))) {
+                                    // conversationExists = true;
+                                   // Log.d("cai gi","ko");
+                                    break;
+                                }
+
+                            }
+                            else if(i == uids.size()-1){
+                                String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
+                                Log.d("cai gi",messageID);
+                                // Tạo dữ liệu tin nhắn mới
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                                String currentTime = sdf.format(new Date());
+                                msgRef.child(messageID).child("id").setValue(messageID);
+                                msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+                                msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+
+                                // Chuyển sang màn hình ChatActivity
+                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                intent.putExtra("uid", iduser2);
+                                intent.putExtra("userid", iduser1);
+                                intent.putExtra("id", messageID);
+                                startActivity(intent);
+                            }
+                        }
+//                        if (iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))) {
+//                            // conversationExists = true;
+//                            Log.d("cai gi","ko");
+//                        }
+
+                        // Nếu cuộc trò chuyện chưa tồn tại, thực hiện tạo tin nhắn mới
+//                        else {
+//                            String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
+//                            Log.d("cai gi",messageID);
+//                            // Tạo dữ liệu tin nhắn mới
+//                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+//                            String currentTime = sdf.format(new Date());
+//                            msgRef.child(messageID).child("id").setValue(messageID);
+//                            msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+//                            msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+//
+//                            // Chuyển sang màn hình ChatActivity
+//                            Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                            intent.putExtra("uid", iduser2);
+//                            intent.putExtra("userid", iduser1);
+//                            intent.putExtra("id", messageID);
+//                            startActivity(intent);
+//                        }
+                    }
+
                     //addmess(uids,iduser1,iduser2);
                     Log.d("Message", uids.get(0));
 
@@ -763,7 +885,8 @@ public class profile extends Fragment {
         // Nếu cuộc trò chuyện chưa tồn tại, thực hiện tạo tin nhắn mới
         else {
             String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
-            Log.d("cai gi",messageID);
+            Log.d("cai gi1", iduser1);
+            Log.d("cai gi2", iduser2);
             // Tạo dữ liệu tin nhắn mới
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
             String currentTime = sdf.format(new Date());
@@ -775,6 +898,7 @@ public class profile extends Fragment {
             intent.putExtra("uid", iduser2);
             intent.putExtra("userid", iduser1);
             intent.putExtra("id", messageID);
+
             startActivity(intent);
         }
     }

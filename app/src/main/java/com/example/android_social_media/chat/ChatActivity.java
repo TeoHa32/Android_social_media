@@ -84,6 +84,15 @@ public class ChatActivity extends AppCompatActivity {
             messageMap.put("senderID", user.getUid());
 //            messageMap.put("senderID",getIntent().getStringExtra("userid"));
 //            Log.d("Người gửi là: ",getIntent().getStringExtra("userid"));
+
+            if (getIntent() != null && getIntent().hasExtra("userid")) {
+                messageMap.put("senderID",getIntent().getStringExtra("userid"));
+                // Xử lý khi userId tồn tại trong Intent
+            } else {
+                messageMap.put("senderID", user.getUid());
+                // Xử lý khi userId không tồn tại trong Intent
+            }
+//            messageMap.put("senderID",getIntent().getStringExtra("userid"));
             messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
 
 
@@ -188,6 +197,7 @@ public class ChatActivity extends AppCompatActivity {
                         ChatModel model = new ChatModel(messageId, message, time, senderID);
                         list.add(model);
 
+
                         // So sánh thời gian của tin nhắn với thời gian của lastMessage hiện tại
                         if (lastChat == null || time.after(lastChat.getTime())) {
                             lastChat = model;
@@ -195,6 +205,9 @@ public class ChatActivity extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                }
+                for ( ChatModel item : list) {
+                    Log.d("list",item.getMessage());
                 }
 
                 // Cập nhật lastMessage mới trong cơ sở dữ liệu Firebase
