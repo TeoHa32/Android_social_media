@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.SearchAdapter;
 import com.example.android_social_media.model.SearchUser;
+import com.example.android_social_media.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,10 +68,11 @@ public class SearchResultFragment extends Fragment {
 
         adapter.OnUserClicked(new SearchAdapter.OnUserClicked() {
             @Override
-            public void onItemClicked(View view, SearchUser searchUser) {
+            public void onItemClicked(View view, SearchUser user) {
                 // Tạo Bundle để truyền UID qua ProfileFragment
                 Bundle bundle = new Bundle();
-                bundle.putString("username", searchUser.getUsername());
+                bundle.putString("username", user.getUsername());
+                bundle.putString("userID", user.getUserID());
 
                 // Tạo instance của ProfileFragment và thiết lập UID
                 profile profile = new profile();

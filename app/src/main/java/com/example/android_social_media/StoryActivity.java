@@ -16,8 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.example.android_social_media.fragment.LoginFragment;
+import com.example.android_social_media.fragment.profile;
 import com.example.android_social_media.model.StoriesModel;
 import com.example.android_social_media.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -124,12 +128,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             public void onClick(View v) {
 
                 //Nhấn vào icon xem tin sẽ xem được thông tin người nào đã xem
-//                Intent intent = new Intent(StoryActivity.this, FollowersActivity.class);
-//                intent.putExtra("id", userid);
-//                intent.putExtra("storyid", storyids.get(counter));
-//                intent.putExtra("title", "views");
-//                startActivity(intent);
-
+                Intent intent = new Intent(StoryActivity.this, FollowerActivity.class);
+                intent.putExtra("id", userid);
+                intent.putExtra("storyid", storyids.get(counter));
+                intent.putExtra("title", "Lượt xem");
+                startActivity(intent);
 
             }
         });

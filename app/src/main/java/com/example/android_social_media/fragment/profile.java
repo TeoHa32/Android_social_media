@@ -15,9 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
+import com.example.android_social_media.adapter.UserAdapter;
+import com.example.android_social_media.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -54,7 +62,7 @@ public class profile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       init(view);
+//       init(view);
 
         //View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -68,7 +76,7 @@ public class profile extends Fragment {
         // Load dữ liệu từ Firebase Realtime Database và hiển thị lên giao diện
         loadUserDataFromFirebase();
         getFollowerCount();
-        checkfollowing();
+//        checkfollowing();
         LinearLayout linearLayout = view.findViewById(R.id.followersClick);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +97,8 @@ public class profile extends Fragment {
             }
         });
 
-       // return view;
     }
+
 
 
     private void init(View view){
@@ -192,29 +200,32 @@ public class profile extends Fragment {
             }
         });
     }
-    private void checkfollowing(){
-        // thay thế child("users").child("-NuXjEdYF637E4qikFCB").child("follower"); thành child("users").child(username).child("following");
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(username).child("follower");
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.exists()) {
-                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                        String followerID = childSnapshot.getValue(String.class);
-                        if(followerID.equals(username)){
-                            flbt.setText("Un follow");
-                            break;
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    private void checkfollowing(){
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        String uid = currentUser.getUid();
+//        String username = UserID;
+//        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("following");
+//        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                if (snapshot.exists()) {
+//                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+//                        String followerID = childSnapshot.getValue(String.class);
+//                        if(followerID.equals(username)){
+//                            flbt.setText("Unfollow");
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
 //    private void unfollow(){
 //        String userIdToRemove = "jukhx1A154W2ERD0nJ9AG3LtyMI2";
