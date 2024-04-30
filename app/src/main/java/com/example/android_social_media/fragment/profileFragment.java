@@ -43,7 +43,7 @@ public class profileFragment extends Fragment {
     String uid,key;
     TextView follow, following;
 
-    ImageView btnHome, btnSearch;
+    ImageView btnHome, btnSearch, btnLogout;
     private RecyclerView recyclerView;
     MyfotosAdapter myfotosAdapter;
     List<post> postList;
@@ -76,9 +76,8 @@ public class profileFragment extends Fragment {
             username = bundle.getString("username");
 
             key = bundle.getString("key");
-            Log.d("bundle khoa tu dong",key);
 
-            if(bundle.getString("key").equals("")){
+            if(key == null){
                 key = user.getUid();
                 Log.d("id người dùng:",key);
             }
@@ -128,6 +127,7 @@ public class profileFragment extends Fragment {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
         btnHome = view.findViewById(R.id.btnHome);
         btnSearch = view.findViewById(R.id.btnSearch);
+        btnLogout = view.findViewById(R.id.btnLogout);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -172,6 +172,17 @@ public class profileFragment extends Fragment {
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, searchFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginFragment login = new LoginFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, login);
                 fragmentTransaction.addToBackStack(null); // Add to back stack if needed
                 fragmentTransaction.commit();
             }

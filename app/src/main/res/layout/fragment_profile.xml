@@ -14,18 +14,18 @@
         android:layout_marginStart="88dp"
         android:layout_marginTop="20dp"
         android:text="meowmoew"
-        app:layout_constraintStart_toEndOf="@+id/setting"
+        app:layout_constraintStart_toEndOf="@+id/btnLogout"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/setting"
+        android:id="@+id/btnLogout"
         android:layout_width="27dp"
         android:layout_height="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/setting" />
+        app:srcCompat="@drawable/log_out" />
 
     <ImageView
         android:id="@+id/imageView3"

@@ -106,7 +106,7 @@
             android:src="@drawable/house_solid" />
 
         <ImageView
-            android:id="@+id/img_search"
+            android:id="@+id/btn_search"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
@@ -124,6 +124,7 @@
             android:src="@drawable/square_plus_regular" />
 
         <ImageView
+            android:id="@id/btnProfile"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"

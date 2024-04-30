@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,7 +38,7 @@ public class homepageFragment extends Fragment {
     private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
     private List<post> postList;
-    private ImageView btnChat;
+    private ImageView btnChat, btnSearch, btnProfile;
     FirebaseUser user;
     StoriesAdapter storiesAdapter;
     List<StoriesModel> storiesModelList;
@@ -66,7 +68,11 @@ public class homepageFragment extends Fragment {
     }
     private void init(View view) {
         imgNewPost = view.findViewById(R.id.img_new_post);
+
         btnChat = view.findViewById(R.id.btnChat);
+        btnSearch = view.findViewById(R.id.btn_search);
+        btnProfile = view.findViewById(R.id.btnProfile);
+
         storiesRecylerView = view.findViewById(R.id.storiesRecyclerView);
         storiesRecylerView.setHasFixedSize(true);
         storiesRecylerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -94,6 +100,54 @@ public class homepageFragment extends Fragment {
 
             }
         });
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchFragment searchFragment = new SearchFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, searchFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                        .child("users").child(user.getUid());
+                userRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            String username = snapshot.child("username").getValue(String.class);
+                            String imageProfile = snapshot.child("profileImage").getValue(String.class);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("username", username);
+                            bundle.putString("key", user.getUid());
+                            bundle.putString("img", imageProfile);
+
+                            profileFragment profile = new profileFragment();
+                            profile.setArguments(bundle);
+                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.fragment_container, profile);
+                            fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                            fragmentTransaction.commit();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
+
     }
     private void startNewPostActivity(){
         Intent intent = new Intent(getActivity(), PostActivity.class);
