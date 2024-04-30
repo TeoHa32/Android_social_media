@@ -36,8 +36,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder> {
     @Override
     public void onBindViewHolder(@NonNull ChatHolder holder, int position) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if(list.get(position).getSenderID().equalsIgnoreCase(user.getUid())){
-            if(list.get(position).getSenderID().equalsIgnoreCase("vYEYezjxu8QT5HgpCRgcxuEOsUs1")){
+        if(list.get(position).getSenderID().equalsIgnoreCase(user.getUid())){
+    //        if(list.get(position).getSenderID().equalsIgnoreCase("vYEYezjxu8QT5HgpCRgcxuEOsUs1")){
             holder.leftChat.setVisibility(View.GONE);
             holder.rightChat.setVisibility(View.VISIBLE);
             holder.rightChat.setText(list.get(position).getMessage());
