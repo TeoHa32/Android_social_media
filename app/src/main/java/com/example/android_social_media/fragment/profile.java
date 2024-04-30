@@ -1,5 +1,7 @@
 package com.example.android_social_media.fragment;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -19,20 +21,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
-import com.example.android_social_media.adapter.UserAdapter;
-import com.example.android_social_media.model.User;
+
+import com.example.android_social_media.chat.ChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+//import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,8 +52,12 @@ public class profile extends Fragment {
     private Button followBtn;
     private RecyclerView recyclerView;
 
-    private String username;
-    private String uid;
+    private long cout;
+
+    private long count;
+
+    private String UserID;
+
     public profile() {
         // Required empty public constructor
     }
@@ -56,27 +68,29 @@ public class profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+//        AndroidThreeTen.init(getActivity());
+//        AndroidThreeTen.init(getActivity());
         return inflater.inflate(R.layout.profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//       init(view);
+        init(view);
 
         //View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Khởi tạo các thành phần giao diện và gán giá trị
         init(view);
 
-        // Lấy UID từ Bundle
         Bundle bundle = getArguments();
-        username = bundle.getString("username");
+        UserID = bundle.getString("UserID");
 
         // Load dữ liệu từ Firebase Realtime Database và hiển thị lên giao diện
         loadUserDataFromFirebase();
         getFollowerCount();
 //        checkfollowing();
+
         LinearLayout linearLayout = view.findViewById(R.id.followersClick);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,12 +105,64 @@ public class profile extends Fragment {
 
         String buttonText = chatButton.getText().toString();
         chatButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                Log.d("nhan chat","roi ne");
+
+//                AndroidThreeTen.init(getActivity());
+
+//                AndroidThreeTen.init(getActivity());
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                String iduser1 = "vYEYezjxu8QT5HgpCRgcxuEOsUs1";
+                String iduser2 = "PVz33IummMfEXX6594CKN0nCJhC3";
+                DatabaseReference msgRef = database.getReference("Messages");
+                String id = msgRef.push().getKey();
+                LocalDateTime currentTime = null;
+                currentTime = LocalDateTime.now();
+
+                // Định dạng thời gian
+                DateTimeFormatter formatter = null;
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                String  formattedTime = currentTime.format(formatter);
+
+
+                // Tạo một hashmap để đại diện cho dữ liệu của user
+                HashMap<String, Object> userData = new HashMap<>();
+                userData.put("uid", Arrays.asList(iduser1, iduser2));
+                userData.put("time", formattedTime );
+                userData.put("lastMessage", "hello");
+                userData.put("id", id);
+
+//              Đẩy dữ liệu của user lên Firebase Realtime Database với key tự động// Tạo key tự động cho user
+                msgRef.child(id).setValue(userData);
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("uid", iduser2);
+                intent.putExtra("userid", iduser1);
+                intent.putExtra("id", id);
+                startActivity(intent);
+//                Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
+//                intent.putExtra("uid", oppositeUID);
+
+               // Log.d("nhan chat","roi ne");
+
+                // Log.d("nhan chat","roi ne");
+            }
+        });
+        flbt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flbt.getText().equals("Follow")){
+                    addfollow();
+                    flbt.setText("Unfollow");
+                } else {
+                    unfollow();
+                    flbt.setText("Follow");
+                }
             }
         });
 
+        // return view;
     }
 
 
@@ -132,35 +198,40 @@ public class profile extends Fragment {
     }
 
     private void loadUserDataFromFirebase() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String snapshotUsername = userSnapshot.child("username").getValue(String.class);
-                        if (snapshotUsername != null && snapshotUsername.equals(username)) {
-                            // Tìm thấy người dùng với username tương ứng
-                            String status = userSnapshot.child("status").getValue(String.class);
-                            String profileImageUrl = userSnapshot.child("profileImage").getValue(String.class);
-                            String toolbarusername = userSnapshot.child("username").getValue(String.class);
+                    String username = dataSnapshot.child("username").getValue(String.class);
+                    String status = dataSnapshot.child("status").getValue(String.class);
+                    String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
+                    String toolbarusername = dataSnapshot.child("username").getValue(String.class);
+                    // int followersCount = follow();
 
-                            // Hiển thị dữ liệu lên giao diện
-                            Log.d("co vao day khong", snapshotUsername);
-                            nameTv.setText(snapshotUsername);
-                            statusTv.setText(status);
-                            toolbarNameTv.setText(toolbarusername);
+                    //    String followingCount = dataSnapshot.child("profileImage").getValue(String.class);
+                    //          String postCount = dataSnapshot.child("profileImage").getValue(String.class);
+//                    long followersCount = dataSnapshot.child("follower").getValue(Long.class);
+//                    long followingCount = dataSnapshot.child("following").getValue(Long.class);
+//                    long postCount = dataSnapshot.child("postCount").getValue(Long.class);
 
-                            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                                Picasso.get().load(profileImageUrl).into(profileImage);
-                            }
+                    // Hiển thị dữ liệu lên giao diện
+                    //toolbarNameTv.setText(username);
+                    Log.d("co vao day khong", username);
+                    nameTv.setText(username);
+                    statusTv.setText(status);
+                    toolbarNameTv.setText(toolbarusername);
 
-                            return; // Kết thúc sau khi tìm thấy người dùng
-                        }
+
+//                    followingCountTv.setText(String.valueOf(followingCount));
+//                    postCountTv.setText(String.valueOf(postCount));
+
+                    // Load hình ảnh đại diện từ Firebase Storage và đặt hình ảnh cho CircleImageView
+                    if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                        Picasso.get().load(profileImageUrl).into(profileImage);
                     }
-                }
-                // Không tìm thấy người dùng với username tương ứng
-                Log.d("co vao day khong", "khong co");
+                } else Log.d("co vao day khong", "khong co");
+
             }
 
             @Override
@@ -171,35 +242,31 @@ public class profile extends Fragment {
     }
 
     private void getFollowerCount() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    long followerCount = 0;
-                    long followingCount = 0;
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String snapshotUsername = userSnapshot.child("username").getValue(String.class);
-                        if (snapshotUsername != null && snapshotUsername.equals(username)) {
-                            if (userSnapshot.child("follower").exists()) {
-                                followerCount = userSnapshot.child("follower").getChildrenCount();
-                            }
-                            if (userSnapshot.child("following").exists()) {
-                                followingCount = userSnapshot.child("following").getChildrenCount();
-                            }
-                            break; // Kết thúc vòng lặp khi tìm thấy người dùng tương ứng
-                        }
-                    }
-                    followersCountTv.setText(String.valueOf(followerCount));
-                    followingCountTv.setText(String.valueOf(followingCount));
-                }
+
+                long followerCount = dataSnapshot.child("follower").getChildrenCount();
+                long followingCount = dataSnapshot.child("following").getChildrenCount();
+
+                cout = followingCount;
+
+                count = followingCount;
+                Log.d("Count " , String.valueOf(count));
+
+                followersCountTv.setText(String.valueOf(followerCount));
+                followingCountTv.setText(String.valueOf(followingCount));
+
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
             }
         });
     }
+
 //    private void checkfollowing(){
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //        String uid = currentUser.getUid();
@@ -227,14 +294,84 @@ public class profile extends Fragment {
 //        });
 //    }
 
-//    private void unfollow(){
-//        String userIdToRemove = "jukhx1A154W2ERD0nJ9AG3LtyMI2";
-//        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-//                .child("users").child("NuXjEdYF637E4qikFCB").child("following");
-//        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
+    private void checkfollowing(){
+        String username = "jukhx1A154W2ERD0nJ9AG3LtyMI2"; //username của trang cá nhân người nhấn vào
+        // thay thế child("users").child("-NuXjEdYF637E4qikFCB").child("follower"); thành child("users").child(username).child("following");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID).child("follower");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()) {
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        String followerID = childSnapshot.getValue(String.class);
+                        if(followerID.equals(username)){
+                            flbt.setText("Unfollow");
+                            break;
+                        }
+                    }
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void unfollow(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+        String userIdToRemove = UserID;
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(uid).child("following");
+        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String userId = userSnapshot.getKey();
+                        if (userId.equals(userIdToRemove)) {
+                            // Xóa người dùng khỏi mảng
+                            userSnapshot.getRef().removeValue();
+                            // hoặc userSnapshot.getRef().setValue(null);
+                            break; // Thoát khỏi vòng lặp sau khi xóa
+                        }
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
+
+    }
+    private void addfollow(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+        String userIdToAdd = UserID;
+        DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
+                .child("users");
+
+        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    long followingCount = dataSnapshot.child(uid).child("following").getChildrenCount();
+                    long followerCount = dataSnapshot.child(UserID).child("follower").getChildrenCount();
+                    Log.d("Chao moij nguoi", String.valueOf(followingCount));
+                    String dem =  String.valueOf(followingCount);
+                    followingRef.child(uid).child("following").child(dem).setValue(userIdToAdd);
+                    followingRef.child(UserID).child("follower").child(dem).setValue(userIdToAdd);
+                    String count1 = String.valueOf(followersCountTv.getText());
+                    long number = Long.parseLong(count1)+1;
+
+//                    followingCount = followingCount + 1;
+                    followersCountTv.setText(String.valueOf(number));
 //                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
 //                        String userId = userSnapshot.getKey();
 //                        if (userId.equals(userIdToRemove)) {
@@ -244,6 +381,7 @@ public class profile extends Fragment {
 //                            break; // Thoát khỏi vòng lặp sau khi xóa
 //                        }
 //                    }
+
 //                }
 //            }
 //
@@ -279,5 +417,17 @@ public class profile extends Fragment {
 //    }
 
 
+                }
+            }
+
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
     }
 
+
+}

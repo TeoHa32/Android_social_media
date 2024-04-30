@@ -36,6 +36,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 public class PostActivity extends AppCompatActivity  {
     Uri imageUri;
@@ -131,6 +134,10 @@ public class PostActivity extends AppCompatActivity  {
                         HashMap<String,Object> hashMap = new HashMap<>();
                         hashMap.put("postId",postId);
                         hashMap.put("postImage",myUrl);
+                        Date currentDate = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String formattedDate = dateFormat.format(currentDate);
+                        hashMap.put("dateTime",formattedDate);
                         hashMap.put("description",description.getText().toString());
                         Log.d("TAG", description.getText().toString());
                         hashMap.put("publisher", FirebaseAuth.getInstance().getUid());

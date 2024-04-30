@@ -72,16 +72,16 @@ public class MainActivity extends AppCompatActivity {
 
         //Khởi tạo ban đầu sẽ ở trang đăng nhập.
         LoginFragment loginFragment = new LoginFragment();
-//        profile p = new profile();
+        //profile p = new profile();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginFragment);
-//        fragmentTransaction.replace(R.id.fragment_container, p);
+      // fragmentTransaction.replace(R.id.fragment_container, p);
         fragmentTransaction.addToBackStack(null); // Add to back stack if needed
         fragmentTransaction.commit();
 
 //       FirebaseDatabase database = FirebaseDatabase.getInstance();
-//       DatabaseReference usersRef = database.getReference("users").child("PVz33IummMfEXX6594CKN0nCJhC3");
+//       DatabaseReference usersRef = database.getReference("users").child("PVz33IummMfEXX6594CKN0nCJhC3");DatabaseReference usersRef = database.getReference("users").child("PVz33IummMfEXX6594CKN0nCJhC3");
 
        //String userId = usersRef.push().getKey(); // Tạo một key ngẫu nhiên cho user
 

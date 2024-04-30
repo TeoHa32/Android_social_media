@@ -1,9 +1,7 @@
 package com.example.android_social_media.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
-import com.example.android_social_media.chat.ChatActivity;
 import com.example.android_social_media.model.chatUserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,12 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -149,6 +143,7 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
                                 holder.name.setText(name);
                             }
                         }
+
                     }
 
                     @Override

@@ -172,6 +172,7 @@ public class profileFragment extends Fragment {
 
                     follow.setText(String.valueOf(followerCount));
                     following.setText(String.valueOf(followingCount));
+//                    return followerCount;
                 }
 
                 @Override

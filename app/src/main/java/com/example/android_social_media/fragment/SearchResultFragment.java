@@ -12,16 +12,22 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.SearchAdapter;
 import com.example.android_social_media.model.SearchUser;
 import com.example.android_social_media.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +42,7 @@ import java.util.regex.Pattern;
 
 public class SearchResultFragment extends Fragment {
 
+    TextView btnHuy;
     SearchView searchView;
     RecyclerView recyclerView;
     SearchAdapter adapter;
@@ -68,15 +75,19 @@ public class SearchResultFragment extends Fragment {
 
         adapter.OnUserClicked(new SearchAdapter.OnUserClicked() {
             @Override
-            public void onItemClicked(View view, SearchUser user) {
+            public void onItemClicked(View view, SearchUser searchUser) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
                 // Tạo Bundle để truyền UID qua ProfileFragment
                 Bundle bundle = new Bundle();
-                bundle.putString("username", user.getUsername());
-                bundle.putString("userID", user.getUserID());
+                bundle.putString("username", searchUser.getUsername());
+                bundle.putString("UserID", searchUser.getUserID());
 
                 // Tạo instance của ProfileFragment và thiết lập UID
                 profile profile = new profile();
                 profile.setArguments(bundle);
+
+
 
                 // Thực hiện chuyển Fragment
                 FragmentManager manager = requireActivity().getSupportFragmentManager();
@@ -84,6 +95,15 @@ public class SearchResultFragment extends Fragment {
                 trans.replace(R.id.fragment_container, profile);
                 trans.addToBackStack(null);
                 trans.commit();
+            }
+        });
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
     }
@@ -175,29 +195,29 @@ public class SearchResultFragment extends Fragment {
                     String lowercaseQuery = newText.toLowerCase(); // Chuyển đổi từ khóa tìm kiếm sang chữ thường
 
                     userRef.orderByChild("name")
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            list.clear(); // Xóa danh sách trước khi thêm kết quả mới
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    list.clear(); // Xóa danh sách trước khi thêm kết quả mới
 
-                            for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-                                if (datasnapshot.getValue() != null) {
-                                    SearchUser searchUser = datasnapshot.getValue(SearchUser.class);
-                                    String name = searchUser.getName().toLowerCase(); // Chuyển đổi tên người dùng sang chữ thường
+                                    for (DataSnapshot datasnapshot : snapshot.getChildren()) {
+                                        if (datasnapshot.getValue() != null) {
+                                            SearchUser searchUser = datasnapshot.getValue(SearchUser.class);
+                                            String name = searchUser.getName().toLowerCase(); // Chuyển đổi tên người dùng sang chữ thường
 
-                                    if (name.contains(lowercaseQuery)) {
-                                        list.add(searchUser);
+                                            if (name.contains(lowercaseQuery)) {
+                                                list.add(searchUser);
+                                            }
+                                        }
                                     }
+                                    adapter.notifyDataSetChanged();
                                 }
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(getContext(), "Đã xảy ra lỗi khi truy vấn dữ liệu!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), "Đã xảy ra lỗi khi truy vấn dữ liệu!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                 }
                 return false;
@@ -227,6 +247,7 @@ public class SearchResultFragment extends Fragment {
     }
 
     public void init(View view){
+        btnHuy = view.findViewById(R.id.btnHuy);
         searchView = view.findViewById(R.id.searchView);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);

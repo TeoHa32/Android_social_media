@@ -226,6 +226,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
                 addView(storyids.get(counter));
                 seenNumber(storyids.get(counter));
+//                return 0;
             }
 
             @Override

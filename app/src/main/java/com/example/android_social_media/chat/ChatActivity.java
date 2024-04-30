@@ -54,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     List<ChatModel> list;
 
     String chatID;
+    //String
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +81,8 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, Object> messageMap = new HashMap<>();
             messageMap.put("id", messageID);
             messageMap.put("message", message);
-            messageMap.put("senderID", user.getUid());
+            //messageMap.put("senderID", user.getUid());
+            messageMap.put("senderID",getIntent().getStringExtra("userid"));
             messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
 
 
@@ -146,6 +148,7 @@ public class ChatActivity extends AppCompatActivity {
                     String userName = snapshot.child("username").getValue(String.class);
                     name.setText(userName);
                 }
+//                return 0;
             }
 
             @Override
@@ -203,6 +206,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatRef.child("time").setValue(currentTimeISO8601);
                 }
                 adapter.notifyDataSetChanged();
+//                return 0;
             }
 
             @Override
