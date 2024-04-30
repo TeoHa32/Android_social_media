@@ -1,5 +1,6 @@
 package com.example.android_social_media;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -119,12 +120,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             public void onClick(View v) {
 
                 //Nhấn vào icon xem tin sẽ xem được thông tin người nào đã xem
-//                Intent intent = new Intent(StoryActivity.this, FollowersActivity.class);
-//                intent.putExtra("id", userid);
-//                intent.putExtra("storyid", storyids.get(counter));
-//                intent.putExtra("title", "views");
-//                startActivity(intent);
-
+                Intent intent = new Intent(StoryActivity.this, FollowerActivity.class);
+                intent.putExtra("id", userid);
+                intent.putExtra("storyid", storyids.get(counter));
+                intent.putExtra("title", "Lượt xem");
+                startActivity(intent);
 
             }
         });
@@ -237,7 +237,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 User user = snapshot.getValue(User.class);
                 Glide.with(getApplicationContext()).load(user.getProfileImage()).into(story_photo);
                 story_username.setText(user.getUsername());
-//                return 0;
+
             }
 
             @Override
@@ -258,7 +258,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 seen_number.setText(""+snapshot.getChildrenCount());
-//                return 0;
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

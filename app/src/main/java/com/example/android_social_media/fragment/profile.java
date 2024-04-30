@@ -19,16 +19,23 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
+
 import com.example.android_social_media.adapter.MyfotosAdapter;
 import com.example.android_social_media.chat.ChatActivity;
 import com.example.android_social_media.model.post;
+
+
+import com.example.android_social_media.chat.ChatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +43,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.picasso.Picasso;
 
@@ -44,6 +52,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+
+//import com.jakewharton.threetenabp.AndroidThreeTen;
+
+import com.squareup.picasso.Picasso;
+
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -77,7 +96,7 @@ public class profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        AndroidThreeTen.init(getActivity());
+//        AndroidThreeTen.init(getActivity());
 //        AndroidThreeTen.init(getActivity());
         return inflater.inflate(R.layout.profile, container, false);
     }
@@ -126,8 +145,11 @@ public class profile extends Fragment {
         // Load dữ liệu từ Firebase Realtime Database và hiển thị lên giao diện
         loadUserDataFromFirebase();
         getFollowerCount();
+
         checkfollowing();
         myFotos();
+
+//        checkfollowing();
 
         LinearLayout linearLayout = view.findViewById(R.id.followersClick);
         linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +259,12 @@ public class profile extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+
                 addmessage();
+
+
+//                AndroidThreeTen.init(getActivity());
+
 //                AndroidThreeTen.init(getActivity());
 //
 //                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -290,6 +317,7 @@ public class profile extends Fragment {
 
             }
         });
+
 
 
         flbt.setOnClickListener(new View.OnClickListener() {
@@ -456,7 +484,32 @@ public class profile extends Fragment {
         });
     }
 
-
+//    private void checkfollowing(){
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        String uid = currentUser.getUid();
+//        String username = UserID;
+//        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("following");
+//        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                if (snapshot.exists()) {
+//                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+//                        String followerID = childSnapshot.getValue(String.class);
+//                        if(followerID.equals(username)){
+//                            flbt.setText("Unfollow");
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     private void checkfollowing(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

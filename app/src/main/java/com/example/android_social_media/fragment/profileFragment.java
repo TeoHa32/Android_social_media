@@ -100,7 +100,7 @@ public class profileFragment extends Fragment {
         }
         if (user != null) {
 
-             uid = user.getUid();
+            uid = user.getUid();
 
             uid = user.getUid();
             Log.d("co uid", uid);

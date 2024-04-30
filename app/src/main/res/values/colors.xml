@@ -6,7 +6,8 @@
     <color name="blue">#0064d1</color>
     <color name="green">#62d6af</color>
     <color name="lightGray">#D8DBE1</color>
-    <color name="tiep">#4780EF</color>
-    <color name="borderprofile">#66676b</color>
     <color name="lightBlack">#3b444b</color>
+    <color name="tiep">#4780EF</color>
+    <color name="red">#ff0000</color>
+    <color name="borderprofile">#66676b</color>
 </resources>

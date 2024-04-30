@@ -3,14 +3,14 @@ package com.example.android_social_media.model;
 public class SearchUser {
     private String UserID, name, username, profileImage;
 
+    public SearchUser() {
+    }
+
     public SearchUser(String userID, String name, String username, String profileImage) {
         UserID = userID;
         this.name = name;
         this.username = username;
         this.profileImage = profileImage;
-    }
-
-    public SearchUser() {
     }
 
     public String getUserID() {
