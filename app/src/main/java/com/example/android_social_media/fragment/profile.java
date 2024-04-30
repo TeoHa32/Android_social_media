@@ -37,7 +37,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.jakewharton.threetenabp.AndroidThreeTen;
+
+
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -684,7 +687,32 @@ public class profile extends Fragment {
     }
 
     private void addmessage(){
+
         AndroidThreeTen.init(getActivity());
+
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        String uid = currentUser.getUid();
+//        String userIdToAdd = UserID;
+//        DatabaseReference messageSnapshot = FirebaseDatabase.getInstance().getReference().child("Messages");
+//
+//        messageSnapshot.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.exists()){
+//                    String messageID = messageSnapshot.getKey();
+//
+//                }
+//            }
+//
+//
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Xử lý khi có lỗi xảy ra
+//            }
+//        });
+      //  DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("example");
+//        AndroidThreeTen.init(getActivity());
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String tk = currentUser.getUid();

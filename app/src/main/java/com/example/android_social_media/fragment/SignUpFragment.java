@@ -234,15 +234,13 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    public void navigateToProfile(String username){
-        Bundle bundle = new Bundle();
-        bundle.putString("username", username);
-        //Nếu đăng ký thành công sẽ chuyển đến trang cá nhân
-        profileFragment profile = new profileFragment();
-        profile.setArguments(bundle);
+    public void navigateToLogin(){
+
+        //Nếu đăng ký thành công sẽ chuyển đến trang đăng nhập
+        LoginFragment login = new LoginFragment();
         FragmentManager manager = requireActivity().getSupportFragmentManager();
         FragmentTransaction trans = manager.beginTransaction();
-        trans.replace(R.id.fragment_container, profile);
+        trans.replace(R.id.fragment_container, login);
         trans.addToBackStack(null);
         trans.commit();
     }
@@ -268,7 +266,8 @@ public class SignUpFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(),"Không update được dữ liệu!", Toast.LENGTH_LONG).show();
                 } else {
-                    navigateToProfile(username);
+//                    navigateToProfile(username);
+                    navigateToLogin();
                     Toast.makeText(getContext(), "Đăng ký thành công!", Toast.LENGTH_LONG).show();
                 }
             }
