@@ -53,7 +53,7 @@ public class ChatModel {
         this.senderID = senderID;
     }
 
-    public List<String> getUid(List<String> uids) {
+    public List<String> getUid() {
         return uid;
     }
 

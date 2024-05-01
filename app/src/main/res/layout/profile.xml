@@ -20,6 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/btnBackMsg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_arrow" />
+
             <TextView
                 android:id="@+id/toolbarNameTV"
                 android:layout_width="wrap_content"
@@ -156,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="following"
+                    android:text="Đang theo dõi"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -184,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="followers"
+                    android:text="Người theo dõi"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -211,7 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="posts"
+                    android:text="Bài viết"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -248,7 +257,7 @@
                 android:layout_marginStart="4dp"
 
                 android:minWidth="160dp"
-                android:text="Follow"
+                android:text="Theo dõi"
                 android:textColor="@android:color/white"
                 android:visibility="visible" />
 
@@ -259,7 +268,7 @@
                 android:layout_marginStart="4dp"
 
                 android:minWidth="160dp"
-                android:text="Chat"
+                android:text="Nhắn tin"
                 android:textColor="@android:color/white"
                 android:visibility="visible" />
 

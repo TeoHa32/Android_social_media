@@ -148,9 +148,17 @@ public class ChatActivity extends AppCompatActivity {
 
                     String profileImage = snapshot.child("profileImage").getValue(String.class);
                     Log.d("ảnh: ", profileImage);
+                    if (profileImage != null && !profileImage.isEmpty()) {
+                        // Sử dụng Picasso để tải hình ảnh từ URL và hiển thị nó trong ImageView
+                        //Picasso.get().load(url).into(img);
+                        Picasso.get().load(profileImage).into(imageView);
 
+                    } else {
+                        // Nếu imageUrl là null hoặc rỗng, bạn có thể thực hiện các xử lý khác tùy thuộc vào yêu cầu của bạn
+                        // Ví dụ: Hiển thị một hình ảnh mặc định hoặc hiển thị một tin nhắn lỗi
+                        imageView.setImageResource(R.drawable.ic_profile);
+                    }
                     // Load image using Picasso or any other library
-                    Picasso.get().load(profileImage).into(imageView);
 
                     String userName = snapshot.child("username").getValue(String.class);
                     name.setText(userName);
@@ -177,6 +185,7 @@ public class ChatActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                 ChatModel lastChat = null;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String messageId = dataSnapshot.child("id").getValue(String.class);

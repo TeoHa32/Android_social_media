@@ -139,6 +139,9 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
                             if (imageUrl != null) {
                                 Picasso.get().load(imageUrl).into(holder.imageView);
                             }
+                            else {
+                                holder.imageView.setImageResource(R.drawable.ic_profile);
+                            }
                             if (name != null) {
                                 holder.name.setText(name);
                             }
