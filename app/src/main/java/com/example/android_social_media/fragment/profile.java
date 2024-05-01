@@ -684,133 +684,136 @@ public class profile extends Fragment {
         });
     }
 
-    private void addmessage(){
-
-//        AndroidThreeTen.init(getActivity());
-
+//    private void addmessage(){
+//
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        String uid = currentUser.getUid();
-//        String userIdToAdd = UserID;
-//        DatabaseReference messageSnapshot = FirebaseDatabase.getInstance().getReference().child("Messages");
+//        String tk = currentUser.getUid();
 //
-//        messageSnapshot.addListenerForSingleValueEvent(new ValueEventListener() {
+//        String iduser1 = tk;
+//        List<String> uids = new ArrayList<>();
+//        String iduser2 = UserID;
+//        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+//        msgRef.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.exists()){
-//                    String messageID = messageSnapshot.getKey();
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(snapshot.exists()){
+//                   // ChatModel c = new ChatModel();
+//                    // Thực hiện kiểm tra xem cuộc trò chuyện đã tồn tại
+//                    for (DataSnapshot data : snapshot.getChildren()) {
+//                        String d = snapshot.getKey();
+//                        ChatModel c = new ChatModel();
+//                        c.setId(d);
+//                        Iterable<DataSnapshot> uidSnapshots = data.child("uid").getChildren();
 //
+//                        for (DataSnapshot uidSnapshot : uidSnapshots) {
+//                            String uid1 = uidSnapshot.getValue(String.class);
+//                            if (uid1 != null) {
+//                                uids.add(uid1);
+//
+//                            }
+//                        }
+//                        c.getUid(uids);
+//                        chat.add(c);
+//                    }
+//                    if(!uids.isEmpty()){
+//                        Log.d("tk 1",uids.get(2));
+//                        Log.d("tk 1",iduser1);
+//                        Log.d("tk 2",uids.get(3));
+//                        Log.d("tk 2",iduser2);
+//                        Log.d("dieu kien ds", String.valueOf(iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))));
+//                        for(int i = 0; i< uids.size();i++){
+//                            if( i %2 == 0){
+//                                if (iduser1.equals(uids.get(i)) && iduser2.equals(uids.get(i+1))) {
+//                                    // conversationExists = true;
+//                                   // Log.d("cai gi","ko");
+//                                    break;
+//                                }
+//
+//                            }
+//                            else if(i == uids.size()-1){
+//                                String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
+//                                Log.d("cai gi",messageID);
+//                                // Tạo dữ liệu tin nhắn mới
+//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+//                                String currentTime = sdf.format(new Date());
+//                                msgRef.child(messageID).child("id").setValue(messageID);
+//                                msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+//                                msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+//
+//                                // Chuyển sang màn hình ChatActivity
+//                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                                intent.putExtra("uid", iduser2);
+//                                intent.putExtra("userid", iduser1);
+//                                intent.putExtra("id", messageID);
+//                                startActivity(intent);
+//                            }
+//                        }
+//                    }
+//
+//                    //addmess(uids,iduser1,iduser2);
+//                    Log.d("Message", uids.get(0));
 //                }
 //            }
 //
-//
-//
 //            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Xử lý khi có lỗi xảy ra
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // Xử lý khi truy vấn bị hủy
 //            }
 //        });
-      //  DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("example");
-//        AndroidThreeTen.init(getActivity());
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String tk = currentUser.getUid();
-
-        String iduser1 = tk;
-        List<String> uids = new ArrayList<>();
-        String iduser2 = UserID;
-//        DatabaseReference msgRef = database.getReference("Messages");
-        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference().child("Messages");
 //
-//// Thực hiện lắng nghe sự kiện chỉ một lần để lấy dữ liệu
+//
+//    }
+
+    private void addmessage() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String iduser1 = currentUser.getUid();
+        String iduser2 = UserID; // Biến UserID cần được định nghĩa ở đâu đó trong mã của bạn
+
+        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference().child("Messages");
         msgRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Thực hiện xử lý dữ liệu lấy về từ cơ sở dữ liệu
-//                String data = snapshot.getValue(String.class);
-//                Log.d("Data from Firebase", data);
-//                d
-                if(snapshot.exists()){
-                   // ChatModel c = new ChatModel();
-                    // Thực hiện kiểm tra xem cuộc trò chuyện đã tồn tại
+                if (snapshot.exists()) {
+                    boolean conversationExists = false;
+                    String conversationId = null;
+
                     for (DataSnapshot data : snapshot.getChildren()) {
-                        String d = snapshot.getKey();
-                        ChatModel c = new ChatModel();
-                        c.setId(d);
                         Iterable<DataSnapshot> uidSnapshots = data.child("uid").getChildren();
+                        List<String> uids = new ArrayList<>();
 
                         for (DataSnapshot uidSnapshot : uidSnapshots) {
-                            String uid1 = uidSnapshot.getValue(String.class);
-                            if (uid1 != null) {
-                                uids.add(uid1);
-
-                            }
+                            String uid = uidSnapshot.getValue(String.class);
+                            uids.add(uid);
                         }
-                        c.getUid(uids);
-                        chat.add(c);
-                    }
-                    if(!uids.isEmpty()){
-                        Log.d("tk 1",uids.get(2));
-                        Log.d("tk 1",iduser1);
-                        Log.d("tk 2",uids.get(3));
-                        Log.d("tk 2",iduser2);
-                        Log.d("dieu kien ds", String.valueOf(iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))));
-                        for(int i = 0; i< uids.size();i++){
-                            if( i %2 == 0){
-                                if (iduser1.equals(uids.get(i)) && iduser2.equals(uids.get(i+1))) {
-                                    // conversationExists = true;
-                                   // Log.d("cai gi","ko");
-                                    break;
-                                }
 
-                            }
-                            else if(i == uids.size()-1){
-                                String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
-                                Log.d("cai gi",messageID);
-                                // Tạo dữ liệu tin nhắn mới
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-                                String currentTime = sdf.format(new Date());
-                                msgRef.child(messageID).child("id").setValue(messageID);
-                                msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
-                                msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
-
-                                // Chuyển sang màn hình ChatActivity
-                                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                                intent.putExtra("uid", iduser2);
-                                intent.putExtra("userid", iduser1);
-                                intent.putExtra("id", messageID);
-                                startActivity(intent);
-                            }
+                        if (uids.contains(iduser1) && uids.contains(iduser2)) {
+                            conversationExists = true;
+                            conversationId = data.getKey();
+                            break;
                         }
-//                        if (iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))) {
-//                            // conversationExists = true;
-//                            Log.d("cai gi","ko");
-//                        }
-
-                        // Nếu cuộc trò chuyện chưa tồn tại, thực hiện tạo tin nhắn mới
-//                        else {
-//                            String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
-//                            Log.d("cai gi",messageID);
-//                            // Tạo dữ liệu tin nhắn mới
-//                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-//                            String currentTime = sdf.format(new Date());
-//                            msgRef.child(messageID).child("id").setValue(messageID);
-//                            msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
-//                            msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
-//
-//                            // Chuyển sang màn hình ChatActivity
-//                            Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                            intent.putExtra("uid", iduser2);
-//                            intent.putExtra("userid", iduser1);
-//                            intent.putExtra("id", messageID);
-//                            startActivity(intent);
-//                        }
                     }
 
-                    //addmess(uids,iduser1,iduser2);
-                    Log.d("Message", uids.get(0));
+                    if (conversationExists && conversationId != null) {
+                        // Hiển thị toàn bộ tin nhắn của cuộc trò chuyện đã tồn tại
+                        // Đây là nơi bạn có thể thực hiện các hành động liên quan đến việc hiển thị tin nhắn
+                        // conversationId chính là ID của cuộc trò chuyện tồn tại
+                        Log.d("Conversation exists", "Conversation ID: " + conversationId);
+                    } else {
+                        // Tạo một cuộc trò chuyện mới nếu chưa tồn tại
+                        String messageID = msgRef.push().getKey();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                        String currentTime = sdf.format(new Date());
+                        msgRef.child(messageID).child("id").setValue(messageID);
+                        msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+                        msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
 
-                    // Kiểm tra xem cuộc trò chuyện đã tồn tại
-                    //Log.d("stt",uids.get(0));
+                        // Chuyển sang màn hình ChatActivity
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("uid", iduser2);
+                        intent.putExtra("userid", iduser1);
+                        intent.putExtra("id", messageID);
+                        startActivity(intent);
+                    }
                 }
             }
 
@@ -819,13 +822,8 @@ public class profile extends Fragment {
                 // Xử lý khi truy vấn bị hủy
             }
         });
-
-// Các câu lệnh sau đây sẽ tiếp tục được thực hiện ngay sau khi sự kiện đã được thực hiện
-    //    Log.d("Message", uids.get(0));
-
-// Các câu lệnh khác ở đây
-
     }
+
 
     private void myFotos(){
 

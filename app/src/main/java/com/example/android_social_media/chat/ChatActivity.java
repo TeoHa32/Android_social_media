@@ -170,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void loadMessages(){
-        list.clear();
+
         chatID = getIntent().getStringExtra("id");
         Log.d("ChatID?", chatID);
 
@@ -182,6 +182,7 @@ public class ChatActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                 ChatModel lastChat = null;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String messageId = dataSnapshot.child("id").getValue(String.class);
