@@ -119,6 +119,15 @@ public class SearchResultFragment extends Fragment {
                 }
             }
         });
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
+            }
+        });
     }
 
     private void searchUser() {
@@ -208,29 +217,29 @@ public class SearchResultFragment extends Fragment {
                     String lowercaseQuery = newText.toLowerCase(); // Chuyển đổi từ khóa tìm kiếm sang chữ thường
 
                     userRef.orderByChild("name")
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            list.clear(); // Xóa danh sách trước khi thêm kết quả mới
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    list.clear(); // Xóa danh sách trước khi thêm kết quả mới
 
-                            for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-                                if (datasnapshot.getValue() != null) {
-                                    SearchUser searchUser = datasnapshot.getValue(SearchUser.class);
-                                    String name = searchUser.getName().toLowerCase(); // Chuyển đổi tên người dùng sang chữ thường
+                                    for (DataSnapshot datasnapshot : snapshot.getChildren()) {
+                                        if (datasnapshot.getValue() != null) {
+                                            SearchUser searchUser = datasnapshot.getValue(SearchUser.class);
+                                            String name = searchUser.getName().toLowerCase(); // Chuyển đổi tên người dùng sang chữ thường
 
-                                    if (name.contains(lowercaseQuery)) {
-                                        list.add(searchUser);
+                                            if (name.contains(lowercaseQuery)) {
+                                                list.add(searchUser);
+                                            }
+                                        }
                                     }
+                                    adapter.notifyDataSetChanged();
                                 }
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(getContext(), "Đã xảy ra lỗi khi truy vấn dữ liệu!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), "Đã xảy ra lỗi khi truy vấn dữ liệu!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                 }
                 return false;

@@ -55,10 +55,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder> {
     }
 
     static class ChatHolder extends RecyclerView.ViewHolder{
-
         TextView leftChat, rightChat;
-
-
         public ChatHolder(@NonNull View itemView){
             super(itemView);
 
@@ -66,6 +63,4 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder> {
             rightChat = itemView.findViewById(R.id.right_chat);
         }
     }
-
-
 }

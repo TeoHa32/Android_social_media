@@ -13,16 +13,12 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.android_social_media.model.StoriesModel;
 import com.example.android_social_media.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -124,12 +120,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             public void onClick(View v) {
 
                 //Nhấn vào icon xem tin sẽ xem được thông tin người nào đã xem
-//                Intent intent = new Intent(StoryActivity.this, FollowersActivity.class);
-//                intent.putExtra("id", userid);
-//                intent.putExtra("storyid", storyids.get(counter));
-//                intent.putExtra("title", "views");
-//                startActivity(intent);
-
+                Intent intent = new Intent(StoryActivity.this, FollowerActivity.class);
+                intent.putExtra("id", userid);
+                intent.putExtra("storyid", storyids.get(counter));
+                intent.putExtra("title", "Lượt xem");
+                startActivity(intent);
 
             }
         });
@@ -223,6 +218,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
                 addView(storyids.get(counter));
                 seenNumber(storyids.get(counter));
+//                return 0;
             }
 
             @Override
@@ -241,6 +237,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 User user = snapshot.getValue(User.class);
                 Glide.with(getApplicationContext()).load(user.getProfileImage()).into(story_photo);
                 story_username.setText(user.getUsername());
+
             }
 
             @Override
@@ -261,6 +258,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 seen_number.setText(""+snapshot.getChildrenCount());
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

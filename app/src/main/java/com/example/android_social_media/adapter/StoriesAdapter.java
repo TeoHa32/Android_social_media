@@ -1,7 +1,5 @@
 package com.example.android_social_media.adapter;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,25 +21,13 @@ import com.example.android_social_media.StoryAddActivity;
 import com.example.android_social_media.model.StoriesModel;
 import com.example.android_social_media.model.User;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesHolder> {
 
@@ -134,6 +119,7 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
                     Glide.with(mContext).load(user.getProfileImage()).into(viewHolder.story_photo_seen);
                     viewHolder.story_username.setText(user.getUsername());
                 }
+
             }
 
             @Override
@@ -209,6 +195,7 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
                         imageView.setVisibility(View.VISIBLE);
                     }
                 }
+//                return currentTime;
             }
 
             @Override
@@ -240,6 +227,7 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.StoriesH
                     viewHolder.story_photo.setVisibility(View.GONE);
                     viewHolder.story_photo_seen.setVisibility(View.VISIBLE);
                 }
+//                return 0;
             }
 
             @Override

@@ -5,13 +5,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +18,13 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.android_social_media.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -265,6 +262,7 @@ public class EditProfileFragment extends Fragment {
                             // Hiển thị thông báo lỗi hoặc thực hiện các hành động phù hợp
                             Toast.makeText(requireContext(), "Người dùng không tồn tại!", Toast.LENGTH_SHORT).show();
                         }
+//                        return 0;
                     }
 
                         @Override
@@ -313,6 +311,7 @@ public class EditProfileFragment extends Fragment {
                         usersRef.child(userId).child("name").setValue(edtName.getText().toString());
                         break; // Chỉ cần cập nhật một người dùng duy nhất
                     }
+//                    return 0;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -337,6 +336,7 @@ public class EditProfileFragment extends Fragment {
                         usersRef.child(userId).child("gender").setValue(newGender);
                         break; // Chỉ cần cập nhật một người dùng duy nhất
                     }
+//                    return 0;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -361,6 +361,7 @@ public class EditProfileFragment extends Fragment {
                         usersRef.child(userId).child("dob").setValue(edtDob.getText().toString());
                         break; // Chỉ cần cập nhật một người dùng duy nhất
                     }
+//                    return 0;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -388,6 +389,7 @@ public class EditProfileFragment extends Fragment {
                         usersRef.child(userId).child("phoneNumber").setValue(edtPhone.getText().toString());
                         break; // Chỉ cần cập nhật một người dùng duy nhất
                     }
+//                    return 0;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -415,6 +417,7 @@ public class EditProfileFragment extends Fragment {
                         usersRef.child(userId).child("username").setValue(edtUsername.getText().toString());
                         break; // Chỉ cần cập nhật một người dùng duy nhất
                     }
+//                    return 0;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -451,6 +454,7 @@ public class EditProfileFragment extends Fragment {
                         usersRef.child(userId).child("password").setValue(edtPassword.getText().toString());
                         break; // Chỉ cần cập nhật một người dùng duy nhất
                     }
+//                    return 0;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {

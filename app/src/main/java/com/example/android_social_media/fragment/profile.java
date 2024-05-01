@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,10 +19,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.R;
+import com.example.android_social_media.adapter.MyfotosAdapter;
 import com.example.android_social_media.chat.ChatActivity;
+import com.example.android_social_media.model.ChatModel;
+import com.example.android_social_media.model.post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,13 +37,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-//import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import com.squareup.picasso.Picasso;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -46,11 +56,19 @@ public class profile extends Fragment {
     private Button flbt,chatButton;
     private Button followBtn;
     private RecyclerView recyclerView;
+    MyfotosAdapter myfotosAdapter;
+    List<post> postList;
+
+    List<ChatModel> chat;
+
+    ImageButton list;
+    String key;
+    ImageView bthome,btinfo,btsearch,btback;
+    private long cout;
+
     private long count;
 
     private String UserID;
-
-
 
     public profile() {
         // Required empty public constructor
@@ -62,6 +80,7 @@ public class profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+//        AndroidThreeTen.init(getActivity());
 //        AndroidThreeTen.init(getActivity());
         return inflater.inflate(R.layout.profile, container, false);
     }
@@ -76,13 +95,45 @@ public class profile extends Fragment {
         // Khởi tạo các thành phần giao diện và gán giá trị
         init(view);
 
+
+//        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+//        messagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                // Lấy danh sách tất cả các key
+//                List<String> messageKeys = new ArrayList<>();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    messageKeys.add(snapshot.getKey());
+//                }
+//
+//                // Loại bỏ key đầu tiên từ danh sách (nếu có ít nhất một key)
+//                if (messageKeys.size() > 1) {
+//                    messageKeys.remove(0);
+//                }
+//
+//                // Xóa tất cả các key còn lại
+//                for (String key : messageKeys) {
+//                    messagesRef.child(key).removeValue();
+//                }
+//            }
+
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Xử lý khi truy vấn bị hủy
+//            }
+//        });
+
         Bundle bundle = getArguments();
         UserID = bundle.getString("UserID");
 
         // Load dữ liệu từ Firebase Realtime Database và hiển thị lên giao diện
         loadUserDataFromFirebase();
         getFollowerCount();
+
         checkfollowing();
+        myFotos();
+
+//        checkfollowing();
 
         LinearLayout linearLayout = view.findViewById(R.id.followersClick);
         linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -97,59 +148,109 @@ public class profile extends Fragment {
 
 
         String buttonText = chatButton.getText().toString();
+
+
         chatButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-//                AndroidThreeTen.init(getActivity());
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                String iduser1 = "vYEYezjxu8QT5HgpCRgcxuEOsUs1";
-                String iduser2 = "PVz33IummMfEXX6594CKN0nCJhC3";
-                DatabaseReference msgRef = database.getReference("Messages");
-                String id = msgRef.push().getKey();
-                LocalDateTime currentTime = null;
-                currentTime = LocalDateTime.now();
 
-                // Định dạng thời gian
-                DateTimeFormatter formatter = null;
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-                String  formattedTime = currentTime.format(formatter);
+                addmessage();
 
-
-                // Tạo một hashmap để đại diện cho dữ liệu của user
-                HashMap<String, Object> userData = new HashMap<>();
-                userData.put("uid", Arrays.asList(iduser1, iduser2));
-                userData.put("time", formattedTime );
-                userData.put("lastMessage", "hello");
-                userData.put("id", id);
-
-//              Đẩy dữ liệu của user lên Firebase Realtime Database với key tự động// Tạo key tự động cho user
-                msgRef.child(id).setValue(userData);
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("uid", iduser2);
-                intent.putExtra("userid", iduser1);
-                intent.putExtra("id", id);
-                startActivity(intent);
-//                Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
-//                intent.putExtra("uid", oppositeUID);
-                // Log.d("nhan chat","roi ne");
             }
         });
+
+
 
         flbt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (flbt.getText().equals("Follow")){
+                if (flbt.getText().equals("Theo dõi")){
                     addfollow();
-                    flbt.setText("Unfollow");
+                    flbt.setText("Đang theo dõi");
                 } else {
                     unfollow();
-                    flbt.setText("Follow");
+                    flbt.setText("Theo dõi");
                 }
             }
         });
 
-        // return view;
+        list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myFotos();
+            }
+        });
+
+        bthome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                //chuyển đến trang chủ
+                homepageFragment homepageFragment = new homepageFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, homepageFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+
+        btinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
+                key = uid;
+                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                                String username = dataSnapshot.child("username").getValue(String.class);
+                                String profileImage = dataSnapshot.child("profileImage").getValue(String.class);
+                                if (username != null) {
+                                    navigateToProfile(username, profileImage);
+                                }
+
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
+
+        btsearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchFragment searchFragment = new SearchFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, searchFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+
+        btback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchResultFragment  searchFragment = new SearchResultFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, searchFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+
+
     }
 
 
@@ -170,18 +271,19 @@ public class profile extends Fragment {
         followingCountTv = view.findViewById(R.id.followingCountTv);
         flbt = view.findViewById(R.id.followBtn);
         chatButton = view.findViewById(R.id.chatBtn);
-
-//        postCountTv = view.findViewById(R.id.postCountTv);
-//        profileImage = view.findViewById(R.id.profileImage);
-//        followBtn = view.findViewById(R.id.followBtn);
-//        recyclerView = view.findViewById(R.id.recyclerView);
-//        countLayout = view.findViewById(R.id.countLayout);
-//        editProfileBtn = view.findViewById(R.id.edit_profileImage);
-//        startChatBtn = view.findViewById(R.id.startChatBtn);
-//
-//
-//        FirebaseAuth auth = FirebaseAuth.getInstance();
-//        user = auth.getCurrentUser();
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager =new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        postList = new ArrayList<>();
+        myfotosAdapter = new MyfotosAdapter(getContext(),postList);
+        recyclerView.setAdapter(myfotosAdapter);
+        list = view.findViewById(R.id.my_list);
+        postCountTv = view.findViewById(R.id.postCountTv);
+        bthome = view.findViewById(R.id.btnHome);
+        btinfo = view.findViewById(R.id.btnProfile);
+        btsearch = view.findViewById(R.id.btnSearch);
+        btback = view.findViewById(R.id.btnBackMsg);
     }
 
     private void loadUserDataFromFirebase() {
@@ -194,30 +296,14 @@ public class profile extends Fragment {
                     String status = dataSnapshot.child("status").getValue(String.class);
                     String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
                     String toolbarusername = dataSnapshot.child("username").getValue(String.class);
-                    // int followersCount = follow();
-
-                    //    String followingCount = dataSnapshot.child("profileImage").getValue(String.class);
-                    //          String postCount = dataSnapshot.child("profileImage").getValue(String.class);
-//                    long followersCount = dataSnapshot.child("follower").getValue(Long.class);
-//                    long followingCount = dataSnapshot.child("following").getValue(Long.class);
-//                    long postCount = dataSnapshot.child("postCount").getValue(Long.class);
-
-                    // Hiển thị dữ liệu lên giao diện
-                    //toolbarNameTv.setText(username);
-                    Log.d("co vao day khong", username);
                     nameTv.setText(username);
                     statusTv.setText(status);
                     toolbarNameTv.setText(toolbarusername);
-
-
-//                    followingCountTv.setText(String.valueOf(followingCount));
-//                    postCountTv.setText(String.valueOf(postCount));
-
-                    // Load hình ảnh đại diện từ Firebase Storage và đặt hình ảnh cho CircleImageView
                     if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                         Picasso.get().load(profileImageUrl).into(profileImage);
-                    }
-                } else Log.d("co vao day khong", "khong co");
+                        }
+                    } else Log.d("co vao day khong", "khong co");
+
             }
 
             @Override
@@ -228,6 +314,7 @@ public class profile extends Fragment {
     }
 
     private void getFollowerCount() {
+
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -235,23 +322,29 @@ public class profile extends Fragment {
 
                 long followerCount = dataSnapshot.child("follower").getChildrenCount();
                 long followingCount = dataSnapshot.child("following").getChildrenCount();
+
+                cout = followingCount;
+
                 count = followingCount;
                 Log.d("Count " , String.valueOf(count));
+
                 followersCountTv.setText(String.valueOf(followerCount));
                 followingCountTv.setText(String.valueOf(followingCount));
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra trong quá trình truy vấn dữ liệu
             }
         });
     }
 
+
     private void checkfollowing(){
-        String username = "jukhx1A154W2ERD0nJ9AG3LtyMI2"; //username của trang cá nhân người nhấn vào
-        // thay thế child("users").child("-NuXjEdYF637E4qikFCB").child("follower"); thành child("users").child(username).child("following");
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(UserID).child("follower");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+        String username = UserID;
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("following");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -260,11 +353,12 @@ public class profile extends Fragment {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                         String followerID = childSnapshot.getValue(String.class);
                         if(followerID.equals(username)){
-                            flbt.setText("Unfollow");
+                            flbt.setText("Đang theo dõi");
                             break;
                         }
                     }
                 }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -277,29 +371,57 @@ public class profile extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = currentUser.getUid();
         String userIdToRemove = UserID;
+        long dem = 0;
         DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
-                .child("users").child(uid).child("following");
-        followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("users");
+        followingRef.child(uid).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    //long followerCount = dataSnapshot.child(UserID).child("follower").getChildrenCount();
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String userId = userSnapshot.getKey();
-                        if (userId.equals(userIdToRemove)) {
+                        String userId1 = (String) userSnapshot.getValue();
+                        if (userId1.equals(userIdToRemove)) {
                             // Xóa người dùng khỏi mảng
                             userSnapshot.getRef().removeValue();
-                            // hoặc userSnapshot.getRef().setValue(null);
-                            break; // Thoát khỏi vòng lặp sau khi xóa
+                            break;
                         }
                     }
+
+
                 }
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xử lý khi có lỗi xảy ra
             }
+        });
+
+        followingRef.child(userIdToRemove).child("follower").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    long followerCount = dataSnapshot.getChildrenCount();
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String userId1 = (String) userSnapshot.getValue();
+                        if (userId1.equals(uid)) {
+                            // Xóa người dùng khỏi mảng
+                            userSnapshot.getRef().removeValue();
+                            Log.d("xoa duoc 2", String.valueOf(followerCount));
+                            followerCount = followerCount -1;
+                            followersCountTv.setText(String.valueOf(followerCount));
+
+
+                            break;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+
         });
 
     }
@@ -307,36 +429,95 @@ public class profile extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = currentUser.getUid();
         String userIdToAdd = UserID;
+        String demgt1;
+        List <String> dem = new ArrayList<>();
+        List <String> demflw = new ArrayList<>();
         DatabaseReference followingRef = FirebaseDatabase.getInstance().getReference()
                 .child("users");
+
+        if(!dem.isEmpty()){
+            Log.d("gia tri cuoi cung", dem.get(0));
+
+        }
 
         followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    DataSnapshot data = dataSnapshot.child(uid).child("following");
+                    for (DataSnapshot userSnapshot : data.getChildren()) {
+
+                        String demgt = userSnapshot.getKey();
+                        dem.add(demgt);
+
+                    }
+
+                    DataSnapshot data1 = dataSnapshot.child(UserID).child("follower");
+                    for (DataSnapshot userSnapshot : data1.getChildren()) {
+                        String demgt = userSnapshot.getKey();
+                        demflw.add(demgt);
+                    }
+                    if(!demflw.isEmpty()){
+                        Log.d("gia tri cuoi cung1", demflw.get(demflw.size()-1));
+                    }
+
                     long followingCount = dataSnapshot.child(uid).child("following").getChildrenCount();
                     long followerCount = dataSnapshot.child(UserID).child("follower").getChildrenCount();
                     Log.d("Chao moij nguoi", String.valueOf(followingCount));
-                    String dem =  String.valueOf(followingCount);
-                    followingRef.child(uid).child("following").child(dem).setValue(userIdToAdd);
-                    followingRef.child(UserID).child("follower").child(dem).setValue(userIdToAdd);
+
+                    String dem1 = "";
+                    String dem2 = "";
+                    if(dem.isEmpty()){
+                        if(demflw.isEmpty()){
+                            dem2 = "0";
+                        }
+                        else {
+                            long b = Long.parseLong(demflw.get(demflw.size()-1))+1;
+                            dem2 = String.valueOf(b);
+
+                        }
+                         dem1 =  "0";
+                        dem1 =  String.valueOf(dem1);
+                    }
+                    else if(demflw.isEmpty()){
+                        if (dem.isEmpty()){
+                            dem1 =  "0";
+                            dem1 =  String.valueOf(dem1);
+                        }
+                        else{
+                            long a = Long.parseLong(dem.get(dem.size()-1))+1;
+                            dem1 =  String.valueOf(a);
+
+                        }
+                        dem2 = "0";
+                       dem2 = String.valueOf(dem2);
+                    }
+                    else {
+                        long a = Long.parseLong(dem.get(dem.size()-1))+1;
+                        long b = Long.parseLong(demflw.get(demflw.size()-1))+1;
+
+                        dem1 =  String.valueOf(a);
+                        dem2 = String.valueOf(b);
+
+                    }
+                    Log.d("dem1",dem1);
+                    Log.d("dem2",dem2);
+                    followingRef.child(uid).child("following").child(dem1).setValue(userIdToAdd);
+                    followingRef.child(UserID).child("follower").child(dem2).setValue(uid);
+
+
+//                    followingRef.child(uid).child("following").setValue(userIdToAdd);
+//                    followingRef.child(UserID).child("follower").setValue(uid);
                     String count1 = String.valueOf(followersCountTv.getText());
                     long number = Long.parseLong(count1)+1;
 
 //                    followingCount = followingCount + 1;
                     followersCountTv.setText(String.valueOf(number));
-//                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-//                        String userId = userSnapshot.getKey();
-//                        if (userId.equals(userIdToRemove)) {
-//                            // Xóa người dùng khỏi mảng
-//                            userSnapshot.getRef().removeValue();
-//                            // hoặc userSnapshot.getRef().setValue(null);
-//                            break; // Thoát khỏi vòng lặp sau khi xóa
-//                        }
-//                    }
+
 
                 }
             }
+
 
 
             @Override
@@ -344,6 +525,300 @@ public class profile extends Fragment {
                 // Xử lý khi có lỗi xảy ra
             }
         });
+    }
+
+//    private void addmessage(){
+//
+//        AndroidThreeTen.init(getActivity());
+//
+////        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+////        String uid = currentUser.getUid();
+////        String userIdToAdd = UserID;
+////        DatabaseReference messageSnapshot = FirebaseDatabase.getInstance().getReference().child("Messages");
+////
+////        messageSnapshot.addListenerForSingleValueEvent(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                if(dataSnapshot.exists()){
+////                    String messageID = messageSnapshot.getKey();
+////
+////                }
+////            }
+////
+////
+////
+////            @Override
+////            public void onCancelled(@NonNull DatabaseError databaseError) {
+////                // Xử lý khi có lỗi xảy ra
+////            }
+////        });
+//      //  DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("example");
+////        AndroidThreeTen.init(getActivity());
+//
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        String tk = currentUser.getUid();
+//
+//        String iduser1 = tk;
+//        List<String> uids = new ArrayList<>();
+//        String iduser2 = UserID;
+
+////        DatabaseReference msgRef = database.getReference("Messages");
+//        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+////
+////// Thực hiện lắng nghe sự kiện chỉ một lần để lấy dữ liệu
+//        msgRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                // Thực hiện xử lý dữ liệu lấy về từ cơ sở dữ liệu
+////                String data = snapshot.getValue(String.class);
+////                Log.d("Data from Firebase", data);
+////                d
+
+//                if(snapshot.exists()){
+//                   // ChatModel c = new ChatModel();
+//                    // Thực hiện kiểm tra xem cuộc trò chuyện đã tồn tại
+//                    for (DataSnapshot data : snapshot.getChildren()) {
+//                        String d = snapshot.getKey();
+//                        ChatModel c = new ChatModel();
+//                        c.setId(d);
+
+//                        Log.d("chat id",c.getId());
+//                        String u = (String) snapshot.child(d).child("uid").child("0").getValue();
+//                        uids.add(u);
+//                         u = (String) snapshot.child(d).child("uid").child("1").getValue();
+//                        uids.add(u);
+////                        Iterable<DataSnapshot> uidSnapshots = data.child("uid").getChildren();
+////
+////                        for (DataSnapshot uidSnapshot : uidSnapshots) {
+////                            String uid1 = uidSnapshot.getValue(String.class);
+////                            if (uid1 != null) {
+////                                uids.add(uid1);
+////
+////                            }
+////                        }
+////                        c.setUid(uids);
+////                        chat.add(c);
+//
+//                    }
+//                    Log.d("chat dl",chat.get(0).getId());
+//                    Log.d("chat dl",chat.get(0).getUid().get(0));
+
+//                    if(!uids.isEmpty()){
+//                        Log.d("tk 1",uids.get(2));
+//                        Log.d("tk 1",iduser1);
+//                        Log.d("tk 2",uids.get(3));
+//                        Log.d("tk 2",iduser2);
+//                        Log.d("dieu kien ds", String.valueOf(iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))));
+
+//                                    // conversationExists = true;
+//                                   // Log.d("cai gi","ko");
+//                                    break;
+//                                }
+//
+//                            }
+//                            else if(i == uids.size()-1){
+//                                String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
+//                                Log.d("cai gi",messageID);
+//                                // Tạo dữ liệu tin nhắn mới
+//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+//                                String currentTime = sdf.format(new Date());
+//                                msgRef.child(messageID).child("id").setValue(messageID);
+//                                msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+//                                msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+//
+//                                // Chuyển sang màn hình ChatActivity
+//                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                                intent.putExtra("uid", iduser2);
+//                                intent.putExtra("userid", iduser1);
+//                                intent.putExtra("id", messageID);
+//                                startActivity(intent);
+//                            }
+//
+////                        if (iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))) {
+////                            // conversationExists = true;
+////                            Log.d("cai gi","ko");
+////                        }
+//
+//                        // Nếu cuộc trò chuyện chưa tồn tại, thực hiện tạo tin nhắn mới
+////                        else {
+////                            String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
+////                            Log.d("cai gi",messageID);
+////                            // Tạo dữ liệu tin nhắn mới
+////                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+////                            String currentTime = sdf.format(new Date());
+////                            msgRef.child(messageID).child("id").setValue(messageID);
+////                            msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+////                            msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+////
+////                            // Chuyển sang màn hình ChatActivity
+////                            Intent intent = new Intent(getActivity(), ChatActivity.class);
+////                            intent.putExtra("uid", iduser2);
+////                            intent.putExtra("userid", iduser1);
+////                            intent.putExtra("id", messageID);
+////                            startActivity(intent);
+////
+//                    }
+//
+//                    //addmess(uids,iduser1,iduser2);
+//                    Log.d("Message", uids.get(0));
+
+//
+//                    // Kiểm tra xem cuộc trò chuyện đã tồn tại
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // Xử lý khi truy vấn bị hủy
+//            }
+//        });
+
+//// Các câu lệnh sau đây sẽ tiếp tục được thực hiện ngay sau khi sự kiện đã được thực hiện
+//    //    Log.d("Message", uids.get(0));
+//
+//// Các câu lệnh khác ở đây
+//
+//    }
+
+    private void addmessage() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String iduser1 = currentUser.getUid();
+        String iduser2 = UserID; // Biến UserID cần được định nghĩa ở đâu đó trong mã của bạn
+
+        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+        msgRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    boolean conversationExists = false;
+                    String conversationId = null;
+
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        Iterable<DataSnapshot> uidSnapshots = data.child("uid").getChildren();
+                        List<String> uids = new ArrayList<>();
+
+                        for (DataSnapshot uidSnapshot : uidSnapshots) {
+                            String uid = uidSnapshot.getValue(String.class);
+                            uids.add(uid);
+                        }
+
+                        if (uids.contains(iduser1) && uids.contains(iduser2)) {
+                            conversationExists = true;
+                            conversationId = data.getKey();
+                            break;
+                        }
+                    }
+
+                    if (conversationExists && conversationId != null) {
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("uid", iduser2);
+                        intent.putExtra("userid", iduser1);
+                        intent.putExtra("id", conversationId);
+                        startActivity(intent);
+                        // Hiển thị toàn bộ tin nhắn của cuộc trò chuyện đã tồn tại
+                        // Đây là nơi bạn có thể thực hiện các hành động liên quan đến việc hiển thị tin nhắn
+                        // conversationId chính là ID của cuộc trò chuyện tồn tại
+                        Log.d("Conversation exists", "Conversation ID: " + conversationId);
+                    } else {
+                        // Tạo một cuộc trò chuyện mới nếu chưa tồn tại
+                        String messageID = msgRef.push().getKey();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+                        String currentTime = sdf.format(new Date());
+                        msgRef.child(messageID).child("id").setValue(messageID);
+                        msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+                        msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+
+                        // Chuyển sang màn hình ChatActivity
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("uid", iduser2);
+                        intent.putExtra("userid", iduser1);
+                        intent.putExtra("id", messageID);
+                        startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý khi truy vấn bị hủy
+            }
+        });
+    }
+    private void myFotos(){
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                postList.clear();
+
+                for (DataSnapshot snapshot : datasnapshot.getChildren()){
+                    post p = snapshot.getValue(post.class);
+                    if(p.getPublisher().equals(UserID)){
+                        postList.add(p);
+                    }
+                }
+                Long a = (long) postList.size();
+                postCountTv.setText(String.valueOf(a));
+                Collections.reverse(postList);
+                myfotosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+
+    public void navigateToProfile(String username,String img){
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        bundle.putString("img", img);
+
+        if(key != null){
+            bundle.putString("key", key);
+        }
+        profileFragment profile = new profileFragment();
+        profile.setArguments(bundle); // Gán Bundle cho Fragment
+        FragmentManager manager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.replace(R.id.fragment_container, profile);
+        trans.addToBackStack(null);
+        trans.commit();
+    }
+
+    public void  addmess(List uids,String iduser1,String iduser2){
+        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference("Messages");
+
+        //DatabaseReference msgRef = database.getReference("Messages");
+        if (iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))) {
+            // conversationExists = true;
+            Log.d("cai gi","ko");
+        }
+
+        // Nếu cuộc trò chuyện chưa tồn tại, thực hiện tạo tin nhắn mới
+        else {
+            String messageID = msgRef.push().getKey(); // Tạo một key duy nhất cho mỗi tin nhắn
+            Log.d("cai gi1", iduser1);
+            Log.d("cai gi2", iduser2);
+            // Tạo dữ liệu tin nhắn mới
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+            String currentTime = sdf.format(new Date());
+            msgRef.child(messageID).child("uid").child("0").setValue(iduser1);
+            msgRef.child(messageID).child("uid").child("1").setValue(iduser2);
+
+            // Chuyển sang màn hình ChatActivity
+            Intent intent = new Intent(getActivity(), ChatActivity.class);
+            intent.putExtra("uid", iduser2);
+            intent.putExtra("userid", iduser1);
+            intent.putExtra("id", messageID);
+
+            startActivity(intent);
+        }
     }
 
 
