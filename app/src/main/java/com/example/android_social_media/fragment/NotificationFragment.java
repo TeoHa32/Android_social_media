@@ -54,7 +54,7 @@ public class NotificationFragment extends Fragment {
         init(view);
         setOnClickListener();
         readNotification();
-        
+
 
 
     }

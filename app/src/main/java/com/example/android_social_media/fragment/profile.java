@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -514,6 +515,7 @@ public class profile extends Fragment {
 //                    followingCount = followingCount + 1;
                     followersCountTv.setText(String.valueOf(number));
 
+                    addNotifications(UserID);
 
                 }
             }
@@ -821,5 +823,18 @@ public class profile extends Fragment {
         }
     }
 
+    private void addNotifications(String userId){
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userId", firebaseUser.getUid());
+        hashMap.put("text", " đã follow bạn!");
+        hashMap.put("postId", "");
+        hashMap.put("isPost", "false");
+
+        reference.push().setValue(hashMap);
+    }
 
 }
