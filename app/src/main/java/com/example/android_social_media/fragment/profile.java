@@ -238,6 +238,18 @@ public class profile extends Fragment {
             }
         });
 
+        btback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchResultFragment  searchFragment = new SearchResultFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, searchFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });dd
+
 
     }
 
