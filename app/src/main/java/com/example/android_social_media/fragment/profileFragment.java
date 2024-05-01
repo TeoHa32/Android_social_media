@@ -41,7 +41,7 @@ public class profileFragment extends Fragment {
     String url;
 
     String uid,key;
-    TextView follow, following;
+    TextView follow, following,postcount;
 
     ImageView btnHome, btnSearch, btnLogout;
     private RecyclerView recyclerView;
@@ -67,6 +67,7 @@ public class profileFragment extends Fragment {
         ImageView img = view.findViewById(R.id.imageView5);
         TextView txtUsername = view.findViewById(R.id.txtUsername);
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
+        postcount = view.findViewById(R.id.textView4);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -256,6 +257,8 @@ private void myFotos(){
                 }
             }
             Collections.reverse(postList);
+            Long a = (long) postList.size();
+            postcount.setText(String.valueOf(a));
             myfotosAdapter.notifyDataSetChanged();
         }
 

@@ -248,7 +248,7 @@ public class profile extends Fragment {
                 fragmentTransaction.addToBackStack(null); // Add to back stack if needed
                 fragmentTransaction.commit();
             }
-        });dd
+        });
 
 
     }
