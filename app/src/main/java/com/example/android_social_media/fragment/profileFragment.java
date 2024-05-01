@@ -1,5 +1,6 @@
 package com.example.android_social_media.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android_social_media.PostActivity;
 import com.example.android_social_media.R;
+import com.example.android_social_media.adapter.MyfotosAdapter;
+import com.example.android_social_media.model.post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +32,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class profileFragment extends Fragment {
 
     Button btnInfoProfile;
@@ -32,9 +43,12 @@ public class profileFragment extends Fragment {
     String url;
 
     String uid,key;
-    TextView follow, following;
+    TextView follow, following,postcount;
 
-    ImageView btnHome, btnSearch;
+    ImageView btnHome, btnSearch, btnLogout, btnAddPost;
+    private RecyclerView recyclerView;
+    MyfotosAdapter myfotosAdapter;
+    List<post> postList;
 
     public profileFragment() {
         // Required empty public constructor
@@ -55,6 +69,7 @@ public class profileFragment extends Fragment {
         ImageView img = view.findViewById(R.id.imageView5);
         TextView txtUsername = view.findViewById(R.id.txtUsername);
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
+        postcount = view.findViewById(R.id.textView4);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -64,9 +79,9 @@ public class profileFragment extends Fragment {
             username = bundle.getString("username");
 
             key = bundle.getString("key");
-            Log.d("bundle khoa tu dong",key);
+            Log.d("key?", key);
 
-            if(bundle.getString("key").equals("")){
+            if(key.equals("")){
                 key = user.getUid();
                 Log.d("id người dùng:",key);
             }
@@ -88,7 +103,7 @@ public class profileFragment extends Fragment {
         }
         if (user != null) {
 
-             uid = user.getUid();
+            uid = user.getUid();
 
             uid = user.getUid();
             Log.d("co uid", uid);
@@ -100,6 +115,7 @@ public class profileFragment extends Fragment {
 
         follow = view.findViewById(R.id.textView5);
         following = view.findViewById(R.id.textView6);
+
         return view;
     }
 
@@ -108,12 +124,23 @@ public class profileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init(view);
         clickListener();
+        myFotos();
     }
 
     private void init(View view) {
         btnInfoProfile = view.findViewById(R.id.btnInfoProfile);
         btnHome = view.findViewById(R.id.btnHome);
         btnSearch = view.findViewById(R.id.btnSearch);
+        btnLogout = view.findViewById(R.id.btnLogout);
+        btnAddPost = view.findViewById(R.id.btnAddPost);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager =new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        postList = new ArrayList<>();
+        myfotosAdapter = new MyfotosAdapter(getContext(),postList);
+        recyclerView.setAdapter(myfotosAdapter);
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +181,25 @@ public class profileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginFragment login = new LoginFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, login);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+        btnAddPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), PostActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void getFollowerCount() {
@@ -172,6 +218,7 @@ public class profileFragment extends Fragment {
 
                     follow.setText(String.valueOf(followerCount));
                     following.setText(String.valueOf(followingCount));
+//                    return followerCount;
                 }
 
                 @Override
@@ -208,5 +255,28 @@ public class profileFragment extends Fragment {
 //        }
 //
 //    }
+private void myFotos(){
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+    reference.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+            postList.clear();
+            for (DataSnapshot snapshot : datasnapshot.getChildren()){
+                post p = snapshot.getValue(post.class);
+                if(p.getPublisher().equals(key)){
+                    postList.add(p);
+                }
+            }
+            Collections.reverse(postList);
+            Long a = (long) postList.size();
+            postcount.setText(String.valueOf(a));
+            myfotosAdapter.notifyDataSetChanged();
+        }
 
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    });
+}
 }

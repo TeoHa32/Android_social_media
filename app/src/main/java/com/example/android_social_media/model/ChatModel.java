@@ -1,6 +1,7 @@
 package com.example.android_social_media.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class ChatModel {
 
@@ -8,6 +9,7 @@ public class ChatModel {
     private String message;
     private Date time;
     private String senderID;
+    private List<String> uid;
 
     public ChatModel() {
     }
@@ -49,5 +51,13 @@ public class ChatModel {
 
     public void setSenderID(String senderID) {
         this.senderID = senderID;
+    }
+
+    public List<String> getUid() {
+        return uid;
+    }
+
+    public void setUid(List<String> uid) {
+        this.uid = uid;
     }
 }

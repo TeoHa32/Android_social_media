@@ -10,13 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,16 +26,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     List<ChatModel> list;
 
     String chatID;
+    //String
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +82,17 @@ public class ChatActivity extends AppCompatActivity {
             messageMap.put("id", messageID);
             messageMap.put("message", message);
             messageMap.put("senderID", user.getUid());
+//            messageMap.put("senderID",getIntent().getStringExtra("userid"));
+//            Log.d("Người gửi là: ",getIntent().getStringExtra("userid"));
+
+            if (getIntent() != null && getIntent().hasExtra("userid")) {
+                messageMap.put("senderID",getIntent().getStringExtra("userid"));
+                // Xử lý khi userId tồn tại trong Intent
+            } else {
+                messageMap.put("senderID", user.getUid());
+                // Xử lý khi userId không tồn tại trong Intent
+            }
+//            messageMap.put("senderID",getIntent().getStringExtra("userid"));
             messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
 
 
@@ -147,13 +151,22 @@ public class ChatActivity extends AppCompatActivity {
 
                     String profileImage = snapshot.child("profileImage").getValue(String.class);
                     Log.d("ảnh: ", profileImage);
+                    if (profileImage != null && !profileImage.isEmpty()) {
+                        // Sử dụng Picasso để tải hình ảnh từ URL và hiển thị nó trong ImageView
+                        //Picasso.get().load(url).into(img);
+                        Picasso.get().load(profileImage).into(imageView);
 
+                    } else {
+                        // Nếu imageUrl là null hoặc rỗng, bạn có thể thực hiện các xử lý khác tùy thuộc vào yêu cầu của bạn
+                        // Ví dụ: Hiển thị một hình ảnh mặc định hoặc hiển thị một tin nhắn lỗi
+                        imageView.setImageResource(R.drawable.ic_profile);
+                    }
                     // Load image using Picasso or any other library
-                    Picasso.get().load(profileImage).into(imageView);
 
                     String userName = snapshot.child("username").getValue(String.class);
                     name.setText(userName);
                 }
+//                return 0;
             }
 
             @Override
@@ -165,7 +178,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void loadMessages(){
+
         chatID = getIntent().getStringExtra("id");
+        Log.d("ChatID?", chatID);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Messages")
@@ -175,6 +190,7 @@ public class ChatActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                 ChatModel lastChat = null;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     String messageId = dataSnapshot.child("id").getValue(String.class);
@@ -190,6 +206,7 @@ public class ChatActivity extends AppCompatActivity {
                         ChatModel model = new ChatModel(messageId, message, time, senderID);
                         list.add(model);
 
+
                         // So sánh thời gian của tin nhắn với thời gian của lastMessage hiện tại
                         if (lastChat == null || time.after(lastChat.getTime())) {
                             lastChat = model;
@@ -197,6 +214,9 @@ public class ChatActivity extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                }
+                for ( ChatModel item : list) {
+                    Log.d("list",item.getMessage());
                 }
 
                 // Cập nhật lastMessage mới trong cơ sở dữ liệu Firebase
@@ -211,6 +231,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatRef.child("time").setValue(currentTimeISO8601);
                 }
                 adapter.notifyDataSetChanged();
+//                return 0;
             }
 
             @Override

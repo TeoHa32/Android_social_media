@@ -1,39 +1,31 @@
 package com.example.android_social_media.fragment;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.GenericLifecycleObserver;
-
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.android_social_media.R;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,21 +34,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
-import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class InfoProfileFragment extends Fragment {
-
+    EditText edtTieuSu;
     TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword;
     TextView titleName, titleUsername, txtChangeImg;
     Button btnEdit;
@@ -64,7 +48,10 @@ public class InfoProfileFragment extends Fragment {
     CircleImageView imgProfile;
     ProgressBar progressBar;
 
-    String username;
+    String username, img;
+    String key ="";
+
+    boolean isConfirmed = false;;
 
 
     public InfoProfileFragment() {
@@ -103,6 +90,7 @@ public class InfoProfileFragment extends Fragment {
         imgProfile = view.findViewById(R.id.imgProfile);
         txtChangeImg = view.findViewById(R.id.txtChangeImg);
         progressBar = view.findViewById(R.id.progressBar);
+        edtTieuSu = view.findViewById(R.id.edtTieuSu);
     }
 
     public void showUserData() {
@@ -121,8 +109,10 @@ public class InfoProfileFragment extends Fragment {
                     String gmailUser = snapshot.child("email").getValue(String.class);
                     String usernameUser = snapshot.child("username").getValue(String.class);
                     String passwordUser = snapshot.child("password").getValue(String.class);
+                    String tieuSuUser = snapshot.child("tieusu").getValue(String.class);
 
                     username = snapshot.child("username").getValue(String.class);
+                    img = snapshot.child("profileImage").getValue(String.class);
 
                     // Hiển thị dữ liệu lên TextView
                     titleName.setText(nameUser);
@@ -138,9 +128,11 @@ public class InfoProfileFragment extends Fragment {
                     pfGmail.setText(gmailUser);
                     pfUsername.setText(usernameUser);
                     pfPassword.setText(passwordUser);
+                    edtTieuSu.setText(tieuSuUser);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
+//                return 0;
             }
 
             @Override
@@ -177,9 +169,15 @@ public class InfoProfileFragment extends Fragment {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profileFragment profileFragment = new profileFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("username",username);
+                Log.d("Username ne", img);
+                bundle.putString("username", username);
+                bundle.putString("img", img);
+                if(key != null){
+                    bundle.putString("key", key);
+                }
+
+                profileFragment profileFragment = new profileFragment();
                 profileFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -205,6 +203,16 @@ public class InfoProfileFragment extends Fragment {
             }
         });//end
 
+        edtTieuSu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isConfirmed) {
+                    // Hiển thị dialog chỉ khi mật khẩu chưa được xác nhận
+                    showDialog(Gravity.CENTER);
+                }
+            }
+        });
+
     }
     private void getUserInfo() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -222,6 +230,7 @@ public class InfoProfileFragment extends Fragment {
                     //Ảnh đại diện mặc định khi user không có ảnh đại diện
                     imgProfile.setImageResource(R.drawable.ic_profile);
                 }
+//                return 0;
             }
 
             @Override
@@ -229,6 +238,68 @@ public class InfoProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Lỗi khi truy xuất dữ liệu người dùng", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showDialog(int gravity){
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_tieusu);
+
+        Window window = dialog.getWindow();
+        if (window == null){
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = gravity;
+        window.setAttributes(windowAttributes);
+
+        if (Gravity.CENTER == gravity){
+            dialog.setCancelable(true);
+        } else {
+            dialog.setCancelable(false);
+        }
+        EditText edtTieuSuNow = dialog.findViewById(R.id.edtTieuSuNow);
+        Button btnXacNhan = dialog.findViewById(R.id.btnXacNhan);
+        Button btnHuy= dialog.findViewById(R.id.btnHuy);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        btnXacNhan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
+                String enteredTieuSu = edtTieuSuNow.getText().toString();
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            userRef.child("tieusu").setValue(enteredTieuSu);
+                            dialog.dismiss();
+                            Toast.makeText(requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Hiển thị thông báo lỗi hoặc thực hiện các hành động phù hợp
+                            Toast.makeText(requireContext(), "Người dùng không tồn tại!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+        dialog.show();
     }
 }
 

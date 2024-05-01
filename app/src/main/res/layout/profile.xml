@@ -20,6 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/btnBackMsg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/ic_arrow" />
+
             <TextView
                 android:id="@+id/toolbarNameTV"
                 android:layout_width="wrap_content"
@@ -31,20 +40,27 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/sendBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="12dp"
-                android:background="@drawable/message"
-                android:contentDescription="@null" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/sendBtn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_margin="12dp"-->
+<!--                android:background="@drawable/message"-->
+<!--                android:contentDescription="@null" />-->
 
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/lightGray"
+        android:layout_below="@+id/toolbar"
+        tools:layout_editor_absoluteX="0dp" />
 
     <LinearLayout
         android:id="@+id/linear_1"
@@ -149,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="following"
+                    android:text="Đang theo dõi"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -177,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="followers"
+                    android:text="Người theo dõi"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -204,7 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="posts"
+                    android:text="Bài viết"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -241,7 +257,7 @@
                 android:layout_marginStart="4dp"
 
                 android:minWidth="160dp"
-                android:text="Follow"
+                android:text="Theo dõi"
                 android:textColor="@android:color/white"
                 android:visibility="visible" />
 
@@ -252,7 +268,7 @@
                 android:layout_marginStart="4dp"
 
                 android:minWidth="160dp"
-                android:text="Chat"
+                android:text="Nhắn tin"
                 android:textColor="@android:color/white"
                 android:visibility="visible" />
 
@@ -270,11 +286,96 @@
         android:layout_marginBottom="8dp"
         android:background="#C8C8C8" />
 
+    <LinearLayout
+        android:id="@+id/viewcontrol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view">
+
+
+        <ImageButton
+            android:id="@+id/my_list"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+
+            android:minWidth="160dp"
+            android:src="@drawable/list_solid" />
+
+
+        <ImageButton
+            android:id="@+id/my_save"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bookmark_solid" />
+
+
+
+    </LinearLayout>
+    <View
+        android:id="@+id/view20"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/viewcontrol"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:background="#C8C8C8" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/view" />
+        android:layout_height="310dp"
+        android:layout_below="@id/view20" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/btnHome"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/house_solid" />
+
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/magnifying_glass_solid" />
+
+        <ImageView
+            android:id="@+id/btnAddPost"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="10dp"
+
+            android:src="@drawable/square_plus_regular" />
+
+        <ImageView
+            android:id="@+id/btnProfile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/user_regular" />
+
+
+    </LinearLayout>
 
 
 </RelativeLayout>
