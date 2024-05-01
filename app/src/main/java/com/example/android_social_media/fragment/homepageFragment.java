@@ -41,7 +41,7 @@ public class homepageFragment extends Fragment {
     private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
     private List<post> postList;
-    private ImageView btnChat;
+    private ImageView btnChat, btnNotify;
     FirebaseUser user;
     StoriesAdapter storiesAdapter;
     List<StoriesModel> storiesModelList;
@@ -70,6 +70,7 @@ public class homepageFragment extends Fragment {
         return view;
     }
     private void init(View view) {
+        btnNotify = view.findViewById(R.id.btnNotify);
         imgNewPost = view.findViewById(R.id.img_new_post);
         btnChat = view.findViewById(R.id.btnChat);
         storiesRecylerView = view.findViewById(R.id.storiesRecyclerView);
@@ -97,6 +98,17 @@ public class homepageFragment extends Fragment {
             public void onClick(View v) {
                 startNewPostActivity();
 
+            }
+        });
+        btnNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NotificationFragment notificationFragment = new NotificationFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, notificationFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }

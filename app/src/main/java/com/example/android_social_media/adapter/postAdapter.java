@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
@@ -81,6 +82,7 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
                 if(holder.like.getTag().equals("like")){
                     FirebaseDatabase.getInstance().getReference().child("Likes").child(post.getPostId())
                             .child(firebaseUser.getUid()).setValue(true);
+                    addNotifications(post.getPublisher(), post.getPostId());
                 }
                 else{
                     FirebaseDatabase.getInstance().getReference().child("Likes").child(post.getPostId())
@@ -192,5 +194,16 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
 
     }
 
+    private void addNotifications(String userId, String postId){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userId", firebaseUser.getUid());
+        hashMap.put("text", " đã thích bài viết của bạn!");
+        hashMap.put("postId", postId);
+        hashMap.put("isPost", "true");
+
+        reference.push().setValue(hashMap);
+    }
 
 }

@@ -1,13 +1,22 @@
 package com.example.android_social_media;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.android_social_media.fragment.LoginFragment;
 import com.example.android_social_media.fragment.profile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -97,6 +106,15 @@ public class MainActivity extends AppCompatActivity {
 //        fragmentTransaction.replace(R.id.fragment_container, pro);
 //        fragmentTransaction.addToBackStack(null); // Add to back stack if needed
 //        fragmentTransaction.commit();
+
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+             @Override
+             public void onComplete(@NonNull Task<String> task) {
+                 String toekn = task.getResult();
+                 Log.d("My Token", "onComplete: "+toekn); //From LOGCAT copy token.
+             }
+        });
 
         //đổi màu
         getWindow().setStatusBarColor(getResources().getColor(R.color.gray));

@@ -39,10 +39,10 @@ import java.util.Calendar;
 
 public class EditProfileFragment extends Fragment {
 
-    EditText edtName, edtDob, edtPhone, edtEmail, edtUsername, edtPassword;
+    EditText edtName, edtDob, edtPhone, edtEmail, edtUsername, edtPassword, edtTieuSu;
     Button btnSave;
     RadioButton rdMale, rdFeMale;
-    String nameUser, genderUser, dobUser, phoneUser, emailUser, usernameUser, passwordUser;
+    String nameUser, genderUser, dobUser, phoneUser, emailUser, usernameUser, passwordUser, tieuSuUser;
     ImageView imageViewBack;
     boolean isPasswordConfirmed = false;;
     DatabaseReference usersRef;
@@ -81,6 +81,7 @@ public class EditProfileFragment extends Fragment {
         rdMale = view.findViewById(R.id.rdMale);
         rdFeMale = view.findViewById(R.id.rdFeMale);
         imageViewBack = view.findViewById(R.id.imageViewBack);
+        edtTieuSu = view.findViewById(R.id.edtTieuSu);
     }
 
     private void showdata() {
@@ -94,6 +95,7 @@ public class EditProfileFragment extends Fragment {
             emailUser = bundle.getString("email");
             usernameUser = bundle.getString("username");
             passwordUser = bundle.getString("password");
+            tieuSuUser = bundle.getString("tieusu");
         }
 
         edtName.setText(nameUser);
@@ -136,6 +138,9 @@ public class EditProfileFragment extends Fragment {
                 if (isPasswordChange()) {
                     isAnyChange = true;
                 }
+//                if (isTieuSuChange()) {
+//                    isAnyChange = true;
+//                }
 
                 if (isAnyChange) {
                     // Thực hiện các thay đổi cần thiết (ví dụ: cập nhật dữ liệu trong Firebase)
@@ -149,17 +154,9 @@ public class EditProfileFragment extends Fragment {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("username",usernameUser);
-                infoProfileFragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });//end imageViewBack
 
@@ -181,6 +178,30 @@ public class EditProfileFragment extends Fragment {
         });
 
     }
+
+//    private boolean isTieuSuChange(){
+//        String newTieuSu = edtTieuSu.getText().toString();
+//        if (!nameUser.equals(newTieuSu)){
+//            usersRef.orderByChild("tieusu").equalTo(usernameUser).addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+//                        String userId = userSnapshot.getKey();
+//                        usersRef.child(userId).child("tieusu").setValue(edtName.getText().toString());
+//                        break; // Chỉ cần cập nhật một người dùng duy nhất
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//            tieuSuUser = newTieuSu;
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     private void showPasswordConfirmationDialog(int gravity){
         final Dialog dialog = new Dialog(requireContext());

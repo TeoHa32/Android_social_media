@@ -27,6 +27,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SearchImageAdapter extends  RecyclerView.Adapter<SearchImageAdapter.SearchImageHolder>{
 
+
+
     private List<SearchImageModel> list;
 
     public SearchImageAdapter(List<SearchImageModel> list) {
@@ -36,14 +38,12 @@ public class SearchImageAdapter extends  RecyclerView.Adapter<SearchImageAdapter
     @NonNull
     @Override
     public SearchImageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_image_item, parent,false);
         return new SearchImageHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SearchImageHolder holder, int position) {
-        holder.id.setText(list.get(position).getId());
-
         Glide.with(holder.itemView.getContext().getApplicationContext())
                 .load(list.get(position).getPostImage())
                 .timeout(6500)
@@ -56,14 +56,13 @@ public class SearchImageAdapter extends  RecyclerView.Adapter<SearchImageAdapter
     }
 
     static class SearchImageHolder extends RecyclerView.ViewHolder{
+
+
         private ImageView imageView;
         private TextView id;
         public SearchImageHolder(View itemView){
             super(itemView);
-
             imageView = itemView.findViewById(R.id.imageView);
-            id = itemView.findViewById(R.id.id);
-
         }
     }
 }

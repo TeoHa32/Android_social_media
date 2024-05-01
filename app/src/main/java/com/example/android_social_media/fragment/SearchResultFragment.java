@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_social_media.R;
@@ -40,9 +42,11 @@ import java.util.regex.Pattern;
 
 public class SearchResultFragment extends Fragment {
 
+    TextView btnHuy;
     SearchView searchView;
     RecyclerView recyclerView;
     SearchAdapter adapter;
+    String key = "";
     List<SearchUser> list;
     /*DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");*/
     public SearchResultFragment() {
@@ -78,20 +82,41 @@ public class SearchResultFragment extends Fragment {
                 // Tạo Bundle để truyền UID qua ProfileFragment
                 Bundle bundle = new Bundle();
                 bundle.putString("username", searchUser.getUsername());
+                bundle.putString("img", searchUser.getProfileImage());
                 bundle.putString("UserID", searchUser.getUserID());
+                if(key != null){
+                    bundle.putString("key", key);
+                }
 
                 // Tạo instance của ProfileFragment và thiết lập UID
                 profile profile = new profile();
                 profile.setArguments(bundle);
+                profileFragment profileFragment = new profileFragment();
+                profileFragment.setArguments(bundle);
 
+                if(uid.equals(searchUser.getUserID())){
+                    FragmentManager manager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction trans = manager.beginTransaction();
+                    trans.replace(R.id.fragment_container, profileFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
+                } else {
+                    // Thực hiện chuyển Fragment
+                    FragmentManager manager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction trans = manager.beginTransaction();
+                    trans.replace(R.id.fragment_container, profile);
+                    trans.addToBackStack(null);
+                    trans.commit();
+                }
+            }
+        });
 
-
-                // Thực hiện chuyển Fragment
-                FragmentManager manager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction trans = manager.beginTransaction();
-                trans.replace(R.id.fragment_container, profile);
-                trans.addToBackStack(null);
-                trans.commit();
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
     }
@@ -235,6 +260,7 @@ public class SearchResultFragment extends Fragment {
     }
 
     public void init(View view){
+        btnHuy = view.findViewById(R.id.btnHuy);
         searchView = view.findViewById(R.id.searchView);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
