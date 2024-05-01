@@ -1,5 +1,6 @@
 package com.example.android_social_media.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android_social_media.PostActivity;
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.MyfotosAdapter;
 import com.example.android_social_media.model.post;
@@ -43,7 +45,7 @@ public class profileFragment extends Fragment {
     String uid,key;
     TextView follow, following,postcount;
 
-    ImageView btnHome, btnSearch, btnLogout;
+    ImageView btnHome, btnSearch, btnLogout, btnAddPost;
     private RecyclerView recyclerView;
     MyfotosAdapter myfotosAdapter;
     List<post> postList;
@@ -130,6 +132,7 @@ public class profileFragment extends Fragment {
         btnHome = view.findViewById(R.id.btnHome);
         btnSearch = view.findViewById(R.id.btnSearch);
         btnLogout = view.findViewById(R.id.btnLogout);
+        btnAddPost = view.findViewById(R.id.btnAddPost);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -189,6 +192,14 @@ public class profileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+        btnAddPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), PostActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void getFollowerCount() {
