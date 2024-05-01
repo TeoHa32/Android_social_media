@@ -97,12 +97,9 @@ public class ChangeImageFragment extends Fragment {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InfoProfileFragment infoProfileFragment = new InfoProfileFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, infoProfileFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
         mGetContentLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

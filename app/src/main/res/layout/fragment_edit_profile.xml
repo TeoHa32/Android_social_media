@@ -54,10 +54,24 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edtName"
+                android:id="@+id/edtTieuSu"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="40dp"
+                android:background="@drawable/custom_edit_text"
+                android:drawableLeft="@drawable/ic_person"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="Tiểu sử"
+                android:inputType="text"
+                android:padding="8dp"
+                android:maxLength="150"/>
+
+            <EditText
+                android:id="@+id/edtName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableLeft="@drawable/ic_person"
                 android:drawablePadding="8dp"
