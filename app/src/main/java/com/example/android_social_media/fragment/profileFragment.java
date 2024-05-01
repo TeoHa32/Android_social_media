@@ -76,8 +76,9 @@ public class profileFragment extends Fragment {
             username = bundle.getString("username");
 
             key = bundle.getString("key");
+            Log.d("key?", key);
 
-            if(key == null){
+            if(key.equals("")){
                 key = user.getUid();
                 Log.d("id người dùng:",key);
             }

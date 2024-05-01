@@ -81,6 +81,9 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, Object> messageMap = new HashMap<>();
             messageMap.put("id", messageID);
             messageMap.put("message", message);
+            messageMap.put("senderID", user.getUid());
+//            messageMap.put("senderID",getIntent().getStringExtra("userid"));
+//            Log.d("Người gửi là: ",getIntent().getStringExtra("userid"));
 
             if (getIntent() != null && getIntent().hasExtra("userid")) {
                 messageMap.put("senderID",getIntent().getStringExtra("userid"));
@@ -175,7 +178,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void loadMessages(){
+
         chatID = getIntent().getStringExtra("id");
+        Log.d("ChatID?", chatID);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Messages")

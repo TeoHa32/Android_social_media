@@ -103,12 +103,32 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                             }
                         }
                         if (!isFollowing) {
-                            followingRef.child(String.valueOf(dataSnapshot.getChildrenCount())).setValue(targetUserID);
-                            followerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    long count = snapshot.getChildrenCount();
-                                    followerRef.child(String.valueOf(count)).setValue(currentUserID);
+                                    // Kiểm tra xem có dữ liệu nào không
+                                    if (snapshot.exists()) {
+                                        // Lặp qua tất cả các child của snapshot để tìm node cuối cùng
+                                        DataSnapshot lastChild = null;
+                                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                            lastChild = childSnapshot;
+                                        }
+
+                                        // Kiểm tra xem lastChild đã được tìm thấy chưa
+                                        if (lastChild != null) {
+                                            // Lấy key của node cuối cùng
+                                            String lastKey = lastChild.getKey();
+                                            // Thực hiện thêm follower với key là lastKey + 1 (chuyển key sang kiểu số nguyên trước khi tăng)
+                                            long newKey = Long.parseLong(lastKey) + 1;
+                                            followingRef.child(String.valueOf(newKey)).setValue(targetUserID);
+                                        } else {
+                                            // Trường hợp không có child nào trong snapshot
+                                            // Có thể làm gì đó ở đây nếu cần
+                                        }
+                                    } else {
+                                        // Trường hợp không có dữ liệu trong snapshot
+                                        // Có thể làm gì đó ở đây nếu cần
+                                    }
                                 }
 
                                 @Override
@@ -116,6 +136,55 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                                     Log.e("UserAdapter", "Error adding follower: " + error.getMessage());
                                 }
                             });
+
+//                            followingRef.child(String.valueOf(dataSnapshot.getChildrenCount())).setValue(targetUserID);
+//                            followerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    long count = snapshot.getChildrenCount();
+//                                    followerRef.child(String.valueOf(count)).setValue(currentUserID);
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//                                    Log.e("UserAdapter", "Error adding follower: " + error.getMessage());
+//                                }
+//                            });
+
+                            followerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    // Kiểm tra xem có dữ liệu nào không
+                                    if (snapshot.exists()) {
+                                        // Lặp qua tất cả các child của snapshot để tìm node cuối cùng
+                                        DataSnapshot lastChild = null;
+                                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                            lastChild = childSnapshot;
+                                        }
+
+                                        // Kiểm tra xem lastChild đã được tìm thấy chưa
+                                        if (lastChild != null) {
+                                            // Lấy key của node cuối cùng
+                                            String lastKey = lastChild.getKey();
+                                            // Thực hiện thêm follower với key là lastKey + 1 (chuyển key sang kiểu số nguyên trước khi tăng)
+                                            long newKey = Long.parseLong(lastKey) + 1;
+                                            followerRef.child(String.valueOf(newKey)).setValue(currentUserID);
+                                        } else {
+                                            // Trường hợp không có child nào trong snapshot
+                                            // Có thể làm gì đó ở đây nếu cần
+                                        }
+                                    } else {
+                                        // Trường hợp không có dữ liệu trong snapshot
+                                        // Có thể làm gì đó ở đây nếu cần
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e("UserAdapter", "Error adding follower: " + error.getMessage());
+                                }
+                            });
+
 
 //                            followerRef.child(String.valueOf(dataSnapshot.getChildrenCount())).setValue(currentUserID);
                         }

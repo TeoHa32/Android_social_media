@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -548,6 +549,7 @@ public class profile extends Fragment {
 //        String iduser1 = tk;
 //        List<String> uids = new ArrayList<>();
 //        String iduser2 = UserID;
+
 ////        DatabaseReference msgRef = database.getReference("Messages");
 //        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference().child("Messages");
 ////
@@ -559,6 +561,7 @@ public class profile extends Fragment {
 ////                String data = snapshot.getValue(String.class);
 ////                Log.d("Data from Firebase", data);
 ////                d
+
 //                if(snapshot.exists()){
 //                   // ChatModel c = new ChatModel();
 //                    // Thực hiện kiểm tra xem cuộc trò chuyện đã tồn tại
@@ -566,6 +569,7 @@ public class profile extends Fragment {
 //                        String d = snapshot.getKey();
 //                        ChatModel c = new ChatModel();
 //                        c.setId(d);
+
 //                        Log.d("chat id",c.getId());
 //                        String u = (String) snapshot.child(d).child("uid").child("0").getValue();
 //                        uids.add(u);
@@ -586,15 +590,14 @@ public class profile extends Fragment {
 //                    }
 //                    Log.d("chat dl",chat.get(0).getId());
 //                    Log.d("chat dl",chat.get(0).getUid().get(0));
+
 //                    if(!uids.isEmpty()){
 //                        Log.d("tk 1",uids.get(2));
 //                        Log.d("tk 1",iduser1);
 //                        Log.d("tk 2",uids.get(3));
 //                        Log.d("tk 2",iduser2);
 //                        Log.d("dieu kien ds", String.valueOf(iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))));
-//                        for(int i = 0; i< chat.size();i++){
-//                            if( i %2 == 0){
-//                                if (iduser1.equals(chat.get(i)) && iduser2.equals(uids.get(i+1))) {
+
 //                                    // conversationExists = true;
 //                                   // Log.d("cai gi","ko");
 //                                    break;
@@ -618,7 +621,7 @@ public class profile extends Fragment {
 //                                intent.putExtra("id", messageID);
 //                                startActivity(intent);
 //                            }
-//                        }
+//
 ////                        if (iduser1.equals(uids.get(0)) && iduser2.equals(uids.get(1))) {
 ////                            // conversationExists = true;
 ////                            Log.d("cai gi","ko");
@@ -641,14 +644,15 @@ public class profile extends Fragment {
 ////                            intent.putExtra("userid", iduser1);
 ////                            intent.putExtra("id", messageID);
 ////                            startActivity(intent);
-////                        }
+////
 //                    }
 //
 //                    //addmess(uids,iduser1,iduser2);
 //                    Log.d("Message", uids.get(0));
+
 //
 //                    // Kiểm tra xem cuộc trò chuyện đã tồn tại
-//                    //Log.d("stt",uids.get(0));
+//
 //                }
 //            }
 //
@@ -657,7 +661,7 @@ public class profile extends Fragment {
 //                // Xử lý khi truy vấn bị hủy
 //            }
 //        });
-//
+
 //// Các câu lệnh sau đây sẽ tiếp tục được thực hiện ngay sau khi sự kiện đã được thực hiện
 //    //    Log.d("Message", uids.get(0));
 //
