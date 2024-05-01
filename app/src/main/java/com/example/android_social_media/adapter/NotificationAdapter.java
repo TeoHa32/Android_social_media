@@ -63,14 +63,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         getUserInfo(holder.image_profile, holder.username, notification.getUserId());
 
-        Log.d("Anh post",   notification.getIsPost());
-        Log.d("Anh post id", notification.getPostId());
-
-        if (notification.getIsPost().equals("true")) {
-            holder.post_image.setVisibility(View.VISIBLE);
-            getPostImage(holder.post_image, notification.getPostId());
+        String isPost = notification.getIsPost();
+        if (isPost != null) {
+            if (isPost.equals("true")) {
+                holder.post_image.setVisibility(View.VISIBLE);
+                getPostImage(holder.post_image, notification.getPostId());
+            } else if (isPost.equals("false")) {
+                holder.post_image.setVisibility(View.GONE);
+            } else {
+                holder.post_image.setVisibility(View.GONE);
+            }
         } else {
-            holder.post_image.setVisibility(View.GONE);
+            // Xử lý trường hợp notification.getIsPost() trả về null
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

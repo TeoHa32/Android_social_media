@@ -12,7 +12,7 @@
         app:civ_border_width="2dp"
         app:civ_border_color="#f23b5a"
         android:layout_gravity="center"
-        android:src="@drawable/image_placeholder"
+        android:src="@drawable/ic_profile"
         android:layout_marginTop="5dp"
         android:id="@+id/story_photo"/>
 
@@ -23,7 +23,7 @@
         android:visibility="gone"
         app:civ_border_color="#f23b5a"
         android:layout_gravity="center"
-        android:src="@drawable/image_placeholder"
+        android:src="@drawable/ic_profile"
         android:layout_marginTop="5dp"
         android:id="@+id/story_photo_seen"/>
 
