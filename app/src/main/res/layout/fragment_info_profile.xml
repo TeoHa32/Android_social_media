@@ -84,15 +84,17 @@
             android:layout_margin="10dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtTieuSu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Tiểu sử!"
-                android:textSize="18dp"
-                android:textAlignment="center"
-                />
+            <EditText
+                android:id="@+id/edtTieuSu"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_edit_text"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Tiểu sử của bạn!"
+                android:inputType="text"
+                android:padding="8dp" />
         </LinearLayout>
 
         <LinearLayout

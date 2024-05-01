@@ -1,11 +1,19 @@
 package com.example.android_social_media.fragment;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -31,8 +40,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class InfoProfileFragment extends Fragment {
-
-    TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword, txtTieuSu;
+    EditText edtTieuSu;
+    TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword;
     TextView titleName, titleUsername, txtChangeImg;
     Button btnEdit;
     ImageView imageViewBack;
@@ -41,6 +50,8 @@ public class InfoProfileFragment extends Fragment {
 
     String username, img;
     String key ="";
+
+    boolean isConfirmed = false;;
 
 
     public InfoProfileFragment() {
@@ -79,7 +90,7 @@ public class InfoProfileFragment extends Fragment {
         imgProfile = view.findViewById(R.id.imgProfile);
         txtChangeImg = view.findViewById(R.id.txtChangeImg);
         progressBar = view.findViewById(R.id.progressBar);
-        txtTieuSu = view.findViewById(R.id.txtTieuSu);
+        edtTieuSu = view.findViewById(R.id.edtTieuSu);
     }
 
     public void showUserData() {
@@ -98,7 +109,7 @@ public class InfoProfileFragment extends Fragment {
                     String gmailUser = snapshot.child("email").getValue(String.class);
                     String usernameUser = snapshot.child("username").getValue(String.class);
                     String passwordUser = snapshot.child("password").getValue(String.class);
-//                    String tieuSuUser = snapshot.child("tieusu").getValue(String.class);
+                    String tieuSuUser = snapshot.child("tieusu").getValue(String.class);
 
                     username = snapshot.child("username").getValue(String.class);
                     img = snapshot.child("profileImage").getValue(String.class);
@@ -117,12 +128,7 @@ public class InfoProfileFragment extends Fragment {
                     pfGmail.setText(gmailUser);
                     pfUsername.setText(usernameUser);
                     pfPassword.setText(passwordUser);
-//                    if (tieuSuUser.equals("")) {
-//                        txtTieuSu.setText("Tiểu sử");
-//                    } else {
-//                        txtTieuSu.setText(tieuSuUser);
-//                    }
-//                    txtTieuSu.setText(tieuSuUser);
+                    edtTieuSu.setText(tieuSuUser);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
@@ -150,7 +156,6 @@ public class InfoProfileFragment extends Fragment {
                 bundle.putString("email", pfGmail.getText().toString());
                 bundle.putString("username", pfUsername.getText().toString());
                 bundle.putString("password", pfPassword.getText().toString());
-                bundle.putString("tieusu", txtTieuSu.getText().toString());
                 editProfileFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -198,6 +203,16 @@ public class InfoProfileFragment extends Fragment {
             }
         });//end
 
+        edtTieuSu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isConfirmed) {
+                    // Hiển thị dialog chỉ khi mật khẩu chưa được xác nhận
+                    showDialog(Gravity.CENTER);
+                }
+            }
+        });
+
     }
     private void getUserInfo() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -223,6 +238,68 @@ public class InfoProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Lỗi khi truy xuất dữ liệu người dùng", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showDialog(int gravity){
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_tieusu);
+
+        Window window = dialog.getWindow();
+        if (window == null){
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = gravity;
+        window.setAttributes(windowAttributes);
+
+        if (Gravity.CENTER == gravity){
+            dialog.setCancelable(true);
+        } else {
+            dialog.setCancelable(false);
+        }
+        EditText edtTieuSuNow = dialog.findViewById(R.id.edtTieuSuNow);
+        Button btnXacNhan = dialog.findViewById(R.id.btnXacNhan);
+        Button btnHuy= dialog.findViewById(R.id.btnHuy);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        btnXacNhan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = currentUser.getUid();
+                String enteredTieuSu = edtTieuSuNow.getText().toString();
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            userRef.child("tieusu").setValue(enteredTieuSu);
+                            dialog.dismiss();
+                            Toast.makeText(requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Hiển thị thông báo lỗi hoặc thực hiện các hành động phù hợp
+                            Toast.makeText(requireContext(), "Người dùng không tồn tại!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+        dialog.show();
     }
 }
 
