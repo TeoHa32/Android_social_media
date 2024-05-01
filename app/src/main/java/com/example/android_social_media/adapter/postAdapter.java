@@ -232,13 +232,15 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
     private void addNotifications(String userId, String postId){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userId", firebaseUser.getUid());
-        hashMap.put("text", " đã thích bài viết của bạn!");
-        hashMap.put("postId", postId);
-        hashMap.put("isPost", "true");
+        if (!userId.equals(firebaseUser.getUid())) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userId", firebaseUser.getUid());
+            hashMap.put("text", " đã thích bài viết của bạn!");
+            hashMap.put("postId", postId);
+            hashMap.put("isPost", "true");
 
-        reference.push().setValue(hashMap);
+            reference.push().setValue(hashMap);
+        }
     }
 
 }

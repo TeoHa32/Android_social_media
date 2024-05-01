@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_social_media.R;
@@ -35,6 +36,7 @@ public class NotificationFragment extends Fragment {
     private RecyclerView recyclerView;
     private NotificationAdapter adapter;
     private List<NotificationModel> list;
+    TextView btnThoat;
     public NotificationFragment() {
         // Required empty public constructor
     }
@@ -50,15 +52,17 @@ public class NotificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         init(view);
-
+        setOnClickListener();
         readNotification();
-        
+
 
 
     }
 
 
     public void init(View view){
+
+        btnThoat = view.findViewById(R.id.btnThoat);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -68,6 +72,15 @@ public class NotificationFragment extends Fragment {
         list = new ArrayList<>();
         adapter = new NotificationAdapter(getContext(), list);
         recyclerView.setAdapter(adapter);
+    }
+
+    public void setOnClickListener(){
+        btnThoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().onBackPressed();
+            }
+        });
     }
 
     private void readNotification() {
