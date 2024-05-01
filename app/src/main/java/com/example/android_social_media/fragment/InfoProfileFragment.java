@@ -32,14 +32,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class InfoProfileFragment extends Fragment {
 
-    TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword;
+    TextView pfName, pfGender, pfDob, pfPhone, pfGmail, pfUsername, pfPassword, txtTieuSu;
     TextView titleName, titleUsername, txtChangeImg;
     Button btnEdit;
     ImageView imageViewBack;
     CircleImageView imgProfile;
     ProgressBar progressBar;
 
-    String username;
+    String username, img;
+    String key ="";
 
 
     public InfoProfileFragment() {
@@ -78,6 +79,7 @@ public class InfoProfileFragment extends Fragment {
         imgProfile = view.findViewById(R.id.imgProfile);
         txtChangeImg = view.findViewById(R.id.txtChangeImg);
         progressBar = view.findViewById(R.id.progressBar);
+        txtTieuSu = view.findViewById(R.id.txtTieuSu);
     }
 
     public void showUserData() {
@@ -96,8 +98,10 @@ public class InfoProfileFragment extends Fragment {
                     String gmailUser = snapshot.child("email").getValue(String.class);
                     String usernameUser = snapshot.child("username").getValue(String.class);
                     String passwordUser = snapshot.child("password").getValue(String.class);
+//                    String tieuSuUser = snapshot.child("tieusu").getValue(String.class);
 
                     username = snapshot.child("username").getValue(String.class);
+                    img = snapshot.child("profileImage").getValue(String.class);
 
                     // Hiển thị dữ liệu lên TextView
                     titleName.setText(nameUser);
@@ -113,6 +117,12 @@ public class InfoProfileFragment extends Fragment {
                     pfGmail.setText(gmailUser);
                     pfUsername.setText(usernameUser);
                     pfPassword.setText(passwordUser);
+//                    if (tieuSuUser.equals("")) {
+//                        txtTieuSu.setText("Tiểu sử");
+//                    } else {
+//                        txtTieuSu.setText(tieuSuUser);
+//                    }
+//                    txtTieuSu.setText(tieuSuUser);
                 } else {
                     Toast.makeText(getContext(), "Không có dữ liệu", Toast.LENGTH_SHORT).show();
                 }
@@ -140,6 +150,7 @@ public class InfoProfileFragment extends Fragment {
                 bundle.putString("email", pfGmail.getText().toString());
                 bundle.putString("username", pfUsername.getText().toString());
                 bundle.putString("password", pfPassword.getText().toString());
+                bundle.putString("tieusu", txtTieuSu.getText().toString());
                 editProfileFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -153,9 +164,15 @@ public class InfoProfileFragment extends Fragment {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profileFragment profileFragment = new profileFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("username",username);
+                Log.d("Username ne", img);
+                bundle.putString("username", username);
+                bundle.putString("img", img);
+                if(key != null){
+                    bundle.putString("key", key);
+                }
+
+                profileFragment profileFragment = new profileFragment();
                 profileFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

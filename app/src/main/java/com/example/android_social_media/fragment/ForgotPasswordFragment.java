@@ -63,12 +63,9 @@ public class ForgotPasswordFragment extends Fragment {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginFragment loginFragment = new LoginFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, loginFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
         // Xử lý xác nhận email quên mật khẩu

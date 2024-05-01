@@ -137,20 +137,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                                 }
                             });
 
-//                            followingRef.child(String.valueOf(dataSnapshot.getChildrenCount())).setValue(targetUserID);
-//                            followerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    long count = snapshot.getChildrenCount();
-//                                    followerRef.child(String.valueOf(count)).setValue(currentUserID);
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//                                    Log.e("UserAdapter", "Error adding follower: " + error.getMessage());
-//                                }
-//                            });
-
                             followerRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {

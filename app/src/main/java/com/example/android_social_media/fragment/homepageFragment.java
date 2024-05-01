@@ -38,7 +38,7 @@ public class homepageFragment extends Fragment {
     private RecyclerView rcvPost, storiesRecylerView;
     private postAdapter postAdapter;
     private List<post> postList;
-    private ImageView btnChat, btnSearch, btnProfile;
+    private ImageView btnChat, btnSearch, btnProfile, btnNotify;
     FirebaseUser user;
     StoriesAdapter storiesAdapter;
     List<StoriesModel> storiesModelList;
@@ -72,6 +72,7 @@ public class homepageFragment extends Fragment {
         btnChat = view.findViewById(R.id.btnChat);
         btnSearch = view.findViewById(R.id.btn_search);
         btnProfile = view.findViewById(R.id.btnProfile);
+        btnNotify = view.findViewById(R.id.btnNotify);
 
         storiesRecylerView = view.findViewById(R.id.storiesRecyclerView);
         storiesRecylerView.setHasFixedSize(true);
@@ -148,13 +149,25 @@ public class homepageFragment extends Fragment {
             }
         });
 
+        btnNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationFragment notificationFragment = new NotificationFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, notificationFragment);
+                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                fragmentTransaction.commit();
+            }
+        });
+
     }
     private void startNewPostActivity(){
         Intent intent = new Intent(getActivity(), PostActivity.class);
         startActivity(intent);
     }
 
-    
+
     private void startChatActivity() {
         Intent intent = new Intent(getActivity(), ChatUsersActivity.class);
         startActivity(intent);
@@ -172,7 +185,7 @@ public class homepageFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 followingList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                   followingList.add(snapshot.getValue(String.class));
+                    followingList.add(snapshot.getValue(String.class));
                     Log.d("phần tử của following List: ", snapshot.getValue(String.class));
                 }
                 readPost();

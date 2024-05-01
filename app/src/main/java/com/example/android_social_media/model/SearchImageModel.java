@@ -1,43 +1,22 @@
 package com.example.android_social_media.model;
 
 public class SearchImageModel {
-    private String id, mota, ngaydang, postImage, uid;
+    private String postId, postImage;
 
-    public SearchImageModel(String id, String mota, String ngaydang, String postImage, String uid) {
-        this.id = id;
-        this.mota = mota;
-        this.ngaydang = ngaydang;
+    public SearchImageModel(String postId, String postImage) {
+        this.postId = postId;
         this.postImage = postImage;
-        this.uid = uid;
     }
-
-
 
     public SearchImageModel() {
     }
 
-    public String getId() {
-        return id;
+    public String getPostId() {
+        return postId;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMota() {
-        return mota;
-    }
-
-    public void setMota(String mota) {
-        this.mota = mota;
-    }
-
-    public String getNgaydang() {
-        return ngaydang;
-    }
-
-    public void setNgaydang(String ngaydang) {
-        this.ngaydang = ngaydang;
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getPostImage() {
@@ -47,13 +26,4 @@ public class SearchImageModel {
     public void setPostImage(String postImage) {
         this.postImage = postImage;
     }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
 }
