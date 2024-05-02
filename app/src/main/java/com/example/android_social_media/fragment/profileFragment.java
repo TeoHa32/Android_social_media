@@ -19,9 +19,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android_social_media.PostActivity;
 import com.example.android_social_media.R;
+import com.example.android_social_media.StoryActivity;
 import com.example.android_social_media.adapter.MyfotosAdapter;
+import com.example.android_social_media.model.StoriesModel;
 import com.example.android_social_media.model.post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,7 +46,7 @@ public class profileFragment extends Fragment {
     String url;
 
     String uid,key;
-    TextView follow, following,postcount;
+    TextView follow, following,postcount, txtTieuSu;
 
     ImageView btnHome, btnSearch, btnLogout, btnAddPost;
     private RecyclerView recyclerView;
@@ -70,6 +73,7 @@ public class profileFragment extends Fragment {
         TextView txtUsername = view.findViewById(R.id.txtUsername);
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
         postcount = view.findViewById(R.id.textView4);
+        txtTieuSu = view.findViewById(R.id.tieusu);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -79,7 +83,6 @@ public class profileFragment extends Fragment {
             username = bundle.getString("username");
 
             key = bundle.getString("key");
-            Log.d("key?", key);
 
             if(key.equals("")){
                 key = user.getUid();
@@ -93,13 +96,30 @@ public class profileFragment extends Fragment {
             txtUsername.setText(username);
             txtUsernameProfile.setText(username);
             if (url != null && !url.isEmpty()) {
-                // Sử dụng Picasso để tải hình ảnh từ URL và hiển thị nó trong ImageView
                 Picasso.get().load(url).into(img);
             } else {
-                // Nếu imageUrl là null hoặc rỗng, bạn có thể thực hiện các xử lý khác tùy thuộc vào yêu cầu của bạn
-                // Ví dụ: Hiển thị một hình ảnh mặc định hoặc hiển thị một tin nhắn lỗi
                 img.setImageResource(R.drawable.ic_profile);
             }
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(key).child("tieusu");
+
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        String tieusu = snapshot.getValue(String.class);
+                        txtTieuSu.setText(tieusu);
+                    }
+                    else{
+                        txtTieuSu.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
         if (user != null) {
 
