@@ -417,7 +417,7 @@ public class LoginFragment extends Fragment {
                             }
                         } else {
                             // Failed to sign in
-                            Toast.makeText(getContext(), "Thông tin đăng nhập không chính xác!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "Thông tin đăng nhập không chính xác!", Toast.LENGTH_SHORT).show();
                             txtUsername.setText("");
                             txtPassword.setText("");
                         }

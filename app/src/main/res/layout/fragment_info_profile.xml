@@ -120,7 +120,7 @@
                 android:layout_weight="1"
                 android:text="Name"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 />
         </LinearLayout>
 
@@ -159,7 +159,7 @@
                 android:layout_weight="1"
                 android:text="Giới tính"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -194,7 +194,7 @@
                 android:layout_weight="1"
                 android:text="Ngày sinh"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -229,7 +229,7 @@
                 android:layout_weight="1"
                 android:text="SDT"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -264,7 +264,7 @@
                 android:layout_weight="1"
                 android:text="Mail"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 />
         </LinearLayout>
 
@@ -300,7 +300,7 @@
                 android:layout_weight="1"
                 android:text="username"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -335,7 +335,7 @@
                 android:layout_weight="1"
                 android:text="password"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:inputType="textPassword"/>
         </LinearLayout>
 
