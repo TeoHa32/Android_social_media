@@ -71,7 +71,7 @@ public class SearchImageAdapter extends  RecyclerView.Adapter<SearchImageAdapter
             @Override
             public void onClick(View view) {
                 SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-                editor.putString("postId", search.getPostId());
+                editor.putString("postid", search.getPostId());
                 editor.apply();
 
                 ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
