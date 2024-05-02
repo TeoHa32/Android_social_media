@@ -132,11 +132,13 @@ public class homepageFragment extends Fragment {
 
                             profileFragment profile = new profileFragment();
                             profile.setArguments(bundle);
-                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_container, profile);
-                            fragmentTransaction.addToBackStack(null); // Add to back stack if needed
-                            fragmentTransaction.commit();
+                            if (!isStateSaved()) { // Check if fragment state is saved
+                                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, profile);
+                                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                                fragmentTransaction.commit();
+                            }
                         }
                     }
 

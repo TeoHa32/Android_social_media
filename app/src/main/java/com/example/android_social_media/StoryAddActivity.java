@@ -88,7 +88,7 @@ public class StoryAddActivity extends AppCompatActivity {
 
     private void publishStory(){
         ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Posting");
+        pd.setMessage("Đang tải ...");
         pd.show();
 
         if(mImageUri != null){
