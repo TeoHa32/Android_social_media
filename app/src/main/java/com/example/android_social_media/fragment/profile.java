@@ -294,7 +294,7 @@ public class profile extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String username = dataSnapshot.child("username").getValue(String.class);
-                    String status = dataSnapshot.child("status").getValue(String.class);
+                    String status = dataSnapshot.child("tieusu").getValue(String.class);
                     String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
                     String toolbarusername = dataSnapshot.child("username").getValue(String.class);
                     nameTv.setText(username);
@@ -830,7 +830,7 @@ public class profile extends Fragment {
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("userId", firebaseUser.getUid());
-        hashMap.put("text", " đã follow bạn!");
+        hashMap.put("text", " đã theo dõi bạn!");
         hashMap.put("postId", "");
         hashMap.put("isPost", "false");
 

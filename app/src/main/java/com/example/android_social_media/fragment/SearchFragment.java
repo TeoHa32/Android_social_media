@@ -143,7 +143,7 @@ public class SearchFragment extends Fragment {
 
 
         list = new ArrayList<>();
-        adapter = new SearchImageAdapter(list);
+        adapter = new SearchImageAdapter(getContext(), list);
         recyclerView.setAdapter(adapter);
     }
 
