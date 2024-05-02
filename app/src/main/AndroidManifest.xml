@@ -26,6 +26,9 @@
             android:name=".StoryAddActivity"
             android:exported="false" />
         <activity
+            android:name=".CommentActivity"
+            android:exported="false" />
+        <activity
             android:name=".chat.ChatUsersActivity"
             android:exported="false" />
         <activity
