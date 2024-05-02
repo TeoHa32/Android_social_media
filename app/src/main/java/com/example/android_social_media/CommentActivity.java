@@ -97,8 +97,27 @@ public class CommentActivity extends AppCompatActivity {
         hashMap.put("comment", addComment.getText().toString());
         hashMap.put("publisher", firebaseUser.getUid());
         reference.push().setValue(hashMap);
+        addNotifications();
         addComment.setText("");
     }
+
+    private void addNotifications(){
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(publisherId);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (!publisherId.equals(firebaseUser.getUid())) {
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userId", firebaseUser.getUid());
+            hashMap.put("text", " bình luận bài viết của bạn: " + addComment.getText().toString());
+            hashMap.put("postId", postId);
+            hashMap.put("isPost", "true");
+
+            reference.push().setValue(hashMap);
+        }
+    }
+
     private void getImage(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
@@ -137,4 +156,5 @@ public class CommentActivity extends AppCompatActivity {
 
 
     }
+
 }
