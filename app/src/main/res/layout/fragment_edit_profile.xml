@@ -130,7 +130,7 @@
                 android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="8dp"
                 android:ems="10"
-                android:hint="Ngày sinh"
+                android:hint="Số điện thoại"
                 android:inputType="text"
                 android:padding="8dp" />
 
