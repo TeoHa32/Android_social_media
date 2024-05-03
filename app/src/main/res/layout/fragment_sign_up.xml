@@ -94,10 +94,11 @@
 
             <RadioButton
                 android:id="@+id/rbMale"
-                android:layout_width="90dp"
+                android:layout_width="73dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                tools:text="Nam" />
+                android:layout_marginStart="10dp"
+                android:text="Nam"
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rbFemale"

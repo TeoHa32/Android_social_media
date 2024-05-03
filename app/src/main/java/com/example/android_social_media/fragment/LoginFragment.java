@@ -189,7 +189,39 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void checkIfEmailExists(String email) {
+//    private void checkIfEmailExists(String email) {
+//        Log.d("email có tồn tại không?", email);
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+//
+//        Query query = databaseReference.orderByChild("email").equalTo(email);
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+//                        String username = userSnapshot.child("username").getValue(String.class);
+//                        String password = userSnapshot.child("password").getValue(String.class);
+//                        String profileImage = userSnapshot.child("profileImage").getValue(String.class);
+//                        if (username != null ) {
+//                            signInWithEmailPassword(email, password);
+//                            navigateToProfile(username, profileImage);
+//                            Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                    }
+//                } else {
+//                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.e("FirebaseError", "Failed to read value.", databaseError.toException());
+//            }
+//        });
+//    }
+
+    private void checkAccountExists(String email, String txtPassword) {
         Log.d("email có tồn tại không?", email);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -202,7 +234,7 @@ public class LoginFragment extends Fragment {
                         String username = userSnapshot.child("username").getValue(String.class);
                         String password = userSnapshot.child("password").getValue(String.class);
                         String profileImage = userSnapshot.child("profileImage").getValue(String.class);
-                        if (username != null) {
+                        if (username != null && password.equals(txtPassword)) {
                             signInWithEmailPassword(email, password);
                             navigateToProfile(username, profileImage);
                             Toast.makeText(getContext(), "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
@@ -210,7 +242,7 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 } else {
-                    Toast.makeText(getContext(), "Tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Thông tin đăng nhập không đúng!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -316,7 +348,7 @@ public class LoginFragment extends Fragment {
             public void onEmailResult(String email) {
 
                 if (email != null) {
-                    checkIfEmailExists(email);
+                    checkAccountExists(email, password);
                     // Nếu tìm thấy email, tiến hành đăng nhập
                     signInWithEmailPassword(email, password);
 
@@ -385,7 +417,7 @@ public class LoginFragment extends Fragment {
                             }
                         } else {
                             // Failed to sign in
-                            Log.d("Sign-in Error", task.getException().getMessage());
+//                            Toast.makeText(getContext(), "Thông tin đăng nhập không chính xác!", Toast.LENGTH_SHORT).show();
                             txtUsername.setText("");
                             txtPassword.setText("");
                         }

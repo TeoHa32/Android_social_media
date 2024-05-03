@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -58,7 +59,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
 
         holder.username.setText(user.getUsername());
         holder.fullname.setText(user.getName());
-        Glide.with(mContext).load(user.getProfileImage()).into(holder.image_profile);
+
+        String profileImage = user.getProfileImage();
+
+        if (profileImage.equals("")) {
+            Glide.with(mContext).load(R.drawable.ic_profile).into(holder.image_profile);
+        } else {
+            Glide.with(mContext).load(profileImage).into(holder.image_profile);
+        }
+
 
         if (user.getUserID().equals(firebaseUser.getUid())){
             holder.btn_follow.setVisibility(View.GONE);
@@ -103,6 +112,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                             }
                         }
                         if (!isFollowing) {
+                            //thông báo cho người kia là mình follow người ta
+                            addNotification(targetUserID);
                             followingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -212,6 +223,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
                 Log.e("UserAdapter", "isFollowing operation cancelled: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void addNotification(String userid){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userId", firebaseUser.getUid());
+        hashMap.put("text", " bắt đầu theo dõi bạn.");
+        hashMap.put("postid", "");
+        hashMap.put("ispost", false);
+
+        reference.push().setValue(hashMap);
     }
 
     @Override

@@ -235,7 +235,16 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                Glide.with(getApplicationContext()).load(user.getProfileImage()).into(story_photo);
+
+                String profileImage = user.getProfileImage();
+                if (profileImage.equals("")) {
+                    Glide.with(getApplicationContext()).load(R.drawable.ic_profile).into(story_photo);
+                } else {
+                    // Nếu profileImage là null hoặc chuỗi rỗng, bạn có thể đặt ảnh mặc định vào holder.image_profile ở đây
+                    Glide.with(getApplicationContext()).load(profileImage).into(story_photo);
+                }
+
+//                Glide.with(getApplicationContext()).load(user.getProfileImage()).into(story_photo);
                 story_username.setText(user.getUsername());
 
             }

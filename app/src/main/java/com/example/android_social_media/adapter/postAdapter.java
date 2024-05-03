@@ -1,6 +1,7 @@
 package com.example.android_social_media.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.android_social_media.CommentActivity;
 import com.example.android_social_media.R;
 import com.example.android_social_media.fragment.PostDetailFragment;
 import com.example.android_social_media.fragment.profile;
@@ -199,25 +201,25 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
                 }
             }
         });
-//        holder.comment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d("comment", "onClick:1 ");
-//                Intent intent = new Intent(mcontext, CommentActivity.class);
-//                intent.putExtra("postId", post.getPostId());
-//                intent.putExtra("publisherId", post.getPublisher());
-//                mcontext.startActivity(intent);
-//            }
-//        });
-//        holder.comments.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(mcontext, CommentActivity.class);
-//                intent.putExtra("postId", post.getPostId());
-//                intent.putExtra("publisherId", post.getPublisher());
-//                mcontext.startActivity(intent);
-//            }
-//        });
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("comment", "onClick:1 ");
+                Intent intent = new Intent(mcontext, CommentActivity.class);
+                intent.putExtra("postId", post.getPostId());
+                intent.putExtra("publisherId", post.getPublisher());
+                mcontext.startActivity(intent);
+            }
+        });
+        holder.comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mcontext, CommentActivity.class);
+                intent.putExtra("postId", post.getPostId());
+                intent.putExtra("publisherId", post.getPublisher());
+                mcontext.startActivity(intent);
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -339,13 +341,15 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
     private void addNotifications(String userId, String postId){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userId", firebaseUser.getUid());
-        hashMap.put("text", " đã thích bài viết của bạn!");
-        hashMap.put("postId", postId);
-        hashMap.put("isPost", "true");
+        if (!userId.equals(firebaseUser.getUid())) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userId", firebaseUser.getUid());
+            hashMap.put("text", " đã thích bài viết của bạn!");
+            hashMap.put("postId", postId);
+            hashMap.put("isPost", "true");
 
-        reference.push().setValue(hashMap);
+            reference.push().setValue(hashMap);
+        }
     }
 
 }

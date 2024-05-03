@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +79,6 @@ public class EditProfileFragment extends Fragment {
         rdMale = view.findViewById(R.id.rdMale);
         rdFeMale = view.findViewById(R.id.rdFeMale);
         imageViewBack = view.findViewById(R.id.imageViewBack);
-        edtTieuSu = view.findViewById(R.id.edtTieuSu);
     }
 
     private void showdata() {
@@ -92,7 +92,6 @@ public class EditProfileFragment extends Fragment {
             emailUser = bundle.getString("email");
             usernameUser = bundle.getString("username");
             passwordUser = bundle.getString("password");
-            tieuSuUser = bundle.getString("tieusu");
         }
 
         edtName.setText(nameUser);
@@ -135,10 +134,6 @@ public class EditProfileFragment extends Fragment {
                 if (isPasswordChange()) {
                     isAnyChange = true;
                 }
-//                if (isTieuSuChange()) {
-//                    isAnyChange = true;
-//                }
-
                 if (isAnyChange) {
                     // Thực hiện các thay đổi cần thiết (ví dụ: cập nhật dữ liệu trong Firebase)
                     Toast.makeText(getContext(), "Lưu thành công!", Toast.LENGTH_SHORT).show();
@@ -175,30 +170,6 @@ public class EditProfileFragment extends Fragment {
         });
 
     }
-
-//    private boolean isTieuSuChange(){
-//        String newTieuSu = edtTieuSu.getText().toString();
-//        if (!nameUser.equals(newTieuSu)){
-//            usersRef.orderByChild("tieusu").equalTo(usernameUser).addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-//                        String userId = userSnapshot.getKey();
-//                        usersRef.child(userId).child("tieusu").setValue(edtName.getText().toString());
-//                        break; // Chỉ cần cập nhật một người dùng duy nhất
-//                    }
-//                }
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-//            tieuSuUser = newTieuSu;
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 
     private void showPasswordConfirmationDialog(int gravity){
         final Dialog dialog = new Dialog(requireContext());

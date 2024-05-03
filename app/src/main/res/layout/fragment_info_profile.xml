@@ -84,15 +84,17 @@
             android:layout_margin="10dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtTieuSu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Tiểu sử!"
-                android:textSize="18dp"
-                android:textAlignment="center"
-                />
+            <EditText
+                android:id="@+id/edtTieuSu"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_edit_text"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Tiểu sử của bạn!"
+                android:inputType="text"
+                android:padding="8dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -118,7 +120,7 @@
                 android:layout_weight="1"
                 android:text="Name"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 />
         </LinearLayout>
 
@@ -157,7 +159,7 @@
                 android:layout_weight="1"
                 android:text="Giới tính"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -192,7 +194,7 @@
                 android:layout_weight="1"
                 android:text="Ngày sinh"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -227,7 +229,7 @@
                 android:layout_weight="1"
                 android:text="SDT"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -262,7 +264,7 @@
                 android:layout_weight="1"
                 android:text="Mail"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 />
         </LinearLayout>
 
@@ -298,7 +300,7 @@
                 android:layout_weight="1"
                 android:text="username"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
         <View
@@ -333,7 +335,7 @@
                 android:layout_weight="1"
                 android:text="password"
                 android:textAlignment="viewEnd"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:inputType="textPassword"/>
         </LinearLayout>
 

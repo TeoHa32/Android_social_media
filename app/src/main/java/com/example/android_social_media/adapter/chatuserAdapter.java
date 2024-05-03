@@ -136,7 +136,8 @@ public class chatuserAdapter extends RecyclerView.Adapter<chatuserAdapter.ChatUs
                             String imageUrl = dataSnapshot.child("profileImage").getValue(String.class);
                             String name = dataSnapshot.child("name").getValue(String.class);
 
-                            if (imageUrl != null) {
+                            Log.d("imageUrl?", imageUrl);
+                            if (!imageUrl.equals("")) {
                                 Picasso.get().load(imageUrl).into(holder.imageView);
                             }
                             else {
