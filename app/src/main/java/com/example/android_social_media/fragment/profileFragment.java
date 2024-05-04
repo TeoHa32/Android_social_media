@@ -235,7 +235,6 @@ public class profileFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
         myphoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
