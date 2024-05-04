@@ -195,6 +195,15 @@
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/baiviet" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSave"
+
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/theodoi"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/theodoi" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
