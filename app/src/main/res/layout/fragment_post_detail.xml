@@ -17,7 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/windowBackground">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:id="@+id/btn_back"
+                android:src="@drawable/arrow_left_solid"
 
+
+                />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -45,6 +53,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
+                    android:id="@+id/btn_edit"
                     android:layout_height="wrap_content"
                     android:layout_alignEnd="@+id/textView11"
                     android:layout_alignParentTop="true"
