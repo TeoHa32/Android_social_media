@@ -34,7 +34,7 @@ public class PostDetailFragment extends Fragment {
     private RecyclerView recyclerView;
     private postAdapter PostAdapter;
     private List<post> postList;
-    private ImageView btn_delete;
+    private ImageView btn_delete, btn_back;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,14 +60,11 @@ public class PostDetailFragment extends Fragment {
         postList = new ArrayList<>();
         PostAdapter = new postAdapter(getContext(), postList);
         recyclerView.setAdapter(PostAdapter);
-
+        btn_back = view.findViewById(R.id.btn_back);
         btn_delete = view.findViewById(R.id.btn_delete);
-
-
         readPost();
         return view;
     }
-
     private void readPost() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(postid);
 
@@ -79,7 +76,6 @@ public class PostDetailFragment extends Fragment {
                 postList.add(p);
                 PostAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -92,7 +88,7 @@ public class PostDetailFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                getActivity().onBackPressed();
+                                getFragmentManager().popBackStack();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -102,6 +98,12 @@ public class PostDetailFragment extends Fragment {
                             }
                         });
 
+            }
+        });
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
             }
         });
     }
