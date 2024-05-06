@@ -37,7 +37,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +63,7 @@ public class profile extends Fragment {
 
     ImageButton list;
     String key;
-    ImageView bthome,btinfo,btsearch,btback;
+    ImageView bthome,btinfo,btsearch,btback,save;
     private long cout;
 
     private long count;
@@ -133,7 +132,7 @@ public class profile extends Fragment {
 
         checkfollowing();
         myFotos();
-
+//        saveFotos();
 //        checkfollowing();
 
         LinearLayout linearLayout = view.findViewById(R.id.followersClick);
@@ -157,6 +156,16 @@ public class profile extends Fragment {
             public void onClick(View v) {
 
                 addmessage();
+
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                saveFotos();
 
             }
         });
@@ -285,6 +294,7 @@ public class profile extends Fragment {
         btinfo = view.findViewById(R.id.btnProfile);
         btsearch = view.findViewById(R.id.btnSearch);
         btback = view.findViewById(R.id.btnBackMsg);
+        save = view.findViewById(R.id.my_save);
     }
 
     private void loadUserDataFromFirebase() {
@@ -774,6 +784,48 @@ public class profile extends Fragment {
         });
     }
 
+    private void saveFotos(){
+        postList.clear();
+//        List<String> listp = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Saves").child(UserID);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                    postList.clear();
+
+                for (DataSnapshot snapshot : datasnapshot.getChildren()){
+                    String a1 = snapshot.getKey();
+                    Log.d("key moi", a1);
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Posts").child(a1);
+                    reference1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot data) {
+                            post p = data.getValue(post.class);
+                            postList.add(p);
+                            Log.d("so luong2", String.valueOf(postList.size()));
+                            Collections.reverse(postList);
+                            myfotosAdapter.notifyDataSetChanged();
+                        }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+                Log.d("so luong", String.valueOf(postList.size()));
+                Collections.reverse(postList);
+                myfotosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 
     public void navigateToProfile(String username,String img){
