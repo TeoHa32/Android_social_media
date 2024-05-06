@@ -48,11 +48,14 @@ public class profileFragment extends Fragment {
     String uid,key;
     TextView follow, following,postcount, txtTieuSu;
 
-    ImageView btnHome, btnSearch, btnLogout, btnAddPost;
+    ImageView btnHome, btnSearch, btnLogout, btnAddPost,btnSave, myphoto;
     private RecyclerView recyclerView;
     MyfotosAdapter myfotosAdapter;
     List<post> postList;
-
+    List<post> postListSave;
+    List<String> mySaves;
+    private RecyclerView recycler_save;
+    MyfotosAdapter myfotosAdapter_save;
     public profileFragment() {
         // Required empty public constructor
     }
@@ -145,6 +148,7 @@ public class profileFragment extends Fragment {
         init(view);
         clickListener();
         myFotos();
+        mysaves();
     }
 
     private void init(View view) {
@@ -153,7 +157,8 @@ public class profileFragment extends Fragment {
         btnSearch = view.findViewById(R.id.btnSearch);
         btnLogout = view.findViewById(R.id.btnLogout);
         btnAddPost = view.findViewById(R.id.btnAddPost);
-
+        btnSave = view.findViewById(R.id.theodoi);
+        myphoto = view.findViewById(R.id.baiviet);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager =new GridLayoutManager(getContext(),3);
@@ -161,6 +166,15 @@ public class profileFragment extends Fragment {
         postList = new ArrayList<>();
         myfotosAdapter = new MyfotosAdapter(getContext(),postList);
         recyclerView.setAdapter(myfotosAdapter);
+        recycler_save = view.findViewById(R.id.recyclerViewSave);
+        recycler_save.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManagerSave =new GridLayoutManager(getContext(),3);
+        recycler_save.setLayoutManager(linearLayoutManagerSave);
+        postListSave = new ArrayList<>();
+        myfotosAdapter_save = new MyfotosAdapter(getContext(),postListSave);
+        recycler_save.setAdapter(myfotosAdapter_save);
+        recyclerView.setVisibility(view.VISIBLE);
+        recycler_save.setVisibility(view.GONE);
     }
     private void clickListener() {
         btnInfoProfile.setOnClickListener(new View.OnClickListener() {
@@ -217,6 +231,20 @@ public class profileFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), PostActivity.class);
                 startActivity(intent);
+            }
+        });
+        myphoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.VISIBLE);
+                recycler_save.setVisibility(View.GONE);
+            }
+        });
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.GONE);
+                recycler_save.setVisibility(View.VISIBLE);
             }
         });
 
@@ -299,4 +327,49 @@ private void myFotos(){
         }
     });
 }
+    private void mysaves(){
+        mySaves = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Saves")
+                .child(key);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    mySaves.add(dataSnapshot.getKey());
+                }
+                readSaves();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void readSaves(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        Log.d("TAGke", "readSaves: "+key);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postListSave.clear();
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    post p = dataSnapshot.getValue(post.class);
+                    for(String id: mySaves){
+
+                        Log.d("TAGIDpost", "onDataChange: "+p.getPostId());
+                        if(p.getPostId().equals(id)){
+                            postListSave.add(p);
+                        }
+                    }
+                }
+                myfotosAdapter_save.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
