@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -92,7 +93,8 @@ public class PostDetailFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                getActivity().onBackPressed();
+                                Toast.makeText(getContext(),"Xóa thành công", Toast.LENGTH_SHORT).show();
+                                getFragmentManager().popBackStack();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
