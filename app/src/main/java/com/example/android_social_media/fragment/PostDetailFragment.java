@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,7 +82,6 @@ public class PostDetailFragment extends Fragment {
                 postList.add(p);
                 PostAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -94,13 +95,24 @@ public class PostDetailFragment extends Fragment {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getContext(),"Xóa thành công", Toast.LENGTH_SHORT).show();
-                                getFragmentManager().popBackStack();
+                                profileFragment profileFragment = new profileFragment();
+                                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, profileFragment);
+                                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                                fragmentTransaction.commit();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Xóa dữ liệu thất bại
+                                Toast.makeText(getContext(),"Xóa thất bại", Toast.LENGTH_SHORT).show();
+                                profileFragment profileFragment = new profileFragment();
+                                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, profileFragment);
+                                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                                fragmentTransaction.commit();
                             }
                         });
 
