@@ -211,6 +211,8 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
                 Intent intent = new Intent(mcontext, CommentActivity.class);
                 intent.putExtra("postId", post.getPostId());
                 intent.putExtra("publisherId", post.getPublisher());
+                Log.d("commentButton", post.getPublisher());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mcontext.startActivity(intent);
             }
         });
@@ -220,6 +222,7 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
                 Intent intent = new Intent(mcontext, CommentActivity.class);
                 intent.putExtra("postId", post.getPostId());
                 intent.putExtra("publisherId", post.getPublisher());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mcontext.startActivity(intent);
             }
         });
