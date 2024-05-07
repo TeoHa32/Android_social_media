@@ -5,8 +5,29 @@ public class User {
     private String username;
     private String name;
     private String profileImage;
+    private String token;
 
     public User() {
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public User(String userID) {
+        UserID = userID;
+    }
+
+    public User(String userID, String username, String name, String profileImage, String token) {
+        UserID = userID;
+        this.username = username;
+        this.name = name;
+        this.profileImage = profileImage;
+        this.token = token;
     }
 
     public User(String userID, String username, String name, String profileImage) {

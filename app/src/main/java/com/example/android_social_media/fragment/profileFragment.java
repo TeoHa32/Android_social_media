@@ -138,7 +138,6 @@ public class profileFragment extends Fragment {
 
         follow = view.findViewById(R.id.textView5);
         following = view.findViewById(R.id.textView6);
-
         return view;
     }
 

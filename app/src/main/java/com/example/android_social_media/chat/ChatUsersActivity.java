@@ -113,6 +113,7 @@ public class ChatUsersActivity extends AppCompatActivity {
                     Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
                     intent.putExtra("uid", oppositeUID);
                     intent.putExtra("id", chatID);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } else {
                     Log.e("clickListener", "Không thể lấy được oppositeUID!");
