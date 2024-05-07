@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,6 +71,7 @@ public class postAdapter  extends RecyclerView.Adapter<postAdapter.ViewHolder>{
             holder.description.setText(post.getDescription());
 
         }
+
         holder.datetime.setText(post.getDatetime());
 
 

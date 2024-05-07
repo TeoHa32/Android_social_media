@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.PostActivity;
+import com.example.android_social_media.PostComparator;
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.StoriesAdapter;
 import com.example.android_social_media.adapter.postAdapter;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class homepageFragment extends Fragment {
@@ -223,6 +225,7 @@ public class homepageFragment extends Fragment {
                         postList.add(post);
                     }
                 }
+                Collections.sort(postList, new PostComparator());
                 postAdapter.notifyDataSetChanged();
             }
             @Override
