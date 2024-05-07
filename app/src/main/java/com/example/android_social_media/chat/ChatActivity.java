@@ -108,14 +108,31 @@ public class ChatActivity extends AppCompatActivity {
             }
 //            messageMap.put("senderID",getIntent().getStringExtra("userid"));
             messageMap.put("time", currentTime); // Sử dụng thời gian đã được định dạng
-
-
             reference.child("message").child(messageID).setValue(messageMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 chatET.setText("");
-                                sendNotification(message,"ha");
+                                ////////////
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+                                reference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()){
+                                            User u = snapshot.getValue(User.class);
+                                            sendNotification(message,u.getName());
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+
+                                    }
+                                });
+                                ////////////
+                             //   sendNotification(message,user.getUid());
                             } else {
                                 Toast.makeText(ChatActivity.this, "Có lỗi xảy ra!", Toast.LENGTH_SHORT).show();
                             }
