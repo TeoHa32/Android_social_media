@@ -84,7 +84,6 @@ public class profileFragment extends Fragment {
             key = bundle.getString("key");
             url = bundle.getString("img");
             username = bundle.getString("username");
-
             key = bundle.getString("key");
 
             if(key.equals("")){
@@ -329,7 +328,7 @@ private void myFotos(){
     private void mysaves(){
         mySaves = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Saves")
-                .child(key);
+                .child(FirebaseAuth.getInstance().getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -338,7 +337,6 @@ private void myFotos(){
                 }
                 readSaves();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
