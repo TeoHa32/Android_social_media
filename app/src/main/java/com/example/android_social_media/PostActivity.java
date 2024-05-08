@@ -79,8 +79,6 @@ public class PostActivity extends AppCompatActivity  {
                 uploadImage();
             }
         });
-
-
     }
     private void openGallery() {
         ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
@@ -100,7 +98,6 @@ public class PostActivity extends AppCompatActivity  {
 
         galleryLauncher.launch("image/*");
     }
-
     private String getFileExtension(Uri uri){
         ContentResolver  contentResolver = getContentResolver();
         MimeTypeMap mine = MimeTypeMap.getSingleton();

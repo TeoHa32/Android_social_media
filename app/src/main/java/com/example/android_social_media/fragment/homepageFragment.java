@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_social_media.PostActivity;
+import com.example.android_social_media.PostComparator;
 import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.StoriesAdapter;
 import com.example.android_social_media.adapter.postAdapter;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class homepageFragment extends Fragment {
@@ -50,7 +52,6 @@ public class homepageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
-
         rcvPost = view.findViewById(R.id.rcv_post);
         rcvPost.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -168,8 +169,6 @@ public class homepageFragment extends Fragment {
         Intent intent = new Intent(getActivity(), PostActivity.class);
         startActivity(intent);
     }
-
-
     private void startChatActivity() {
         Intent intent = new Intent(getActivity(), ChatUsersActivity.class);
         startActivity(intent);
@@ -223,6 +222,7 @@ public class homepageFragment extends Fragment {
                         postList.add(post);
                     }
                 }
+                Collections.sort(postList, new PostComparator());
                 postAdapter.notifyDataSetChanged();
             }
             @Override

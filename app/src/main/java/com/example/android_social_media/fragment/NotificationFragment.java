@@ -50,13 +50,9 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         init(view);
         setOnClickListener();
         readNotification();
-
-
-
     }
 
 
@@ -73,7 +69,6 @@ public class NotificationFragment extends Fragment {
         adapter = new NotificationAdapter(getContext(), list);
         recyclerView.setAdapter(adapter);
     }
-
     public void setOnClickListener(){
         btnThoat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +77,6 @@ public class NotificationFragment extends Fragment {
             }
         });
     }
-
     private void readNotification() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child((firebaseUser.getUid()));
@@ -96,7 +90,6 @@ public class NotificationFragment extends Fragment {
                 }
                 adapter.notifyDataSetChanged();;
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

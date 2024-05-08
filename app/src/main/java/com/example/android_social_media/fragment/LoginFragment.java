@@ -42,6 +42,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -89,8 +90,19 @@ public class LoginFragment extends Fragment {
 //        checkTokenExpiration();
         init(view);
         clickListener();
-    }
 
+    }
+    void getFCMToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                String token = task.getResult();
+                Log.d("token", token);
+                String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(id);
+                reference.child("token").setValue(token);
+            }
+        });
+    }
     public void init(View view){
         txtSignUp = view.findViewById(R.id.txtSignUp);
         btnLogin = view.findViewById(R.id.btnLogin);
@@ -361,8 +373,6 @@ public class LoginFragment extends Fragment {
             }
         });
     }
-
-
     //gặp vấn đề khi login binh thường bằng tài khoản đã từng login google
     private void signInWithEmailPassword(String email, String password) {
         Log.d("email người đăng nhập: ", email);
@@ -373,17 +383,16 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getContext(), "Địa chỉ email không hợp lệ!", Toast.LENGTH_SHORT).show();
             return;
         }
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
-
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Successfully signed in with email and password
                             FirebaseUser user = mAuth.getCurrentUser();
+                            getFCMToken();
                             Log.d("có thành công ko?","vô đc");
                             if (user != null) {
                                 Log.d("có tồn tại người dùng nào không?", user.getUid());
@@ -395,7 +404,6 @@ public class LoginFragment extends Fragment {
                                         if (snapshot.exists()) {
                                             for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                                                 String userKey = userSnapshot.getKey();
-
                                                 if (userKey != null && userKey.equals(user.getUid())) {
                                                     String username = userSnapshot.child("username").getValue(String.class);
                                                     String profileImage = userSnapshot.child("profileImage").getValue(String.class);

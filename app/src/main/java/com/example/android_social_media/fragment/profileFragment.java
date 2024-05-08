@@ -69,7 +69,6 @@ public class profileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ImageView img = view.findViewById(R.id.imageView5);
@@ -77,14 +76,14 @@ public class profileFragment extends Fragment {
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
         postcount = view.findViewById(R.id.textView4);
         txtTieuSu = view.findViewById(R.id.tieusu);
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         if (bundle != null) {
             key = bundle.getString("key");
             url = bundle.getString("img");
             username = bundle.getString("username");
-
+            Log.d("key?", key);
+            Log.d("img?", url);
+            Log.d("username?", username);
             key = bundle.getString("key");
 
             if(key.equals("")){
@@ -138,7 +137,6 @@ public class profileFragment extends Fragment {
 
         follow = view.findViewById(R.id.textView5);
         following = view.findViewById(R.id.textView6);
-
         return view;
     }
 
@@ -330,7 +328,7 @@ private void myFotos(){
     private void mysaves(){
         mySaves = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Saves")
-                .child(key);
+                .child(FirebaseAuth.getInstance().getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -339,7 +337,6 @@ private void myFotos(){
                 }
                 readSaves();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
