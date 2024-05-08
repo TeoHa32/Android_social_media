@@ -48,12 +48,12 @@ public class PostActivity extends AppCompatActivity  {
     EditText description;
     StorageReference DatabaseReference;
     TextView post;
-    Button buttonPost;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_posts);
-        buttonPost = findViewById(R.id.buttonPost);
+
         close = findViewById(R.id.close);
         image_added = findViewById(R.id.image_addPost);
         post = findViewById(R.id.post);
@@ -66,12 +66,7 @@ public class PostActivity extends AppCompatActivity  {
             }
         });
         openGallery();
-        buttonPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
+
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
