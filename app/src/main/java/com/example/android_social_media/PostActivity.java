@@ -79,8 +79,6 @@ public class PostActivity extends AppCompatActivity  {
                 uploadImage();
             }
         });
-
-
     }
     private void openGallery() {
         ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),

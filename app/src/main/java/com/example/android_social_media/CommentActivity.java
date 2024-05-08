@@ -204,7 +204,7 @@ public class CommentActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject();
                         JSONObject notificationObject = new JSONObject();
                         notificationObject.put("title","Thông báo");
-                        notificationObject.put("body",u.getName()+" đã comment vào bài viết của bạn");
+                        notificationObject.put("body",u.getName()+" đã bình luận vào bài viết của bạn");
                         JSONObject dataObject = new JSONObject();
                         dataObject.put("userId",firebaseUser.getUid());
                         jsonObject.put("notification",notificationObject);

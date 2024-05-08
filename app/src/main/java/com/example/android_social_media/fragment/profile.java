@@ -29,6 +29,7 @@ import com.example.android_social_media.R;
 import com.example.android_social_media.adapter.MyfotosAdapter;
 import com.example.android_social_media.chat.ChatActivity;
 import com.example.android_social_media.model.ChatModel;
+import com.example.android_social_media.model.User;
 import com.example.android_social_media.model.post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +40,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +52,13 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class profile extends Fragment {
@@ -58,7 +69,7 @@ public class profile extends Fragment {
     private RecyclerView recyclerView;
     MyfotosAdapter myfotosAdapter;
     List<post> postList;
-
+    FirebaseUser firebaseUser;
     List<ChatModel> chat;
 
     ImageButton list;
@@ -271,7 +282,7 @@ public class profile extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         assert getActivity() != null;
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         nameTv = view.findViewById(R.id.nameTv);
         statusTv = view.findViewById(R.id.statusTV);
         toolbarNameTv = view.findViewById(R.id.toolbarNameTV);
@@ -524,7 +535,21 @@ public class profile extends Fragment {
 
 //                    followingCount = followingCount + 1;
                     followersCountTv.setText(String.valueOf(number));
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(userIdToAdd);
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                User u = snapshot.getValue(User.class);
+                                sendNotification(u.getToken(),u.getProfileImage());
+                            }
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     addNotifications(UserID);
 
                 }
@@ -874,7 +899,6 @@ public class profile extends Fragment {
             startActivity(intent);
         }
     }
-
     private void addNotifications(String userId){
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
@@ -887,6 +911,69 @@ public class profile extends Fragment {
         hashMap.put("isPost", "false");
 
         reference.push().setValue(hashMap);
+    }
+    void sendNotification(String token,String image) {
+        Log.d("TAGcomment", token);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User u = snapshot.getValue(User.class);
+                    try{
+                        JSONObject jsonObject = new JSONObject();
+                        JSONObject notificationObject = new JSONObject();
+                        notificationObject.put("title","Thông báo");
+                        notificationObject.put("body",u.getName()+" đã theo dõi bạn");
+                        JSONObject dataObject = new JSONObject();
+                        dataObject.put("userId",firebaseUser.getUid());
+                        jsonObject.put("notification",notificationObject);
+                        jsonObject.put("data",dataObject);
+//                        jsonObject.put("to","c0cJxYMlTI2Cuy8sopKfsp:APA91bFUL4diRMuMbgHLtP2IODs9Za9P_IWwJJTKjG7eqB8ecQQxA4meA1Wm4DcFuYmnm_PtbI4qwO6b2H8nop2er3d_vqkS4bomeiTtk0og1rP21QTVqZMUyIeo_pFO17KxUGmf65ti");
+                        jsonObject.put("to",token);
+                        callApi(jsonObject);
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+//                return 0;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("loadUser", "Không thể đọc được dữ liệu.", error.toException());
+                // Handle error
+            }
+        });
+
+    }
+    void callApi(JSONObject jsonObject){
+        MediaType JSON = MediaType.get("application/json");
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://fcm.googleapis.com/fcm/send";
+        RequestBody body = RequestBody.create(jsonObject.toString(),JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Authorization","Bearer AAAAUim2Eso:APA91bGDcN23BvYdB7gr5KyePONZDmenUFi1qk8VidnQmc5ENhAnsWhBzEjqYxBFtZu0QgdPr7m9zCiP1Rh9pVMQaAP4AYvG4sEJ8V0fbrRAGCUcEec8QVCwUYiOmvb3-AJvoifv3qQq")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d("Thất bại", "thất bại");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // Đã nhận phản hồi thành công từ API
+                    String responseBody = response.body().string();
+                    Log.d("thành công 1", responseBody);
+                } else {
+                    // Gọi API không thành công
+
+                }Log.d("thành công", "onResponse: không thành công");
+            }
+        });
     }
 
 }

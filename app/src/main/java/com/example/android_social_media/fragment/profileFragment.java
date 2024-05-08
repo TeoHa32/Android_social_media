@@ -69,7 +69,6 @@ public class profileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ImageView img = view.findViewById(R.id.imageView5);
@@ -77,9 +76,7 @@ public class profileFragment extends Fragment {
         TextView txtUsernameProfile = view.findViewById(R.id.usernameProfile);
         postcount = view.findViewById(R.id.textView4);
         txtTieuSu = view.findViewById(R.id.tieusu);
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         if (bundle != null) {
             key = bundle.getString("key");
             url = bundle.getString("img");
