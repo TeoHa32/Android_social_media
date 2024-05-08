@@ -99,7 +99,7 @@ public class PostDetailFragment extends Fragment {
                                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.fragment_container, profileFragment);
-                                fragmentTransaction.addToBackStack(null); // Add to back stack if needed
+                                fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
                             }
                         })

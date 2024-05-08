@@ -52,7 +52,6 @@ public class homepageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
-
         rcvPost = view.findViewById(R.id.rcv_post);
         rcvPost.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -170,8 +169,6 @@ public class homepageFragment extends Fragment {
         Intent intent = new Intent(getActivity(), PostActivity.class);
         startActivity(intent);
     }
-
-
     private void startChatActivity() {
         Intent intent = new Intent(getActivity(), ChatUsersActivity.class);
         startActivity(intent);

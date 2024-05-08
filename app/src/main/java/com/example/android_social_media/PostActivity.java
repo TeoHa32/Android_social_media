@@ -100,7 +100,6 @@ public class PostActivity extends AppCompatActivity  {
 
         galleryLauncher.launch("image/*");
     }
-
     private String getFileExtension(Uri uri){
         ContentResolver  contentResolver = getContentResolver();
         MimeTypeMap mine = MimeTypeMap.getSingleton();
